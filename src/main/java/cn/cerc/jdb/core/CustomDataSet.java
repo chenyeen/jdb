@@ -147,14 +147,6 @@ public class CustomDataSet extends Component implements IRecord {
 		return recNo;
 	}
 
-	/**
-	 * 此函数由 size() 取代
-	 */
-	@Deprecated
-	public int getRecordCount() {
-		return this.records.size();
-	}
-
 	public int size() {
 		return this.records.size();
 	}
