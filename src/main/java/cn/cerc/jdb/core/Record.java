@@ -24,7 +24,7 @@ public class Record implements IRecord, Serializable {
 	private static final long serialVersionUID = 4454304132898734723L;
 	private DataSetState state = DataSetState.dsNone;
 	private FieldDefs defs = null;
-	private Map<String, Object> datas = new HashMap<String, Object>();
+	private Map<String, Object> items = new HashMap<String, Object>();
 	private Map<String, Object> delta = new HashMap<String, Object>();
 
 	public Record() {
@@ -57,14 +57,14 @@ public class Record implements IRecord, Serializable {
 			defs.add(field);
 
 		if (this.state == DataSetState.dsEdit) {
-			Object oldValue = datas.get(field);
+			Object oldValue = items.get(field);
 			// 只有值发生变更的时候 才做处理
 			if (!compareValue(value, oldValue)) {
 				if (delta.get(field) == null)
 					setValue(delta, field, oldValue);
 			}
 		}
-		setValue(datas, field, value);
+		setValue(items, field, value);
 
 		return this;
 	}
@@ -111,7 +111,7 @@ public class Record implements IRecord, Serializable {
 	}
 
 	public Object getField(String field) {
-		return datas.get(field);
+		return items.get(field);
 	}
 
 	public Map<String, Object> getDelta() {
@@ -122,12 +122,12 @@ public class Record implements IRecord, Serializable {
 		return delta.get(field);
 	}
 
-	public int length() {
-		return datas.size();
+	public int size() {
+		return items.size();
 	}
 
-	public Map<String, Object> getDatas() {
-		return datas;
+	public Map<String, Object> getItems() {
+		return this.items;
 	}
 
 	public FieldDefs getFieldDefs() {
@@ -162,7 +162,7 @@ public class Record implements IRecord, Serializable {
 	@Override
 	public String toString() {
 		Map<String, Object> items = new TreeMap<>();
-		for (int i = 0; i < defs.count(); i++) {
+		for (int i = 0; i < defs.size(); i++) {
 			String field = defs.getFields().get(i);
 			Object obj = this.getField(field);
 			if (obj instanceof TDateTime)
@@ -206,14 +206,14 @@ public class Record implements IRecord, Serializable {
 	public void setJSON(String jsonStr) {
 
 		Gson gson = new GsonBuilder().serializeNulls().create();
-		datas = gson.fromJson(jsonStr, new TypeToken<Map<String, Object>>() {
+		items = gson.fromJson(jsonStr, new TypeToken<Map<String, Object>>() {
 		}.getType());
 		defs.clear();
-		for (String key : datas.keySet()) {
+		for (String key : items.keySet()) {
 			defs.add(key);
-			if ("{}".equals(datas.get(key)))
-				datas.put(key, null);
-			Object obj = datas.get(key);
+			if ("{}".equals(items.get(key)))
+				items.put(key, null);
+			Object obj = items.get(key);
 			if (obj instanceof Double) {
 				double tmp = (double) obj;
 				if (tmp >= Integer.MIN_VALUE && tmp <= Integer.MAX_VALUE) {
@@ -356,7 +356,7 @@ public class Record implements IRecord, Serializable {
 	}
 
 	public void clear() {
-		datas.clear();
+		items.clear();
 		delta.clear();
 	}
 
