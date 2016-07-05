@@ -273,7 +273,7 @@ public class DataQuery extends DataSet {
 		StringBuffer sql = new StringBuffer();
 		sql.append("insert into ").append(tableName);
 
-		Set<String> fs = tRecord.getDatas().keySet();
+		Set<String> fs = tRecord.getItems().keySet();
 		List<String> fileds = new ArrayList<String>(fs);
 		// Logger.debug(getClass(),"fielsd == " + fileds);
 		if (fileds == null || fileds.size() == 0) {

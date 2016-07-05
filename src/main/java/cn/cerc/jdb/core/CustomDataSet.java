@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -18,7 +19,7 @@ import cn.cerc.jdb.other.DelphiException;
  * @author ZhangGong
  * 
  */
-public class CustomDataSet extends Component implements IRecord {
+public class CustomDataSet extends Component implements IRecord, Iterable<Record> {
 	private int recNo = 0;
 	private int fetchNo = -1;
 	private FieldDefs fieldDefs = new FieldDefs();
@@ -378,5 +379,10 @@ public class CustomDataSet extends Component implements IRecord {
 			throw new RuntimeException("searchKey is null!");
 
 		return searchItems.get(keyValue);
+	}
+
+	@Override
+	public Iterator<Record> iterator() {
+		return new CustomDataSetIteratior(this);
 	}
 }

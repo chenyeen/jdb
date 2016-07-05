@@ -54,10 +54,10 @@ public class DataSet extends CustomDataSet implements Serializable {
 
 		buffer.append("{");
 		if (head != null) {
-			if (head.length() > 0) {
+			if (head.size() > 0) {
 				buffer.append("\"head\":").append(head.toString());
 			}
-			if (head.length() > 0 && this.size() > 0) {
+			if (head.size() > 0 && this.size() > 0) {
 				buffer.append(",");
 			}
 		}
@@ -69,7 +69,7 @@ public class DataSet extends CustomDataSet implements Serializable {
 				Record record = this.getRecords().get(i);
 				if (i < beginLine || i > endLine)
 					continue;
-				Map<String, Object> tmp1 = record.getDatas();
+				Map<String, Object> tmp1 = record.getItems();
 				Map<String, Object> tmp2 = new LinkedHashMap<String, Object>();
 				for (String field : fields) {
 					Object obj = tmp1.get(field);

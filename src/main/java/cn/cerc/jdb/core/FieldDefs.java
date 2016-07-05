@@ -16,10 +16,6 @@ public class FieldDefs implements Serializable {
 		return fields.contains(field);
 	}
 
-	public int count() {
-		return fields.size();
-	}
-
 	@Override
 	public String toString() {
 		return "TFieldDefs [fields=" + fields + "]";
@@ -46,7 +42,7 @@ public class FieldDefs implements Serializable {
 		FieldDefs fds = query.getFieldDefs();
 		List<String> fields = fds.getFields();
 		if (fds != null) {
-			for (int i = 0; i < fds.count(); i++) {
+			for (int i = 0; i < fds.size(); i++) {
 				this.add(fields.get(i));
 			}
 		}
