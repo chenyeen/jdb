@@ -97,7 +97,7 @@ public class DataQuery extends DataSet {
 					this.fetchFinish = false;
 					break;
 				}
-				Record record = append();
+				Record record = append().getCurrent();
 				for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
 					String fn = rs.getMetaData().getColumnLabel(i);
 					record.setField(fn, rs.getObject(fn));

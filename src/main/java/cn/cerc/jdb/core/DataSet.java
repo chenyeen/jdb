@@ -124,7 +124,7 @@ public class DataSet extends CustomDataSet implements Serializable {
 				for (int i = 1; i < dataset.size(); i++) {
 					@SuppressWarnings("rawtypes")
 					ArrayList Recordj = (ArrayList) dataset.get(i);
-					Record record = this.append();
+					Record record = this.append().getCurrent();
 					for (int j = 0; j < fields.size(); j++) {
 						record.setField(fields.get(j).toString(), Recordj.get(j));
 					}

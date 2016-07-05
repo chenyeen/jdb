@@ -27,14 +27,14 @@ public class CustomDataSet extends Component implements IRecord {
 	private String searchKey;
 	private SortedMap<String, Record> searchItems;
 
-	public Record append() {
+	public CustomDataSet append() {
 		if (this.searchKey != null)
 			throw new RuntimeException("searchKey is not null!");
 
 		return addRecord();
 	}
 
-	public Record append(String serachValue) {
+	public CustomDataSet append(String serachValue) {
 		if (this.searchKey == null)
 			throw new RuntimeException("searchKey is null!");
 
@@ -42,20 +42,20 @@ public class CustomDataSet extends Component implements IRecord {
 		if (result != null)
 			throw new RuntimeException("searchValue is exists!");
 
-		result = this.addRecord();
+		result = this.addRecord().getCurrent();
 		result.setField(this.searchKey, serachValue);
 		searchItems.put(serachValue, result);
-		return result;
+		return this;
 	}
 
-	private Record addRecord() {
+	private CustomDataSet addRecord() {
 		Record ar = new Record(this.fieldDefs);
 		ar.setState(DataSetState.dsInsert);
 		this.records.add(ar);
 		recNo = records.size();
 		if (OnNewRecord != null)
 			OnNewRecord.execute(this);
-		return ar;
+		return this;
 	}
 
 	public void edit() {
@@ -145,14 +145,6 @@ public class CustomDataSet extends Component implements IRecord {
 
 	public int getRecNo() {
 		return recNo;
-	}
-
-	/**
-	 * 此函数由 size() 取代
-	 */
-	@Deprecated
-	public int getRecordCount() {
-		return this.records.size();
 	}
 
 	public int size() {
@@ -254,7 +246,7 @@ public class CustomDataSet extends Component implements IRecord {
 		// 再复制所有数据
 		for (int i = 0; i < source.records.size(); i++) {
 			Record src_row = source.records.get(i);
-			Record tar_row = this.append();
+			Record tar_row = this.append().getCurrent(); 
 			for (String field : src_row.getFieldDefs().getFields()) {
 				tar_row.setField(field, src_row.getField(field));
 			}
