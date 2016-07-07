@@ -196,7 +196,8 @@ public class Record implements IRecord, Serializable {
 				double tmp = (double) obj;
 				if (tmp >= Integer.MIN_VALUE && tmp <= Integer.MAX_VALUE) {
 					Integer val = (int) tmp;
-					obj = val;
+					if (tmp == val)
+						obj = val;
 				}
 			}
 			setField(field, obj);
