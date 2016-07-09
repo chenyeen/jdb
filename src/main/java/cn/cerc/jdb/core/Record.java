@@ -205,7 +205,6 @@ public class Record implements IRecord, Serializable {
 	}
 
 	public void setJSON(String jsonStr) {
-
 		Gson gson = new GsonBuilder().serializeNulls().create();
 		items = gson.fromJson(jsonStr, new TypeToken<Map<String, Object>>() {
 		}.getType());
@@ -214,14 +213,6 @@ public class Record implements IRecord, Serializable {
 			defs.add(key);
 			if ("{}".equals(items.get(key)))
 				items.put(key, null);
-			Object obj = items.get(key);
-			if (obj instanceof Double) {
-				double tmp = (double) obj;
-				if (tmp >= Integer.MIN_VALUE && tmp <= Integer.MAX_VALUE) {
-					Integer val = (int) tmp;
-					obj = val;
-				}
-			}
 		}
 	}
 

@@ -4,13 +4,17 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import cn.cerc.jdb.core.FieldDefs;
-import cn.cerc.jdb.core.Record;
-
 public class RecordTest_JSON {
 	private FieldDefs def = new FieldDefs();
 	private Record item = new Record(def);
-	private String jsonStr = "{\"Boolean\":true,\"Date\":\"2016-06-20 00:00:00\",\"DateTime\":\"2016-06-20 09:26:35\",\"Double\":3.12,\"Integer\":123,\"Null\":null,\"OldDate\":\"2016-06-20 09:26:35\",\"String\":\"AAA\"}";
+	private String jsonStr = "{\"Boolean\":true,"
+			+ "\"Date\":\"2016-06-20 00:00:00\","
+			+ "\"DateTime\":\"2016-06-20 09:26:35\","
+			+ "\"Double\":3.12,"
+			+ "\"Integer\":123,"
+			+ "\"Null\":null,"
+			+ "\"OldDate\":\"2016-06-20 09:26:35\","
+			+ "\"String\":\"AAA\"}";
 
 	@Test
 	public void test_toJSON_old() {
