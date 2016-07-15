@@ -7,7 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -458,7 +460,7 @@ public class DataQuery extends DataSet {
 
 		int whereindex = fileds.size() + 1; // where条件后index
 		try (PreparedStatement ps = conn.prepareStatement(sql.toString());) {
-
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			for (int i = 1; i <= fileds.size(); i++) {
 				String field = fileds.get(i - 1);
 				Object value = record.getField(field);
@@ -466,9 +468,13 @@ public class DataQuery extends DataSet {
 					ps.setObject(i, record.getField(field).toString());
 				} else if (value instanceof Double) {
 					ps.setObject(i, roundTo((Double) record.getField(field), -6));
-				} else
-					ps.setObject(i, record.getField(field)); // set 新值
-
+				} else {
+					Object val = record.getField(field);
+					if (val instanceof Date)
+						ps.setObject(i, sdf.format(val));
+					else
+						ps.setObject(i, val); // set 新值
+				}
 				// 旧值
 				Object oldVlaue = record.getOldField(field);
 
@@ -488,8 +494,13 @@ public class DataQuery extends DataSet {
 				if (oldVlaue != null) {
 					if (oldVlaue instanceof Double) {
 						ps.setObject(whereindex, roundTo((Double) oldVlaue, -6));
-					} else
-						ps.setObject(whereindex, oldVlaue); // set 值
+					} else {
+						// set 值
+						if (oldVlaue instanceof Date)
+							ps.setObject(whereindex, sdf.format(oldVlaue));
+						else
+							ps.setObject(whereindex, oldVlaue); // set 值
+					}
 					whereindex++;
 				}
 				pklist.remove(field); // 为后续主键获取拼接条件
