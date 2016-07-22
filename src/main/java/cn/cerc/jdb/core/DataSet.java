@@ -126,7 +126,16 @@ public class DataSet extends CustomDataSet implements Serializable {
 					ArrayList Recordj = (ArrayList) dataset.get(i);
 					Record record = this.append().getCurrent();
 					for (int j = 0; j < fields.size(); j++) {
-						record.setField(fields.get(j).toString(), Recordj.get(j));
+						Object obj = Recordj.get(j);
+						if (obj instanceof Double) {
+							double tmp = (double) obj;
+							if (tmp >= Integer.MIN_VALUE && tmp <= Integer.MAX_VALUE) {
+								Integer val = (int) tmp;
+								if (tmp == val)
+									obj = val;
+							}
+						}
+						record.setField(fields.get(j).toString(), obj);
 					}
 					this.post();
 				}

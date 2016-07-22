@@ -247,7 +247,7 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		// 再复制所有数据
 		for (int i = 0; i < source.records.size(); i++) {
 			Record src_row = source.records.get(i);
-			Record tar_row = this.append().getCurrent(); 
+			Record tar_row = this.append().getCurrent();
 			for (String field : src_row.getFieldDefs().getFields()) {
 				tar_row.setField(field, src_row.getField(field));
 			}
