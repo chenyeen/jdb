@@ -66,6 +66,7 @@ public class SqlConnection extends Component implements AutoCloseable {
 			st.execute(sql);
 			return true;
 		} catch (SQLException e) {
+			log.error("error sql: " + sql);
 			throw new RuntimeException(e.getMessage());
 		}
 	}
