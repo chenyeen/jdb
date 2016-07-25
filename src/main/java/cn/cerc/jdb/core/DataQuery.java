@@ -524,11 +524,11 @@ public class DataQuery extends DataSet {
 				}
 				whereindex++;
 			}
-			log.debug("update：" + ps.toString());
-			int result = ps.executeUpdate();
-			if (result != 1) {
+			if (ps.executeUpdate() != 1) {
+				log.error("update error：" + ps.toString());
 				throw new RuntimeException("当前记录已被其它用户修改或不存在，更新失败");
 			} else {
+				log.debug("update：" + ps.toString());
 				record.getDelta().clear();
 				return true;
 			}
