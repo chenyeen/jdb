@@ -50,4 +50,13 @@ public class BatchScriptTest {
 		assertEquals(bs.size(), 2);
 		assertEquals(bs.getItem(2), "select * from a");
 	}
+	
+	@Test
+	public void test_clean(){
+		bs = new BatchScript(null);
+		bs.add("select * from a;");
+		bs.clean();
+		bs.add("select * from b;");
+		assertEquals(bs.size(), 1);
+	}
 }

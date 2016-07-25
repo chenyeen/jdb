@@ -86,7 +86,12 @@ public class BatchScript {
 
 	public int size() {
 		String tmp[] = items.toString().split(";");
-		return tmp.length;
+		int len = 0;
+		for (String item : tmp) {
+			if (!item.trim().equals(""))
+				len++;
+		}
+		return len;
 	}
 
 	public String getItem(int i) {
@@ -94,5 +99,9 @@ public class BatchScript {
 		if (i < 0 && i > (tmp.length - 1))
 			throw new RuntimeException("命令索引超出范围！");
 		return tmp[i].trim();
+	}
+
+	public void clean() {
+		items = new StringBuffer();
 	}
 }
