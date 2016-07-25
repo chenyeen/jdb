@@ -1,13 +1,9 @@
 package cn.cerc.jdb.core;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import cn.cerc.jdb.core.BigdataException;
-import cn.cerc.jdb.core.DataQuery;
 
 public class DataQueryTest {
 	// private static final Logger log = Logger.getLogger(AppQueryTest.class);
@@ -24,7 +20,7 @@ public class DataQueryTest {
 	public void test_open() {
 		ds.setMaximum(1);
 		ds.add("select Code_,Name_ from %s", Account);
-		assertTrue(ds.open());
+		ds.open();
 		assertEquals(ds.size(), 1);
 	}
 

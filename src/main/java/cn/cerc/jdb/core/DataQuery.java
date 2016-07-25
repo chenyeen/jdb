@@ -50,7 +50,7 @@ public class DataQuery extends DataSet {
 		this.connection = conn.getConnection();
 	}
 
-	public boolean open() {
+	public DataQuery open() {
 		if (connection == null)
 			throw new RuntimeException("SqlConnection is null");
 		Connection conn = connection.getConnection();
@@ -82,7 +82,7 @@ public class DataQuery extends DataSet {
 					log.debug("取出所有数据: end");
 					this.first();
 					this.active = true;
-					return true;
+					return this;
 				}
 			}
 		} catch (SQLException e) {

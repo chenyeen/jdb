@@ -51,7 +51,7 @@ public class BatchScript {
 		}
 	}
 
-	public void exec() {
+	public BatchScript exec() {
 		String tmp[] = items.toString().split(";");
 		for (String item : tmp) {
 			if (!item.trim().equals("")) {
@@ -59,6 +59,7 @@ public class BatchScript {
 				conn.execute(item.trim());
 			}
 		}
+		return this;
 	}
 
 	public boolean exists() {
