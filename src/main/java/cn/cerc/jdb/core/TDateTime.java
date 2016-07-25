@@ -131,6 +131,7 @@ public class TDateTime implements Serializable, Comparable<TDateTime>, Cloneable
 		this.data = data;
 	}
 
+	//若当前值大，则返回正数，否则返回负数
 	public int compareDay(TDateTime dateFrom) {
 		if (dateFrom == null)
 			return 0;
