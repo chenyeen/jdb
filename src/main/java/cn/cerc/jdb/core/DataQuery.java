@@ -5,6 +5,7 @@ import static cn.cerc.jdb.other.utils.roundTo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
@@ -28,6 +29,7 @@ public class DataQuery extends DataSet {
 	// private boolean closeMax = false;
 	private int offset = 0;
 	private int maximum = BigdataException.MAX_RECORDS;
+	private List<String> fields;
 
 	// 若数据有取完，则为true，否则为false
 	private boolean fetchFinish;
@@ -69,17 +71,17 @@ public class DataQuery extends DataSet {
 					rs.last();
 					if (this.maximum > -1)
 						BigdataException.check(this, rs.getRow());
-					String fn;
-					List<String> fs = new ArrayList<String>();
-					for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-						fn = rs.getMetaData().getColumnLabel(i);
-						fs.add(fn);
+					fields = new ArrayList<String>();
+					ResultSetMetaData meta = rs.getMetaData();
+					for (int i = 1; i <= meta.getColumnCount(); i++) {
+						String field = meta.getColumnLabel(i);
+						this.getFieldDefs().add(field);
+						fields.add(field);
 					}
-					this.getFieldDefs().add(fs.toArray(new String[0]));
 					// 取出所有数据
-					log.debug("取出所有数据: begin");
+					log.debug("load ResultSet: begin");
 					copyResultSet(rs);
-					log.debug("取出所有数据: end");
+					log.debug("load ResultSet: end");
 					this.first();
 					this.active = true;
 					return this;
@@ -179,6 +181,9 @@ public class DataQuery extends DataSet {
 	public void post() {
 		String tableName = getTableName();
 		Record record = this.getCurrent();
+		if(fields != null && this.getFieldDefs().size() != fields.size()){
+			throw new PostFieldException(this, this.fields);
+		}
 		if (record.getState() == DataSetState.dsInsert) {
 			insertCommand(connection.getConnection(), tableName, record);
 		} else if (record.getState() == DataSetState.dsEdit) {
