@@ -5,6 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 public interface IRecord {
 	public boolean exists(String field);
@@ -70,9 +72,15 @@ public interface IRecord {
 		for (Field method : clazz.getDeclaredFields()) {
 			String field = method.getName();
 			Column column = method.getAnnotation(Column.class);
+			
 			String dbField = field;
 			if (column != null && !"".equals(column.name()))
 				dbField = column.name();
+			
+			GeneratedValue generatedValue = method.getAnnotation(GeneratedValue.class);
+			if(generatedValue != null && generatedValue.strategy().equals(GenerationType.IDENTITY))
+				continue;
+			
 			Method get;
 			try {
 				field = field.substring(0, 1).toUpperCase() + field.substring(1);
