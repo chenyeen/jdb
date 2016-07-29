@@ -385,4 +385,34 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 	public Iterator<Record> iterator() {
 		return new CustomDataSetIteratior(this);
 	}
+
+	@Override
+	public boolean exists(String field) {
+		return this.getFieldDefs().exists(field);
+	}
+
+	// 将内容转成List
+	public <T> List<T> getList(Class<T> clazz) {
+		List<T> items = new ArrayList<T>();
+		for (Record rs : this) {
+			items.add(rs.getObject(clazz));
+		}
+		return items;
+	}
+
+	// 将内容转成Map
+	public <T> Map<String, T> getMap(Class<T> clazz, String... keys) {
+		Map<String, T> items = new HashMap<String, T>();
+		for (Record rs : this) {
+			String key = "";
+			for (String field : keys) {
+				if ("".equals(key))
+					key = rs.getString(field);
+				else
+					key += ";" + rs.getString(field);
+			}
+			items.put(key, rs.getObject(clazz));
+		}
+		return items;
+	}
 }
