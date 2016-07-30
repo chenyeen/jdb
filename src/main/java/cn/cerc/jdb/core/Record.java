@@ -42,10 +42,10 @@ public class Record implements IRecord, Serializable {
 	public void setState(DataSetState state) {
 		if (state == DataSetState.dsEdit) {
 			if (this.state == DataSetState.dsInsert) {
-				throw new RuntimeException("当前记录为插入状态 不允许被修改");
+				// throw new RuntimeException("当前记录为插入状态 不允许被修改");
+				return;
 			}
 		}
-
 		this.state = state;
 	}
 
