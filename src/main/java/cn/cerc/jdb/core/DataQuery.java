@@ -186,12 +186,13 @@ public class DataQuery extends DataSet {
 		}
 		if (record.getState() == DataSetState.dsInsert) {
 			insertCommand(connection.getConnection(), tableName, record);
+			record.setState(DataSetState.dsNone);
 		} else if (record.getState() == DataSetState.dsEdit) {
 			updateCommand(connection.getConnection(), tableName, record);
+			record.setState(DataSetState.dsNone);
 		} else {
 			throw new RuntimeException("post方法调用错误");
 		}
-		record.setState(DataSetState.dsNone);
 	}
 
 	@Override
