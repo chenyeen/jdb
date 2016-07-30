@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Transient;
 
 import org.apache.log4j.Logger;
 
@@ -38,6 +39,8 @@ public interface IRecord {
 			throw new RuntimeException(e1.getMessage());
 		}
 		for (Field method : clazz.getDeclaredFields()) {
+			if (method.getAnnotation(Transient.class) != null)
+				continue;
 			Column column = method.getAnnotation(Column.class);
 			String dbField = method.getName();
 			String field = method.getName().substring(0, 1).toUpperCase() + method.getName().substring(1);
@@ -80,7 +83,7 @@ public interface IRecord {
 						boolean value = this.getBoolean(dbField);
 						Method set = clazz.getMethod("set" + field, boolean.class);
 						set.invoke(obj, value);
-						
+
 					} else if (method.getType().equals(TDateTime.class)) {
 						TDateTime value = this.getDateTime(dbField);
 						Method set = clazz.getMethod("set" + field, value.getClass());
@@ -111,16 +114,17 @@ public interface IRecord {
 	default public <T> void setObject(T object) {
 		Class<?> clazz = object.getClass();
 		for (Field method : clazz.getDeclaredFields()) {
-			String field = method.getName();
-			Column column = method.getAnnotation(Column.class);
-
-			String dbField = field;
-			if (column != null && !"".equals(column.name()))
-				dbField = column.name();
-
+			if (method.getAnnotation(Transient.class) != null)
+				continue;
 			GeneratedValue generatedValue = method.getAnnotation(GeneratedValue.class);
 			if (generatedValue != null && generatedValue.strategy().equals(GenerationType.IDENTITY))
 				continue;
+
+			String field = method.getName();
+			Column column = method.getAnnotation(Column.class);
+			String dbField = field;
+			if (column != null && !"".equals(column.name()))
+				dbField = column.name();
 
 			Method get;
 			try {
