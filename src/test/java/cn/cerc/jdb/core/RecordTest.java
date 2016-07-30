@@ -25,16 +25,6 @@ public class RecordTest {
 		assertEquals(item.getState(), DataSetState.dsInsert);
 	}
 
-	/**
-	 * 不允许把插入状态直接修改为修改状态
-	 */
-	@Test(expected = RuntimeException.class)
-	public void test_setState_error() {
-		item.setState(DataSetState.dsInsert);
-		assertEquals(item.getState(), DataSetState.dsInsert);
-		item.setState(DataSetState.dsEdit);
-	}
-
 	@Test
 	public void test_setField() {
 		String field1 = "code";
