@@ -16,9 +16,16 @@ public class SumRecord extends Record {
 	}
 
 	public SumRecord addField(String field) {
-		if (fields.containsKey(field))
-			return this;
-		fields.put(field, 0.0);
+		if (!fields.containsKey(field))
+			fields.put(field, 0.0);
+		return this;
+	}
+
+	public SumRecord addField(String... args) {
+		for (String field : args) {
+			if (!fields.containsKey(field))
+				fields.put(field, 0.0);
+		}
 		return this;
 	}
 
@@ -43,5 +50,19 @@ public class SumRecord extends Record {
 
 	public void setDataSet(DataSet dataSet) {
 		this.dataSet = dataSet;
+	}
+
+	public Map<String, Double> getFields() {
+		return fields;
+	}
+
+	@Deprecated
+	/**
+	 * 仅在调试时使用
+	 */
+	public void print() {
+		for (String field : fields.keySet()) {
+			System.out.println(String.format("%s: %s", field, "" + fields.get(field)));
+		}
 	}
 }
