@@ -1,10 +1,12 @@
 package cn.cerc.jdb.core;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
-import cn.cerc.jdb.core.TDateTime;
+import org.junit.Test;
 
 public class TDateTimeTest {
 	private String ym = "201512";
@@ -36,6 +38,12 @@ public class TDateTimeTest {
 
 		obj = TDateTime.fromYearMonth("201503").incMonth(-1);
 		assertThat("测试2月份", obj.getYearMonth(), is("201502"));
+
+		obj = TDateTime.fromDate("2015-05-31").incMonth(1);
+		assertTrue("测试6月份", "201506".equals(obj.getYearMonth()));
+
+		obj = TDateTime.fromDate("2015-01-31").incMonth(1);
+		assertTrue("测试2月份", "201502".equals(obj.getYearMonth()));
 	}
 
 	@Test
