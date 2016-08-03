@@ -48,7 +48,10 @@ public class SearchDataSet {
 			items = new HashMap<>();
 			add(dataSet);
 		}
-		return items.get(key.toString());
+		if (key == null)
+			return items.get("null");
+		else
+			return items.get(key.toString());
 	}
 
 	public Record get(Object[] keys) {
@@ -58,10 +61,12 @@ public class SearchDataSet {
 			throw new DelphiException("参数名称 与 值列表长度不匹配");
 
 		String key = null;
-		for (Object obj : keys)
+		for (Object obj : keys) {
+			if (obj == null)
+				obj = "null";
 			key = key == null ? obj.toString() : key + ";" + obj.toString();
-
-		log.debug(String.format("key: %s", key));
+		}
+		log.info(String.format("key: %s", key));
 
 		return get(key);
 	}
