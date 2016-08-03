@@ -144,10 +144,10 @@ public interface IRecord {
 
 	default public boolean equalsValues(Map<String, Object> values) {
 		for (String field : values.keySet()) {
-			if (getField(field) == null)
-				return false;
-			String value = getField(field).toString();
-			String compareValue = values.get(field).toString();
+			Object obj1 = getField(field);
+			String value = obj1 == null ? "null" : obj1.toString();
+			Object obj2 = values.get(field);
+			String compareValue = obj2 == null ? "null" : obj2.toString();
 			if (!value.equals(compareValue))
 				return false;
 		}
