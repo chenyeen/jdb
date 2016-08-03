@@ -3,6 +3,7 @@ package cn.cerc.jdb.core;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -29,6 +30,8 @@ public interface IRecord {
 	public TDateTime getDateTime(String field);
 
 	public IRecord setField(String field, Object value);
+
+	public Object getField(String field);
 
 	// 转成指定类型的对象
 	default public <T> T getObject(Class<T> clazz) {
@@ -137,5 +140,17 @@ public interface IRecord {
 				// e.printStackTrace();
 			}
 		}
+	}
+
+	default public boolean equalsValues(Map<String, Object> values) {
+		for (String field : values.keySet()) {
+			if (getField(field) == null)
+				return false;
+			String value = getField(field).toString();
+			String compareValue = values.get(field).toString();
+			if (!value.equals(compareValue))
+				return false;
+		}
+		return true;
 	}
 }
