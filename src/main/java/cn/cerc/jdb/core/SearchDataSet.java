@@ -25,8 +25,8 @@ public class SearchDataSet {
 	}
 
 	public SearchDataSet add(CustomDataSet dataSet) {
-		dataSet.first();
-		while (dataSet.fetch()) {
+		for (int i = dataSet.size(); i > 0; i--) {
+			dataSet.setRecNo(i);
 			add(dataSet.getCurrent());
 		}
 		return this;
@@ -83,8 +83,11 @@ public class SearchDataSet {
 			throw new DelphiException("参数名称不能为空");
 		if (!keyFields.equals(this.keyFields)) {
 			fields.clear();
-			for (String key : keyFields.split(";"))
+			for (String key : keyFields.split(";")) {
+				if (!dataSet.exists(key))
+					throw new RuntimeException(String.format("字段 %s 不存在，无法查找！", key));
 				fields.add(key);
+			}
 			this.keyFields = keyFields;
 			clear();
 		}
