@@ -22,7 +22,6 @@ public class SearchDataSet {
 	}
 
 	public SearchDataSet add(CustomDataSet dataSet) {
-		System.out.println("add DataSet");
 		dataSet.first();
 		while (dataSet.fetch()) {
 			add(dataSet.getCurrent());

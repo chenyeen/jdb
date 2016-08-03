@@ -138,51 +138,50 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		return this.fieldDefs;
 	}
 
+	/**
+	 * 仅用于查找一次时，调用此函数，速度最快
+	 */
+	public boolean locateOnlyOne(String fields, Object... values) {
+		if (fields == null || "".equals(fields))
+			throw new DelphiException("参数名称不能为空");
+		if (values == null || values.length == 0)
+			throw new DelphiException("值列表不能为空或者长度不能为0");
+		String[] fieldslist = fields.split(";");
+		if (fieldslist.length != values.length)
+			throw new DelphiException("参数名称 与 值列表长度不匹配");
+		Map<String, Object> fieldValueMap = new HashMap<String, Object>();
+		for (int i = 0; i < fieldslist.length; i++) {
+			fieldValueMap.put(fieldslist[i], values[i]);
+		}
+
+		this.first();
+		while (this.fetch()) {
+			if (this.getCurrent().equalsValues(fieldValueMap))
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 用于查找多次，调用时，会先进行排序，以方便后续的相同Key查找
+	 */
 	public boolean locate(String fields, Object... values) {
-		Record record = lookup(fields, values, true);
-		if (record != null) {
-			this.setRecNo(this.records.indexOf(record) + 1);
-			return true;
-		} else {
+		if (search == null)
+			search = new SearchDataSet(this);
+		search.setFields(fields);
+		Record record = values.length == 1 ? search.get(values[0]) : search.get(values);
+
+		if (record == null)
 			return false;
-		}
+		this.setRecNo(this.records.indexOf(record) + 1);
+		return true;
 	}
 
-	// 查找指定的字段值是否存在，若存在，则令RecNo等于该记录
-	public Record lookup(String fields, Object value) {
-		return lookup(fields, new Object[] { value }, true);
-	}
-
-	public Record lookup(String fields, Object[] values) {
-		return lookup(fields, values, true);
-	}
-
-	public Record lookup(String fields, Object[] values, boolean beforeSort) {
-		if (beforeSort) {
-			if (search == null)
-				search = new SearchDataSet(this);
-			search.setFields(fields);
-			return search.get(values);
-		} else {
-			if (fields == null || "".equals(fields))
-				throw new DelphiException("参数名称不能为空");
-			if (values == null || values.length == 0)
-				throw new DelphiException("值列表不能为空或者长度不能为0");
-			String[] fieldslist = fields.split(";");
-			if (fieldslist.length != values.length)
-				throw new DelphiException("参数名称 与 值列表长度不匹配");
-			Map<String, Object> fieldValueMap = new HashMap<String, Object>();
-			for (int i = 0; i < fieldslist.length; i++) {
-				fieldValueMap.put(fieldslist[i], values[i]);
-			}
-
-			this.first();
-			while (this.fetch()) {
-				if (this.getCurrent().equalsValues(fieldValueMap))
-					return this.getCurrent();
-			}
-		}
-		return null;
+	public Record lookup(String fields, Object... values) {
+		if (search == null)
+			search = new SearchDataSet(this);
+		search.setFields(fields);
+		return values.length == 1 ? search.get(values[0]) : search.get(values);
 	}
 
 	public DataSetState getState() {
