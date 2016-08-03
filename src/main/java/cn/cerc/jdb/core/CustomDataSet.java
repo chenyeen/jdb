@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import cn.cerc.jdb.other.DelphiException;
 
@@ -25,31 +23,11 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 	private FieldDefs fieldDefs = new FieldDefs();
 	private List<Record> records = new ArrayList<Record>();
 	public DataSetNotifyEvent OnNewRecord;
-	private String searchKey;
-	private SortedMap<String, Record> searchItems;
+	private SearchDataSet search;
 
 	public CustomDataSet append() {
-		if (this.searchKey != null)
-			throw new RuntimeException("searchKey is not null!");
-
-		return addRecord();
-	}
-
-	public CustomDataSet append(String serachValue) {
-		if (this.searchKey == null)
-			throw new RuntimeException("searchKey is null!");
-
-		Record result = searchItems.get(serachValue);
-		if (result != null)
-			throw new RuntimeException("searchValue is exists!");
-
-		result = this.addRecord().getCurrent();
-		result.setField(this.searchKey, serachValue);
-		searchItems.put(serachValue, result);
-		return this;
-	}
-
-	private CustomDataSet addRecord() {
+		if (search != null)
+			search.clear();
 		Record ar = new Record(this.fieldDefs);
 		ar.setState(DataSetState.dsInsert);
 		this.records.add(ar);
@@ -62,14 +40,16 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 	public void edit() {
 		if (bof() || eof())
 			throw new RuntimeException("当前记录为空，无法修改");
-
+		if (search != null)
+			search.clear();
 		this.getCurrent().setState(DataSetState.dsEdit);
 	}
 
 	public boolean delete() {
-		if (bof() || eof()) {
+		if (bof() || eof())
 			throw new RuntimeException("当前记录为空，无法修改");
-		}
+		if (search != null)
+			search.clear();
 		records.remove(recNo - 1);
 		if (recNo > records.size()) {
 			recNo = records.size();
@@ -80,6 +60,8 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 	}
 
 	public void post() {
+		if (search != null)
+			search.clear();
 		this.getCurrent().setState(DataSetState.dsNone);
 	}
 
@@ -156,67 +138,50 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		return this.fieldDefs;
 	}
 
-	public boolean locate(String keyValue) {
-		if (searchKey == null)
-			throw new RuntimeException("searchKey is null!");
-		Record item = searchItems.get(keyValue);
-		if (item == null)
-			return false;
-
-		this.setRecNo(this.records.indexOf(item) + 1);
-		return true;
-	}
-
-	public boolean locate(String fields, Object... values) {
-		// Locate("It_", 2);
-		// Locate("Name_", "张三");
-		// Locate("Name_;Final_", "张三", true);
-		// Locate("Name_;It_", "张三", 2);
-
-		if (fields == null || "".equals(fields)) {
+	/**
+	 * 仅用于查找一次时，调用此函数，速度最快
+	 */
+	public boolean locateOnlyOne(String fields, Object... values) {
+		if (fields == null || "".equals(fields))
 			throw new DelphiException("参数名称不能为空");
-		}
-
-		if (values == null || values.length == 0) {
+		if (values == null || values.length == 0)
 			throw new DelphiException("值列表不能为空或者长度不能为0");
-		}
-
 		String[] fieldslist = fields.split(";");
-
-		if (fieldslist.length != values.length) { // 判断参数与值列表是否匹配 如果不匹配， 则抛出异常
+		if (fieldslist.length != values.length)
 			throw new DelphiException("参数名称 与 值列表长度不匹配");
-		}
-
 		Map<String, Object> fieldValueMap = new HashMap<String, Object>();
 		for (int i = 0; i < fieldslist.length; i++) {
 			fieldValueMap.put(fieldslist[i], values[i]);
 		}
 
-		// 查找指定的字段值是否存在，若存在，则令RecNo等于该记录
-		boolean Result = false;
 		this.first();
-		while (!this.eof()) {
-			List<Boolean> resultList = new ArrayList<Boolean>();
-			Record row = getCurrent();
-			for (String field : fieldslist) {
-				if (row.getField(field) == null)
-					return false;
-				String value = row.getField(field).toString();
-				String compareValue = fieldValueMap.get(field).toString();
-
-				if (value != null && !value.equals(compareValue)) {
-					continue;
-				} else {
-					resultList.add(Boolean.TRUE);
-				}
-			}
-			if (resultList.size() == fieldslist.length) {
-				Result = true;
-				break;
-			}
-			next();
+		while (this.fetch()) {
+			if (this.getCurrent().equalsValues(fieldValueMap))
+				return true;
 		}
-		return Result;
+		return false;
+	}
+
+	/**
+	 * 用于查找多次，调用时，会先进行排序，以方便后续的相同Key查找
+	 */
+	public boolean locate(String fields, Object... values) {
+		if (search == null)
+			search = new SearchDataSet(this);
+		search.setFields(fields);
+		Record record = values.length == 1 ? search.get(values[0]) : search.get(values);
+
+		if (record == null)
+			return false;
+		this.setRecNo(this.records.indexOf(record) + 1);
+		return true;
+	}
+
+	public Record lookup(String fields, Object... values) {
+		if (search == null)
+			search = new SearchDataSet(this);
+		search.setFields(fields);
+		return values.length == 1 ? search.get(values[0]) : search.get(values);
 	}
 
 	public DataSetState getState() {
@@ -237,6 +202,8 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 	}
 
 	protected void copyDataSet(CustomDataSet source) {
+		if (search != null)
+			search.clear();
 		// 先复制字段定义
 		FieldDefs tarDefs = this.getFieldDefs();
 		for (String field : source.getFieldDefs().getFields()) {
@@ -296,8 +263,8 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 	public Record setField(String field, Object value) {
 		if (field == null)
 			throw new RuntimeException("field is null!");
-		if (field.equals(this.searchKey))
-			throw new RuntimeException("searchKey is not null!");
+		if (search != null && search.existsKey(field))
+			search.clear();
 		return this.getCurrent().setField(field, value);
 	}
 
@@ -312,14 +279,20 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 	}
 
 	public void copyRecord(Record source, FieldDefs defs) {
+		if (search != null)
+			search.clear();
 		this.getCurrent().copyValues(source, defs);
 	}
 
 	public void copyRecord(Record source, String... fields) {
+		if (search != null)
+			search.clear();
 		this.getCurrent().copyValues(source, fields);
 	}
 
 	public void copyRecord(Record sourceRecord, String[] sourceFields, String[] targetFields) {
+		if (search != null)
+			search.clear();
 		if (targetFields.length != sourceFields.length)
 			throw new RuntimeException("前后字段数目不一样，请您确认！");
 		Record targetRecord = this.getCurrent();
@@ -328,26 +301,36 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 	}
 
 	public CustomDataSet setField(String field, TDateTime value) {
+		if (search != null && search.existsKey(field))
+			search.clear();
 		this.getCurrent().setField(field, value);
 		return this;
 	}
 
 	public CustomDataSet setField(String field, int value) {
+		if (search != null && search.existsKey(field))
+			search.clear();
 		this.getCurrent().setField(field, value);
 		return this;
 	}
 
 	public CustomDataSet setField(String field, String value) {
+		if (search != null && search.existsKey(field))
+			search.clear();
 		this.getCurrent().setField(field, value);
 		return this;
 	}
 
 	public CustomDataSet setField(String field, Boolean value) {
+		if (search != null && search.existsKey(field))
+			search.clear();
 		this.getCurrent().setField(field, value);
 		return this;
 	}
 
 	public CustomDataSet setNull(String field) {
+		if (search != null && search.existsKey(field))
+			search.clear();
 		this.getCurrent().setField(field, null);
 		return this;
 	}
@@ -355,30 +338,6 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 	public boolean isNull(String field) {
 		Object obj = getCurrent().getField(field);
 		return obj == null || "".equals(obj);
-	}
-
-	public String getSearchKey() {
-		return searchKey;
-	}
-
-	public void setSearchKey(String searchKey) {
-		if (searchKey == null)
-			throw new RuntimeException("searchKey is null!");
-		if (this.searchKey == null) {
-			searchItems = new TreeMap<>();
-		}
-		if (!searchKey.equals(this.searchKey)) {
-			if (this.size() != 0)
-				throw new RuntimeException("DataSet is not null!");
-			this.searchKey = searchKey;
-		}
-	}
-
-	public Record search(String keyValue) {
-		if (searchKey == null)
-			throw new RuntimeException("searchKey is null!");
-
-		return searchItems.get(keyValue);
 	}
 
 	@Override
