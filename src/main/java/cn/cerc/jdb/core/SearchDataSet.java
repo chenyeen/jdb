@@ -25,10 +25,8 @@ public class SearchDataSet {
 	}
 
 	public SearchDataSet add(CustomDataSet dataSet) {
-		for (int i = dataSet.size(); i > 0; i--) {
-			dataSet.setRecNo(i);
-			add(dataSet.getCurrent());
-		}
+		for (int i = dataSet.size(); i > 0; i--)
+			add(dataSet.getRecords().get(i - 1));
 		return this;
 	}
 
