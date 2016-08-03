@@ -30,7 +30,9 @@ public class SearchDataSet {
 		return this;
 	}
 
-	private void add(Record record) {
+	public void add(Record record) {
+		if (items == null)
+			items = new HashMap<>();
 		String key = null;
 		for (String field : fields) {
 			Object val = record.getField(field);
