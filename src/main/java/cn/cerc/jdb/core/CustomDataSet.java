@@ -138,31 +138,14 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		return this.fieldDefs;
 	}
 
-	public void locate(Record record){
-		this.setRecNo(this.records.indexOf(record) + 1);
-	}
-	
-	@Deprecated
 	public boolean locate(String fields, Object... values) {
-		if (fields == null || "".equals(fields))
-			throw new DelphiException("参数名称不能为空");
-		if (values == null || values.length == 0)
-			throw new DelphiException("值列表不能为空或者长度不能为0");
-		String[] fieldslist = fields.split(";");
-		if (fieldslist.length != values.length)
-			throw new DelphiException("参数名称 与 值列表长度不匹配");
-		Map<String, Object> fieldValueMap = new HashMap<String, Object>();
-		for (int i = 0; i < fieldslist.length; i++) {
-			fieldValueMap.put(fieldslist[i], values[i]);
+		Record record = lookup(fields, values, true);
+		if (record != null) {
+			this.setRecNo(this.records.indexOf(record) + 1);
+			return true;
+		} else {
+			return false;
 		}
-
-		// 查找指定的字段值是否存在，若存在，则令RecNo等于该记录
-		this.first();
-		while (this.fetch()) {
-			if (equalsValues(fieldValueMap))
-				return true;
-		}
-		return false;
 	}
 
 	// 查找指定的字段值是否存在，若存在，则令RecNo等于该记录
