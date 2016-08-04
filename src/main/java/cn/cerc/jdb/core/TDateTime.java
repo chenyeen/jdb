@@ -73,15 +73,6 @@ public class TDateTime implements Serializable, Comparable<TDateTime>, Cloneable
 		data = value;
 	}
 
-	public TDateTime addDay(int value) {
-		TDateTime result = this.clone();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(result.getData());
-		cal.set(Calendar.DAY_OF_MONTH, value + cal.get(Calendar.DAY_OF_MONTH));
-		result.setData(cal.getTime());
-		return result;
-	}
-
 	public TDateTime incHour(int value) {
 		TDateTime result = this.clone();
 		Calendar cal = Calendar.getInstance();
@@ -131,7 +122,7 @@ public class TDateTime implements Serializable, Comparable<TDateTime>, Cloneable
 		this.data = data;
 	}
 
-	//若当前值大，则返回正数，否则返回负数
+	// 若当前值大，则返回正数，否则返回负数
 	public int compareDay(TDateTime dateFrom) {
 		if (dateFrom == null)
 			return 0;
@@ -235,8 +226,31 @@ public class TDateTime implements Serializable, Comparable<TDateTime>, Cloneable
 		return new TDate(this.data);
 	}
 
-	public TDateTime incDay(int days) {
-		return this.addDay(days);
+	public TDateTime incDay(int value) {
+		TDateTime result = this.clone();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(result.getData());
+		cal.set(Calendar.DAY_OF_MONTH, value + cal.get(Calendar.DAY_OF_MONTH));
+		result.setData(cal.getTime());
+		return result;
+	}
+
+	public TDateTime incMonth(int offset) {
+		TDateTime result = this.clone();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(result.getData());
+		int month = cal.get(Calendar.MONTH);
+		cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + offset / 12);
+		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + offset % 12);
+		if (cal.get(Calendar.MONTH) - month > (offset % 12))
+			cal.set(Calendar.DATE, 0);
+		result.setData(cal.getTime());
+		return result;
+	}
+
+	@Deprecated
+	public TDateTime addDay(int value) {
+		return this.incDay(value);
 	}
 
 	public static String FormatDateTime(String fmt, TDateTime value) {
@@ -247,14 +261,6 @@ public class TDateTime implements Serializable, Comparable<TDateTime>, Cloneable
 			throw new DelphiException("日期格式不正确");
 		}
 		return sdf.format(value.getData());
-	}
-
-	public TDateTime incMonth(int offset) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(this.getData());
-		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + offset);
-		this.setData(cal.getTime());
-		return this;
 	}
 
 	// 返回value的当月第1天
@@ -342,5 +348,17 @@ public class TDateTime implements Serializable, Comparable<TDateTime>, Cloneable
 
 	public boolean isNull() {
 		return this.data == null;
+	}
+
+	public static void main(String[] args) {
+		TDateTime date = TDateTime.fromDate("2016-02-28 08:00:01");
+		System.out.println(date);
+		System.out.println(date.incMonth(1));
+		System.out.println(date.incMonth(2));
+		System.out.println(date.incMonth(3));
+		System.out.println(date.incMonth(4));
+		System.out.println(date.incMonth(12));
+		System.out.println(date.incMonth(13));
+		System.out.println(date);
 	}
 }
