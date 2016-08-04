@@ -89,7 +89,7 @@ public class SearchDataSet {
 		if (!keyFields.equals(this.keyFields)) {
 			fields.clear();
 			for (String key : keyFields.split(";")) {
-				if (!dataSet.exists(key))
+				if (dataSet.size() > 0 && dataSet.getFieldDefs().size() > 0 && !dataSet.exists(key))
 					throw new RuntimeException(String.format("字段 %s 不存在，无法查找！", key));
 				fields.add(key);
 			}

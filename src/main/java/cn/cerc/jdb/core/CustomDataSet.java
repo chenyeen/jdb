@@ -374,4 +374,13 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		}
 		return items;
 	}
+
+	public static void main(String[] args) {
+		CustomDataSet ds = new CustomDataSet();
+		System.out.println((ds.locate("PartCode_", "aa")));
+		ds.append();
+		System.out.println((ds.locate("PartCode_", "aa")));
+		ds.setField("PartCode_", "aa");
+		System.out.println((ds.locate("PartCode_", "aa")));
+	}
 }
