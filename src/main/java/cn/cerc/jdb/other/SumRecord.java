@@ -56,7 +56,6 @@ public class SumRecord extends Record {
 		return fields;
 	}
 
-	@Deprecated
 	/**
 	 * 仅在调试时使用
 	 */
