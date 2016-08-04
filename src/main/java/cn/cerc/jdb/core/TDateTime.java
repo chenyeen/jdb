@@ -73,15 +73,6 @@ public class TDateTime implements Serializable, Comparable<TDateTime>, Cloneable
 		data = value;
 	}
 
-	public TDateTime incHour(int value) {
-		TDateTime result = this.clone();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(result.getData());
-		cal.set(Calendar.HOUR_OF_DAY, value + cal.get(Calendar.HOUR_OF_DAY));
-		result.setData(cal.getTime());
-		return result;
-	}
-
 	@Override
 	public String toString() {
 		if (data == null)
@@ -224,6 +215,15 @@ public class TDateTime implements Serializable, Comparable<TDateTime>, Cloneable
 
 	public TDate asDate() {
 		return new TDate(this.data);
+	}
+
+	public TDateTime incHour(int value) {
+		TDateTime result = this.clone();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(result.getData());
+		cal.set(Calendar.HOUR_OF_DAY, value + cal.get(Calendar.HOUR_OF_DAY));
+		result.setData(cal.getTime());
+		return result;
 	}
 
 	public TDateTime incDay(int value) {
