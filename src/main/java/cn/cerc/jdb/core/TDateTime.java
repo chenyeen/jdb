@@ -268,7 +268,7 @@ public class TDateTime implements Serializable, Comparable<TDateTime>, Cloneable
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(this.getData());
 		cal.set(Calendar.DAY_OF_MONTH, 1);
-		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
@@ -282,7 +282,7 @@ public class TDateTime implements Serializable, Comparable<TDateTime>, Cloneable
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(this.getData());
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
@@ -360,5 +360,10 @@ public class TDateTime implements Serializable, Comparable<TDateTime>, Cloneable
 		System.out.println(date.incMonth(12));
 		System.out.println(date.incMonth(13));
 		System.out.println(date);
+
+		TDateTime date2 = TDateTime.fromDate("2016-05-31 23:59:59");
+		System.out.println(date2);
+		System.out.println(date2.incMonth(1));
+		System.out.println(date2.incMonth(1).monthBof());
 	}
 }
