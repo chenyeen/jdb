@@ -131,7 +131,7 @@ public class TDateTime implements Serializable, Comparable<TDateTime>, Cloneable
 		this.data = data;
 	}
 
-	// 若当前值大，则返回正数，否则返回负数
+	//若当前值大，则返回正数，否则返回负数
 	public int compareDay(TDateTime dateFrom) {
 		if (dateFrom == null)
 			return 0;
@@ -252,10 +252,7 @@ public class TDateTime implements Serializable, Comparable<TDateTime>, Cloneable
 	public TDateTime incMonth(int offset) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(this.getData());
-		int month = cal.get(Calendar.MONTH);
 		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + offset);
-		if (cal.get(Calendar.MONTH) - month > 1)
-			cal.set(Calendar.DATE, cal.get(Calendar.DATE) - cal.get(Calendar.DATE));
 		this.setData(cal.getTime());
 		return this;
 	}
