@@ -59,4 +59,10 @@ public class RecordTest {
 		item.setField("value", "2.0");
 		assertEquals(2, item.getInt("value"));
 	}
+	
+	@Test
+	public void test_getInteger(){
+		item.setField("type", true);
+		assertEquals(1, item.getDouble("type"), 0);
+	}
 }

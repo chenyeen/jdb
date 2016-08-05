@@ -254,7 +254,10 @@ public class Record implements IRecord, Serializable {
 			return (int) val;
 		} else if (obj instanceof Long) {
 			return ((Long) obj).intValue();
+		} else if ((obj instanceof Boolean)) {
+			return (Boolean) obj ? 1 : 0;
 		} else {
+			System.out.println(obj.getClass().getName());
 			return 0;
 		}
 	}
@@ -274,6 +277,8 @@ public class Record implements IRecord, Serializable {
 		else if (obj instanceof Long) {
 			Long tmp = (Long) obj;
 			return tmp * 1.0;
+		} else if ((obj instanceof Boolean)) {
+			return (Boolean) obj ? 1 : 0;
 		} else {
 			double d = (Double) obj;
 			if (d == 0)
