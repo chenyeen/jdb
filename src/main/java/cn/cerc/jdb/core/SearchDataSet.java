@@ -5,12 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import cn.cerc.jdb.other.DelphiException;
 
 public class SearchDataSet {
-	private static final Logger log = Logger.getLogger(SearchDataSet.class);
+	// private static final Logger log = Logger.getLogger(SearchDataSet.class);
 	private CustomDataSet dataSet;
 	private Map<String, Record> items;
 	private List<String> fields = new ArrayList<>();
@@ -66,7 +64,6 @@ public class SearchDataSet {
 				obj = "null";
 			key = key == null ? obj.toString() : key + ";" + obj.toString();
 		}
-		log.info(String.format("key: %s", key));
 
 		return get(key);
 	}
