@@ -257,7 +257,6 @@ public class Record implements IRecord, Serializable {
 		} else if ((obj instanceof Boolean)) {
 			return (Boolean) obj ? 1 : 0;
 		} else {
-			System.out.println(obj.getClass().getName());
 			return 0;
 		}
 	}
