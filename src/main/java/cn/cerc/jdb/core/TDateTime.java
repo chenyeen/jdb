@@ -237,13 +237,19 @@ public class TDateTime implements Serializable, Comparable<TDateTime>, Cloneable
 
 	public TDateTime incMonth(int offset) {
 		TDateTime result = this.clone();
+		if (offset == 0)
+			return result;
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(result.getData());
-		int month = cal.get(Calendar.MONTH);
-		cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) + offset / 12);
-		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + offset % 12);
-		if (cal.get(Calendar.MONTH) - month > (offset % 12))
-			cal.set(Calendar.DATE, 0);
+		int day = cal.get(Calendar.DATE);
+		cal.set(Calendar.DATE, 1);
+		boolean isMaxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH) == day;
+		cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + offset);
+		int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		if (isMaxDay || day > maxDay)
+			cal.set(Calendar.DATE, maxDay);
+		else
+			cal.set(Calendar.DATE, day);
 		result.setData(cal.getTime());
 		return result;
 	}
