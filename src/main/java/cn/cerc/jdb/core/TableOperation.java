@@ -26,42 +26,12 @@ public class TableOperation {
 		this.conn = connection;
 	}
 
-	public boolean delete(Record tRecord) {
-		StringBuffer sql = new StringBuffer();
-
-		sql.append("delete from ").append(tableName).append(" where 1 = 1 ");
-
-		String key = getKeyByDict(conn, tableName, tRecord);
-		String[] pks = key.split(";");
-
-		for (String pk : pks) {
-			sql.append(" and ").append(pk).append(" = ? ");
-		}
-
-		try (PreparedStatement ps = conn.prepareStatement(sql.toString());) {
-			Object value = null;
-			int index = 1;
-			for (String pk : pks) {
-				value = tRecord.getField(pk);
-				if (value == null) {
-					throw new RuntimeException("主键值为空");
-				}
-				ps.setObject(index, value);
-				index++;
-			}
-			log.debug("delete：" + ps.toString());
-			return ps.execute();
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
-		}
-	}
-
-	public boolean insert(Record tRecord) {
+	public boolean insert(Record record) {
 
 		StringBuffer sql = new StringBuffer();
 		sql.append("insert into ").append(tableName);
 
-		Set<String> fs = tRecord.getItems().keySet();
+		Set<String> fs = record.getItems().keySet();
 		List<String> fileds = new ArrayList<String>(fs);
 		// Logger.debug(getClass(),"fielsd == " + fileds);
 		if (fileds == null || fileds.size() == 0) {
@@ -74,8 +44,8 @@ public class TableOperation {
 		for (int i = 1; i <= fileds.size(); i++) {
 			String key = fileds.get(i - 1);
 			if (uid.equalsIgnoreCase(key)) {
-				if (tRecord.getField(key) != null) {
-					if (isBlank(tRecord.getField(key).toString())) {
+				if (record.getField(key) != null) {
+					if (isBlank(record.getField(key).toString())) {
 						flag = true;
 						break;
 					}
@@ -84,7 +54,7 @@ public class TableOperation {
 		}
 
 		if (!flag) {
-			String pkkey = getKeyByDict(conn, tableName, tRecord);
+			String pkkey = getKeyByDict(conn, tableName, record);
 			String[] pks = pkkey.split(";");
 
 			for (String pk : pks) {
@@ -120,7 +90,7 @@ public class TableOperation {
 			ps = conn.prepareStatement(sql.toString());
 			for (int i = 1; i <= fileds.size(); i++) {
 				String key = fileds.get(i - 1);
-				Object value = tRecord.getField(key);
+				Object value = record.getField(key);
 				if (flag && uid.equalsIgnoreCase(key)) { // uid值为空 使用mysql自增
 															// 此处不处理
 					continue;
@@ -136,7 +106,7 @@ public class TableOperation {
 			if (flag) {
 				int uidvalue = findAutoUid(conn);
 				log.debug("自增列uid value：" + uidvalue);
-				tRecord.setField(uid, uidvalue);
+				record.setField(uid, uidvalue);
 			}
 
 			return result > 0;
@@ -155,44 +125,6 @@ public class TableOperation {
 				throw new RuntimeException(e.getMessage());
 			}
 		}
-	}
-
-	private int findAutoUid(Connection conn) {
-		Integer result = null;
-		String sql = "SELECT LAST_INSERT_ID() ";
-		Statement stmt = null;
-		ResultSet rs = null;
-		try {
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(sql);
-			if (rs.next()) {
-				result = rs.getInt(1);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new RuntimeException(e.getMessage());
-			}
-			try {
-				if (stmt != null) {
-					stmt.close();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new RuntimeException(e.getMessage());
-			}
-		}
-		if (result == null) {
-			throw new RuntimeException("未获取UID");
-		}
-		return result.intValue();
 	}
 
 	public boolean update(Record record) {
@@ -322,6 +254,74 @@ public class TableOperation {
 			e.printStackTrace();
 			throw new RuntimeException(e.getMessage());
 		}
+	}
+
+	public boolean delete(Record record) {
+		StringBuffer sql = new StringBuffer();
+
+		sql.append("delete from ").append(tableName).append(" where 1 = 1 ");
+
+		String key = getKeyByDict(conn, tableName, record);
+		String[] pks = key.split(";");
+
+		for (String pk : pks) {
+			sql.append(" and ").append(pk).append(" = ? ");
+		}
+
+		try (PreparedStatement ps = conn.prepareStatement(sql.toString());) {
+			Object value = null;
+			int index = 1;
+			for (String pk : pks) {
+				value = record.getField(pk);
+				if (value == null) {
+					throw new RuntimeException("主键值为空");
+				}
+				ps.setObject(index, value);
+				index++;
+			}
+			log.debug("delete：" + ps.toString());
+			return ps.execute();
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+
+	private int findAutoUid(Connection conn) {
+		Integer result = null;
+		String sql = "SELECT LAST_INSERT_ID() ";
+		Statement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			if (rs.next()) {
+				result = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e.getMessage());
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+		if (result == null) {
+			throw new RuntimeException("未获取UID");
+		}
+		return result.intValue();
 	}
 
 	private String getKeyByDict(Connection conn, String tableName, Record tRecord) {
