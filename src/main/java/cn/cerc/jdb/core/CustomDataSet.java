@@ -29,6 +29,7 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		if (search != null)
 			search.clear();
 		Record ar = new Record(this.fieldDefs);
+		ar.setDataSet(this);
 		ar.setState(DataSetState.dsInsert);
 		this.records.add(ar);
 		recNo = records.size();

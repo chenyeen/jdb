@@ -26,6 +26,7 @@ public class Record implements IRecord, Serializable {
 	private FieldDefs defs = null;
 	private Map<String, Object> items = new HashMap<String, Object>();
 	private Map<String, Object> delta = new HashMap<String, Object>();
+	private CustomDataSet dataSet;
 
 	public Record() {
 		this.defs = new FieldDefs();
@@ -364,5 +365,13 @@ public class Record implements IRecord, Serializable {
 
 	public boolean hasValue(String field) {
 		return defs.exists(field) && !"".equals(getString(field));
+	}
+
+	public CustomDataSet getDataSet() {
+		return dataSet;
+	}
+
+	public void setDataSet(CustomDataSet dataSet) {
+		this.dataSet = dataSet;
 	}
 }
