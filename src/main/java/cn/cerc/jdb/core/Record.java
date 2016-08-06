@@ -374,4 +374,10 @@ public class Record implements IRecord, Serializable {
 	public void setDataSet(CustomDataSet dataSet) {
 		this.dataSet = dataSet;
 	}
+
+	public CustomDataSet locate() {
+		int recNo = dataSet.getRecords().indexOf(this) + 1;
+		dataSet.setRecNo(recNo);
+		return dataSet;
+	}
 }
