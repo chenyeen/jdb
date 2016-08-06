@@ -40,14 +40,14 @@ public class Record implements IRecord, Serializable {
 		return state;
 	}
 
-	public void setState(DataSetState state) {
-		if (state == DataSetState.dsEdit) {
+	public void setState(DataSetState dataSetState) {
+		if (dataSetState == DataSetState.dsEdit) {
 			if (this.state == DataSetState.dsInsert) {
 				// throw new RuntimeException("当前记录为插入状态 不允许被修改");
 				return;
 			}
 		}
-		this.state = state;
+		this.state = dataSetState;
 	}
 
 	public Record setField(String field, Object value) {
