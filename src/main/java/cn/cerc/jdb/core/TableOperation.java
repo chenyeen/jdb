@@ -21,6 +21,8 @@ public class TableOperation {
 	private final String uid = "UID_";
 	private Connection conn;
 	private String tableName;
+	private String lastCommand;
+	private boolean preview = false;
 
 	public TableOperation(Connection connection) {
 		this.conn = connection;
@@ -38,7 +40,8 @@ public class TableOperation {
 			throw new RuntimeException("字段为空");
 		}
 
-		// 1、fileds中存在UID_字段 但赋值为空 2、fileds不存在UID_ 但表KEY中存在 UID_
+		// 1、fileds中存在UID_字段 但赋值为空
+		// 2、fileds不存在UID_ 但表KEY中存在 UID_
 		// 标识是否需要从数据库中获取 自增字段 默认为false
 		boolean flag = false;
 		for (int i = 1; i <= fileds.size(); i++) {
@@ -91,8 +94,8 @@ public class TableOperation {
 			for (int i = 1; i <= fileds.size(); i++) {
 				String key = fileds.get(i - 1);
 				Object value = record.getField(key);
-				if (flag && uid.equalsIgnoreCase(key)) { // uid值为空 使用mysql自增
-															// 此处不处理
+				// uid值为空 使用mysql自增，不处理
+				if (flag && uid.equalsIgnoreCase(key)) {
 					continue;
 				}
 				if (value instanceof TDateTime)
@@ -101,6 +104,11 @@ public class TableOperation {
 					ps.setObject(i, value);
 			}
 			log.debug("insert：" + ps.toString());
+			lastCommand = ps.toString().split(":")[1].trim();
+			if (preview) {
+				log.info(lastCommand);
+				return false;
+			}
 			int result = ps.executeUpdate();
 
 			if (flag) {
@@ -242,6 +250,11 @@ public class TableOperation {
 				}
 				whereindex++;
 			}
+			lastCommand = ps.toString().split(":")[1].trim();
+			if (preview) {
+				log.info(lastCommand);
+				return false;
+			}
 			if (ps.executeUpdate() != 1) {
 				log.error("update error：" + ps.toString());
 				throw new RuntimeException("当前记录已被其它用户修改或不存在，更新失败");
@@ -280,6 +293,11 @@ public class TableOperation {
 				index++;
 			}
 			log.debug("delete：" + ps.toString());
+			lastCommand = ps.toString().split(":")[1].trim();
+			if (preview) {
+				log.info(lastCommand);
+				return false;
+			}
 			return ps.execute();
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
@@ -379,9 +397,9 @@ public class TableOperation {
 	}
 
 	// 根据 sql 获取数据库表名
-	public String getTableName(String commandText) {
+	public String findTableName(String sql) {
 		String result = null;
-		String[] items = commandText.split("[ \r\n]");
+		String[] items = sql.split("[ \r\n]");
 		for (int i = 0; i < items.length; i++) {
 			if (items[i].toLowerCase().contains("from")) {
 				// 如果取到form后 下一个记录为数据库表名
@@ -410,5 +428,17 @@ public class TableOperation {
 
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
+	}
+
+	public String getLastCommand() {
+		return lastCommand;
+	}
+
+	public boolean isPreview() {
+		return preview;
+	}
+
+	public void setPreview(boolean preview) {
+		this.preview = preview;
 	}
 }

@@ -176,7 +176,7 @@ public class DataQuery extends DataSet {
 	private TableOperation getOperation() {
 		if (operation == null) {
 			operation = new TableOperation(connection.getConnection());
-			String tableName = operation.getTableName(this.commandText);
+			String tableName = operation.findTableName(this.commandText);
 			operation.setTableName(tableName);
 		}
 		return operation;
