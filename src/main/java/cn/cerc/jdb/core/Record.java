@@ -47,6 +47,8 @@ public class Record implements IRecord, Serializable {
 				return;
 			}
 		}
+		if (dataSetState.equals(DataSetState.dsNone))
+			delta.clear();
 		this.state = dataSetState;
 	}
 

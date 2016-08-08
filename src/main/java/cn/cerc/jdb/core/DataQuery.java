@@ -22,6 +22,8 @@ public class DataQuery extends DataSet {
 	private int maximum = BigdataException.MAX_RECORDS;
 	private List<String> fields;
 	private Operator operator;
+	private List<Record> delList = new ArrayList<>();
+	private boolean batchSave;
 
 	// 若数据有取完，则为true，否则为false
 	private boolean fetchFinish;
@@ -89,7 +91,7 @@ public class DataQuery extends DataSet {
 			int total = 0;
 			do {
 				total++;
-				if (this.maximum > -1 && total > this.maximum) {
+				if (this.maximum > -1 && this.maximum < total) {
 					this.fetchFinish = false;
 					break;
 				}
@@ -154,9 +156,13 @@ public class DataQuery extends DataSet {
 			throw new PostFieldException(this, this.fields);
 		}
 		if (record.getState() == DataSetState.dsInsert) {
+			if (batchSave)
+				return;
 			getDefaultOperator().insert(record);
 			record.setState(DataSetState.dsNone);
 		} else if (record.getState() == DataSetState.dsEdit) {
+			if (batchSave)
+				return;
 			getDefaultOperator().update(record);
 			record.setState(DataSetState.dsNone);
 		} else {
@@ -165,12 +171,37 @@ public class DataQuery extends DataSet {
 	}
 
 	@Override
-	public boolean delete() {
-		if (this.getCurrent().getState() != DataSetState.dsNone) {
-			throw new RuntimeException("在插入和修改的时候 记录不允许删除");
+	public void delete() {
+		Record record = this.getCurrent();
+		if (record.getState() == DataSetState.dsInsert) {
+			super.delete();
+			return;
 		}
-		getDefaultOperator().delete(this.getCurrent());
-		return super.delete();
+		super.delete();
+		if (batchSave)
+			delList.add(record);
+		else
+			getDefaultOperator().delete(record);
+	}
+
+	public void save() {
+		if (!batchSave)
+			throw new RuntimeException("batchSave is false");
+		Operator operator = getDefaultOperator();
+		// 先执行删除
+		for (Record record : delList)
+			operator.delete(record);
+		delList.clear();
+		// 再执行增加、修改
+		for (Record record : this) {
+			if (record.getState().equals(DataSetState.dsInsert)) {
+				operator.insert(record);
+				record.setState(DataSetState.dsNone);
+			} else if (record.getState().equals(DataSetState.dsEdit)) {
+				operator.update(record);
+				record.setState(DataSetState.dsNone);
+			}
+		}
 	}
 
 	private Operator getDefaultOperator() {
@@ -189,6 +220,7 @@ public class DataQuery extends DataSet {
 	public void setOperator(DefaultOperator operator) {
 		this.operator = operator;
 	}
+
 	public String toString() {
 		StringBuffer sl = new StringBuffer();
 		sl.append(String.format("[%s]%n", this.getClass().getName()));
@@ -260,5 +292,12 @@ public class DataQuery extends DataSet {
 		this.commandText = null;
 	}
 
+	public boolean isBatchSave() {
+		return batchSave;
+	}
+
+	public void setBatchSave(boolean batchSave) {
+		this.batchSave = batchSave;
+	}
 
 }

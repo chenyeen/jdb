@@ -134,7 +134,6 @@ public class DefaultOperator implements Operator {
 				throw new RuntimeException("当前记录已被其它用户修改或不存在，更新失败");
 			} else {
 				log.debug(lastCommand);
-				record.getDelta().clear();
 				return true;
 			}
 		} catch (SQLException e) {
@@ -246,7 +245,7 @@ public class DefaultOperator implements Operator {
 			bs.append("select COLUMN_NAME from INFORMATION_SCHEMA.COLUMNS ");
 			bs.append("where table_name= ? AND COLUMN_KEY= 'PRI' ", tableName);
 			PreparedStatement ps = bs.build();
-			log.warn(ps.toString().split(":")[1].trim());
+			log.debug(ps.toString().split(":")[1].trim());
 			ResultSet rs = ps.executeQuery();
 			int i = 0;
 			while (rs.next()) {

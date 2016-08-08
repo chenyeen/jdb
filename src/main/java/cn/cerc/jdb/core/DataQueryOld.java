@@ -197,13 +197,14 @@ public class DataQueryOld extends DataSet {
 	}
 
 	@Override
-	public boolean delete() {
+	public void delete() {
 		String tableName = getTableName();
 		if (this.getCurrent().getState() != DataSetState.dsNone) {
 			throw new RuntimeException("在插入和修改的时候 记录不允许删除");
 		}
 		deleteCommand(connection.getConnection(), tableName, this.getCurrent());
-		return super.delete();
+		super.delete();
+		return;
 	}
 
 	public String toString() {

@@ -46,7 +46,7 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		this.getCurrent().setState(DataSetState.dsEdit);
 	}
 
-	public boolean delete() {
+	public void delete() {
 		if (bof() || eof())
 			throw new RuntimeException("当前记录为空，无法修改");
 		if (search != null)
@@ -57,7 +57,7 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		}
 		if (this.fetchNo > -1)
 			this.fetchNo--;
-		return true;
+		return;
 	}
 
 	public void post() {
