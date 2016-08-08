@@ -69,7 +69,7 @@ public class DataQueryTest_save {
 		ds.post();
 
 		ds.edit();
-		ds.setField("Value_", 3);
+		ds.setField("Value_", 2);
 		ds.post();
 
 		if (batchSave)
@@ -79,7 +79,7 @@ public class DataQueryTest_save {
 		ds.append();
 		ds.setField("Code_", "codeB");
 		ds.setField("Name_", "name");
-		ds.setField("Value_", 1);
+		ds.setField("Value_", 3);
 		ds.post();
 	}
 }
