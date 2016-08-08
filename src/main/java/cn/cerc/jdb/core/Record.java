@@ -63,7 +63,7 @@ public class Record implements IRecord, Serializable {
 			Object oldValue = items.get(field);
 			// 只有值发生变更的时候 才做处理
 			if (!compareValue(value, oldValue)) {
-				if (delta.get(field) == null)
+				if (!delta.containsKey(field))
 					setValue(delta, field, oldValue);
 			}
 		}
@@ -86,10 +86,6 @@ public class Record implements IRecord, Serializable {
 			map.put(field, ((BigDecimal) value).doubleValue());
 		} else if (value instanceof LinkedTreeMap) {
 			map.put(field, null);
-			// } else if (value instanceof JSONNull)
-			// map.put(field, null);
-			// else if (value instanceof JSONObject) {
-			// map.put(field, null);
 		} else if (value instanceof BigDecimal)
 			map.put(field, ((BigDecimal) value).doubleValue());
 		else if (value instanceof Date) {
@@ -102,7 +98,6 @@ public class Record implements IRecord, Serializable {
 	}
 
 	private boolean compareValue(Object value, Object compareValue) {
-
 		if (value == null && compareValue == null) { // 都为空
 			return true;
 		}
