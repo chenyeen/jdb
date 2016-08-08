@@ -1,6 +1,6 @@
 package cn.cerc.jdb.core;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -59,10 +59,31 @@ public class RecordTest {
 		item.setField("value", "2.0");
 		assertEquals(2, item.getInt("value"));
 	}
-	
+
 	@Test
-	public void test_getInteger(){
+	public void test_getInteger() {
 		item.setField("type", true);
 		assertEquals(1, item.getDouble("type"), 0);
+	}
+
+	@Test
+	public void test_setField_delta() {
+		Record rs = new Record();
+		rs.setField("Code_", "a");
+		assertEquals(rs.getDelta().size(), 0);
+		
+		Object val = null;
+	
+		rs.setField("Code_", val);
+		assertEquals(rs.getDelta().size(), 0);
+		
+		rs.setState(DataSetState.dsEdit);
+		rs.setField("Code_", val);
+		assertEquals(rs.getDelta().size(), 0);
+		
+		rs.setField("Code_", "c");
+		rs.setField("Code_", "d");
+		assertEquals(rs.getDelta().size(), 1);
+		assertTrue(rs.getOldField("Code_") == val);
 	}
 }

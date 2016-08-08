@@ -2,12 +2,14 @@ package cn.cerc.jdb.core;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class DataQueryTest_save {
 	private StubConnection conn = new StubConnection();
 
 	@Test
+	@Ignore
 	public void test_delete() {
 		conn.execute("delete from temp");
 		DataQuery ds = new DataQuery(conn);
@@ -39,14 +41,8 @@ public class DataQueryTest_save {
 		}
 	}
 
-	private int getTotal(String table) {
-		DataQuery ds = new DataQuery(conn);
-		ds.add("select count(*) as total from %s", table);
-		ds.open();
-		return ds.getInt("total");
-	}
-
 	@Test
+	@Ignore
 	public void test_insert() {
 		conn.execute("delete from temp");
 		System.out.println("batchSave is true");
@@ -81,5 +77,12 @@ public class DataQueryTest_save {
 		ds.setField("Name_", "name");
 		ds.setField("Value_", 3);
 		ds.post();
+	}
+
+	private int getTotal(String table) {
+		DataQuery ds = new DataQuery(conn);
+		ds.add("select count(*) as total from %s", table);
+		ds.open();
+		return ds.getInt("total");
 	}
 }
