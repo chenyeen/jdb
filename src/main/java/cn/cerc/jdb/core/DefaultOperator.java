@@ -11,8 +11,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-public class TableOperation {
-	private static final Logger log = Logger.getLogger(TableOperation.class);
+public class DefaultOperator implements Operator {
+	private static final Logger log = Logger.getLogger(DefaultOperator.class);
 	private final String CONST_UID = "UID_";
 	private Connection conn;
 	private String tableName;
@@ -20,10 +20,11 @@ public class TableOperation {
 	private boolean preview = false;
 	private List<String> primaryKeys = new ArrayList<>();
 
-	public TableOperation(Connection connection) {
+	public DefaultOperator(Connection connection) {
 		this.conn = connection;
 	}
 
+	@Override
 	public boolean insert(Record record) {
 		if (record.getFieldDefs().size() == 0)
 			throw new RuntimeException("字段为空");
@@ -80,6 +81,7 @@ public class TableOperation {
 		}
 	}
 
+	@Override
 	public boolean update(Record record) {
 		Map<String, Object> delta = record.getDelta();
 		if (delta.size() == 0)
@@ -142,6 +144,7 @@ public class TableOperation {
 		}
 	}
 
+	@Override
 	public boolean delete(Record record) {
 		try (BuildStatement bs = new BuildStatement(conn);) {
 			if (this.primaryKeys.size() == 0)
@@ -256,36 +259,11 @@ public class TableOperation {
 		}
 	}
 
-	// 根据 sql 获取数据库表名
-	public String findTableName(String sql) {
-		String result = null;
-		String[] items = sql.split("[ \r\n]");
-		for (int i = 0; i < items.length; i++) {
-			if (items[i].toLowerCase().contains("from")) {
-				// 如果取到form后 下一个记录为数据库表名
-				while (isBlank(items[i + 1])) {
-					// 防止取到空值
-					i++;
-				}
-				result = items[++i]; // 获取数据库表名
-				break;
-			}
-		}
-
-		if (result == null)
-			throw new RuntimeException("SQL语句异常");
-
-		return result;
-	}
-
-	private boolean isBlank(String value) {
-		return value == null || value.trim().equals("");
-	}
-
 	public String getTableName() {
 		return tableName;
 	}
 
+	@Override
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
 	}

@@ -21,7 +21,7 @@ public class DataQuery extends DataSet {
 	private int offset = 0;
 	private int maximum = BigdataException.MAX_RECORDS;
 	private List<String> fields;
-	private TableOperation operation;
+	private Operator operator;
 
 	// 若数据有取完，则为true，否则为false
 	private boolean fetchFinish;
@@ -154,10 +154,10 @@ public class DataQuery extends DataSet {
 			throw new PostFieldException(this, this.fields);
 		}
 		if (record.getState() == DataSetState.dsInsert) {
-			getOperation().insert(record);
+			getDefaultOperator().insert(record);
 			record.setState(DataSetState.dsNone);
 		} else if (record.getState() == DataSetState.dsEdit) {
-			getOperation().update(record);
+			getDefaultOperator().update(record);
 			record.setState(DataSetState.dsNone);
 		} else {
 			throw new RuntimeException("post方法调用错误");
@@ -169,19 +169,26 @@ public class DataQuery extends DataSet {
 		if (this.getCurrent().getState() != DataSetState.dsNone) {
 			throw new RuntimeException("在插入和修改的时候 记录不允许删除");
 		}
-		getOperation().delete(this.getCurrent());
+		getDefaultOperator().delete(this.getCurrent());
 		return super.delete();
 	}
 
-	private TableOperation getOperation() {
-		if (operation == null) {
-			operation = new TableOperation(connection.getConnection());
-			String tableName = operation.findTableName(this.commandText);
-			operation.setTableName(tableName);
+	private Operator getDefaultOperator() {
+		if (operator == null) {
+			operator = new DefaultOperator(connection.getConnection());
+			String tableName = operator.findTableName(this.commandText);
+			operator.setTableName(tableName);
 		}
-		return operation;
+		return operator;
 	}
 
+	public Operator getOperator() {
+		return operator;
+	}
+
+	public void setOperator(DefaultOperator operator) {
+		this.operator = operator;
+	}
 	public String toString() {
 		StringBuffer sl = new StringBuffer();
 		sl.append(String.format("[%s]%n", this.getClass().getName()));
@@ -252,5 +259,6 @@ public class DataQuery extends DataSet {
 	public void clear() {
 		this.commandText = null;
 	}
+
 
 }

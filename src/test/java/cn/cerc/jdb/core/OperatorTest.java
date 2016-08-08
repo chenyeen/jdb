@@ -6,14 +6,14 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class TableOperationTest {
+public class OperatorTest {
 	private StubConnection handle = new StubConnection();
 	private int maxTest = 50;
-	private TableOperation obj;
+	private DefaultOperator obj;
 
 	@Before
 	public void setUp() throws Exception {
-		obj = new TableOperation(handle.getConnection());
+		obj = new DefaultOperator(handle.getConnection());
 	}
 
 	@Test
