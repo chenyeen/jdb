@@ -20,7 +20,7 @@ public class DataQuery extends DataSet {
 	// private boolean closeMax = false;
 	private int offset = 0;
 	private int maximum = BigdataException.MAX_RECORDS;
-	private List<String> fields;
+	private List<String> fields = new ArrayList<String>();
 	private Operator operator;
 	private List<Record> delList = new ArrayList<>();
 	private boolean batchSave;
@@ -31,6 +31,7 @@ public class DataQuery extends DataSet {
 	@Override
 	public void close() {
 		this.active = false;
+		fields.clear();
 		super.close();
 	}
 
@@ -55,27 +56,13 @@ public class DataQuery extends DataSet {
 		try {
 			this.fetchFinish = true;
 			try (Statement st = conn.createStatement()) {
-				log.debug("取数据: begin");
 				String sql = getSelectCommand();
 				log.debug(sql.replaceAll("\r\n", " "));
 				st.execute(sql);
 				log.debug("取数据: end");
 				try (ResultSet rs = st.getResultSet()) {
-					// 取出所有字段定义
-					rs.last();
-					if (this.maximum > -1)
-						BigdataException.check(this, rs.getRow());
-					fields = new ArrayList<String>();
-					ResultSetMetaData meta = rs.getMetaData();
-					for (int i = 1; i <= meta.getColumnCount(); i++) {
-						String field = meta.getColumnLabel(i);
-						this.getFieldDefs().add(field);
-						fields.add(field);
-					}
 					// 取出所有数据
-					log.debug("load ResultSet: begin");
-					copyResultSet(rs);
-					log.debug("load ResultSet: end");
+					append(rs);
 					this.first();
 					this.active = true;
 					return this;
@@ -86,9 +73,38 @@ public class DataQuery extends DataSet {
 		}
 	}
 
-	private void copyResultSet(ResultSet rs) throws SQLException {
+	// 追加相同数据表的其它记录，与已有记录合并
+	public void attach(String sql) {
+		Connection conn = connection.getConnection();
+		try {
+			try (Statement st = conn.createStatement()) {
+				log.debug(sql.replaceAll("\r\n", " "));
+				st.execute(sql);
+				try (ResultSet rs = st.getResultSet()) {
+					append(rs);
+				}
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+
+	private void append(ResultSet rs) throws SQLException {
+		rs.last();
+		if (this.maximum > -1)
+			BigdataException.check(this, this.size() + rs.getRow());
+		// 取得字段清单
+		ResultSetMetaData meta = rs.getMetaData();
+		for (int i = 1; i <= meta.getColumnCount(); i++) {
+			String field = meta.getColumnLabel(i);
+			if (!fields.contains(field)) {
+				this.getFieldDefs().add(field);
+				fields.add(field);
+			}
+		}
+		// 取得所有数据
 		if (rs.first()) {
-			int total = 0;
+			int total = this.size();
 			do {
 				total++;
 				if (this.maximum > -1 && this.maximum < total) {
@@ -110,10 +126,10 @@ public class DataQuery extends DataSet {
 		if (value) {
 			if (!this.active)
 				this.open();
+			this.active = true;
 		} else {
 			this.close();
 		}
-		this.active = value;
 		return this;
 	}
 
@@ -278,14 +294,6 @@ public class DataQuery extends DataSet {
 
 	public boolean getFetchFinish() {
 		return fetchFinish;
-	}
-
-	@Deprecated
-	/*
-	 * 此函数不再需要，请改为直接使用调用 setMaximum(-1)
-	 */
-	public void setCloseMax(boolean closeMax) {
-		this.maximum = -1;
 	}
 
 	public void clear() {
