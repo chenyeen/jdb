@@ -74,14 +74,16 @@ public class DataQuery extends DataSet {
 	}
 
 	// 追加相同数据表的其它记录，与已有记录合并
-	public void attach(String sql) {
+	public int attach(String sql) {
 		Connection conn = connection.getConnection();
 		try {
 			try (Statement st = conn.createStatement()) {
 				log.debug(sql.replaceAll("\r\n", " "));
 				st.execute(sql);
 				try (ResultSet rs = st.getResultSet()) {
+					int oldSize = this.size();
 					append(rs);
+					return this.size() - oldSize;
 				}
 			}
 		} catch (SQLException e) {
