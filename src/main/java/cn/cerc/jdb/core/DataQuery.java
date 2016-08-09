@@ -10,6 +10,13 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import cn.cerc.jdb.field.BooleanField;
+import cn.cerc.jdb.field.DoubleField;
+import cn.cerc.jdb.field.FieldDefine;
+import cn.cerc.jdb.field.IntegerField;
+import cn.cerc.jdb.field.StringField;
+import cn.cerc.jdb.field.TDateTimeField;
+
 public class DataQuery extends DataSet {
 	private static final Logger log = Logger.getLogger(DataQuery.class);
 
@@ -20,18 +27,18 @@ public class DataQuery extends DataSet {
 	// private boolean closeMax = false;
 	private int offset = 0;
 	private int maximum = BigdataException.MAX_RECORDS;
-	private List<String> fields = new ArrayList<String>();
-	private Operator operator;
-	private List<Record> delList = new ArrayList<>();
-	private boolean batchSave;
-
 	// 若数据有取完，则为true，否则为false
 	private boolean fetchFinish;
+	// 数据库保存操作执行对象
+	private Operator operator;
+	// 批次保存模式，默认为post与delete立即保存
+	private boolean batchSave = false;
+	// 仅当batchSave为true时，delList才有记录存在
+	private List<Record> delList = new ArrayList<>();
 
 	@Override
 	public void close() {
 		this.active = false;
-		fields.clear();
 		super.close();
 	}
 
@@ -74,7 +81,7 @@ public class DataQuery extends DataSet {
 
 	// 追加相同数据表的其它记录，与已有记录合并
 	public int attach(String sql) {
-		if (this.fields.size() == 0) {
+		if (!this.active) {
 			this.clear();
 			this.add(sql);
 			this.open();
@@ -106,11 +113,28 @@ public class DataQuery extends DataSet {
 			BigdataException.check(this, this.size() + rs.getRow());
 		// 取得字段清单
 		ResultSetMetaData meta = rs.getMetaData();
+		FieldDefs defs = this.getFieldDefs();
 		for (int i = 1; i <= meta.getColumnCount(); i++) {
 			String field = meta.getColumnLabel(i);
-			if (!fields.contains(field)) {
-				this.getFieldDefs().add(field);
-				fields.add(field);
+			if (!defs.exists(field)) {
+				if (defs.isStrict()) {
+					FieldDefine define = null;
+					String type = meta.getColumnTypeName(i);
+					if ("VARCHAR".equals(type))
+						define = new StringField(meta.getColumnDisplaySize(i));
+					else if ("DECIMAL".equals(type) || "BIGINT".equals(type) || "INT UNSIGNED".equals(type))
+						define = new DoubleField(meta.getPrecision(i), meta.getScale(i));
+					else if ("INT".equals(type))
+						define = new IntegerField();
+					else if ("BIT".equals(type))
+						define = new BooleanField();
+					else if ("DATETIME".equals(type))
+						define = new TDateTimeField();
+					else
+						throw new RuntimeException("not support type: " + type);
+					defs.add(field, define);
+				} else
+					defs.add(field);
 			}
 		}
 		// 取得所有数据
@@ -179,9 +203,6 @@ public class DataQuery extends DataSet {
 
 	public void post() {
 		Record record = this.getCurrent();
-		if (fields != null && this.getFieldDefs().size() != fields.size()) {
-			throw new PostFieldException(this, this.fields);
-		}
 		if (record.getState() == DataSetState.dsInsert) {
 			if (batchSave)
 				return;
@@ -233,9 +254,10 @@ public class DataQuery extends DataSet {
 
 	private Operator getDefaultOperator() {
 		if (operator == null) {
-			operator = new DefaultOperator(connection.getConnection());
-			String tableName = operator.findTableName(this.commandText);
-			operator.setTableName(tableName);
+			DefaultOperator def = new DefaultOperator(connection.getConnection());
+			String tableName = def.findTableName(this.commandText);
+			def.setTableName(tableName);
+			operator = def;
 		}
 		return operator;
 	}
@@ -317,6 +339,14 @@ public class DataQuery extends DataSet {
 
 	public void setBatchSave(boolean batchSave) {
 		this.batchSave = batchSave;
+	}
+
+	public boolean isStrict() {
+		return this.getFieldDefs().isStrict();
+	}
+
+	public void setStrict(boolean strict) {
+		this.getFieldDefs().setStrict(strict);
 	}
 
 }

@@ -2,18 +2,23 @@ package cn.cerc.jdb.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-public class FieldDefs implements Serializable {
+import cn.cerc.jdb.field.FieldDefine;
+
+public class FieldDefs implements Serializable, Iterable<String> {
 	private static final long serialVersionUID = 7478897050846245325L;
-	private List<String> fields = new ArrayList<String>();
-
-	public int indexOf(String field) {
-		return fields.indexOf(field);
-	}
+	private Map<String, FieldDefine> fields = new TreeMap<>();
+	// 设置字段为强类型，必须预先定义，默认为弱类型
+	private boolean strict = false;
+	// 设置是否不再允许添加字段，默认为可随时添加
+	private boolean locked = false;
 
 	public boolean exists(String field) {
-		return fields.contains(field);
+		return fields.containsKey(field);
 	}
 
 	@Override
@@ -22,14 +27,37 @@ public class FieldDefs implements Serializable {
 	}
 
 	public List<String> getFields() {
-		return fields;
+		List<String> result = new ArrayList<>();
+		for (String field : fields.keySet())
+			result.add(field);
+		return result;
 	}
 
 	public FieldDefs add(String field) {
-		if (!fields.contains(field)) {
-			fields.add(field);
+		if (this.locked)
+			throw new RuntimeException("locked is true");
+		if (this.strict)
+			throw new RuntimeException("strict is true");
+		if (!fields.containsKey(field))
+			fields.put(field, null);
+		return this;
+	}
+
+	public FieldDefs add(String field, FieldDefine fieldDefine) {
+		if (this.locked)
+			throw new RuntimeException("locked is true");
+		if (this.strict && fieldDefine == null)
+			throw new RuntimeException("fieldDefine is null");
+		if (!fields.containsKey(field)) {
+			if (fieldDefine != null)
+				fieldDefine.setCode(field);
+			fields.put(field, fieldDefine);
 		}
 		return this;
+	}
+
+	public FieldDefine getDefine(String field) {
+		return fields.get(field);
 	}
 
 	public void add(String... strs) {
@@ -40,12 +68,8 @@ public class FieldDefs implements Serializable {
 
 	public void add(DataQuery query) {
 		FieldDefs fds = query.getFieldDefs();
-		List<String> fields = fds.getFields();
-		if (fds != null) {
-			for (int i = 0; i < fds.size(); i++) {
-				this.add(fields.get(i));
-			}
-		}
+		for (String field : query.getFieldDefs())
+			this.add(field, fds.getDefine(field));
 	}
 
 	public void clear() {
@@ -56,4 +80,26 @@ public class FieldDefs implements Serializable {
 		return fields.size();
 	}
 
+	public boolean isStrict() {
+		return strict;
+	}
+
+	public void setStrict(boolean strict) {
+		if (strict && fields.size() > 0)
+			throw new RuntimeException("fields not is null");
+		this.strict = strict;
+	}
+
+	@Override
+	public Iterator<String> iterator() {
+		return this.getFields().iterator();
+	}
+
+	public boolean isLocked() {
+		return locked;
+	}
+
+	public void setLocked(boolean locked) {
+		this.locked = locked;
+	}
 }

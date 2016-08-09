@@ -53,7 +53,7 @@ public class OperatorTest {
 	@Test
 	@Ignore
 	public void test_3_insert_new() {
-		Operator obj = new DefaultOperator(handle.getConnection());
+		DefaultOperator obj = new DefaultOperator(handle.getConnection());
 		obj.setTableName("temp");
 		for (int i = 0; i < maxTest; i++) {
 			Record record = new Record();

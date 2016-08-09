@@ -18,6 +18,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 
+import cn.cerc.jdb.field.FieldDefine;
 import cn.cerc.jdb.other.DelphiException;
 
 public class Record implements IRecord, Serializable {
@@ -58,6 +59,13 @@ public class Record implements IRecord, Serializable {
 
 		if (!defs.exists(field))
 			defs.add(field);
+
+		FieldDefine define = defs.getDefine(field);
+		if (define != null) {
+			if (!define.validate(value))
+				throw new RuntimeException(
+						String.format("[%s]%s:%s validate error!", define.getClass().getName(), field, value));
+		}
 
 		if (this.state == DataSetState.dsEdit) {
 			Object oldValue = items.get(field);
