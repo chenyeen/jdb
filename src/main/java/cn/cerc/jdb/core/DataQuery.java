@@ -59,7 +59,6 @@ public class DataQuery extends DataSet {
 				String sql = getSelectCommand();
 				log.debug(sql.replaceAll("\r\n", " "));
 				st.execute(sql);
-				log.debug("取数据: end");
 				try (ResultSet rs = st.getResultSet()) {
 					// 取出所有数据
 					append(rs);
@@ -75,7 +74,17 @@ public class DataQuery extends DataSet {
 
 	// 追加相同数据表的其它记录，与已有记录合并
 	public int attach(String sql) {
+		if (this.fields.size() == 0) {
+			this.clear();
+			this.add(sql);
+			this.open();
+			return this.size();
+		}
+		if (connection == null)
+			throw new RuntimeException("SqlConnection is null");
 		Connection conn = connection.getConnection();
+		if (conn == null)
+			throw new RuntimeException("Connection is null");
 		try {
 			try (Statement st = conn.createStatement()) {
 				log.debug(sql.replaceAll("\r\n", " "));
