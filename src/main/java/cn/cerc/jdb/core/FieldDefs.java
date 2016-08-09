@@ -38,6 +38,8 @@ public class FieldDefs implements Serializable, Iterable<String> {
 			throw new RuntimeException("locked is true");
 		if (this.strict)
 			throw new RuntimeException("strict is true");
+		if (field == null || "".equals(field))
+			throw new RuntimeException("field is null!");
 		if (!fields.containsKey(field))
 			fields.put(field, null);
 		return this;
@@ -48,6 +50,8 @@ public class FieldDefs implements Serializable, Iterable<String> {
 			throw new RuntimeException("locked is true");
 		if (this.strict && fieldDefine == null)
 			throw new RuntimeException("fieldDefine is null");
+		if (field == null || "".equals(field))
+			throw new RuntimeException("field is null!");
 		if (!fields.containsKey(field)) {
 			if (fieldDefine != null)
 				fieldDefine.setCode(field);

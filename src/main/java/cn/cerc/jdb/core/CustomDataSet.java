@@ -262,7 +262,7 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 
 	@Override
 	public Record setField(String field, Object value) {
-		if (field == null)
+		if (field == null || "".equals(field))
 			throw new RuntimeException("field is null!");
 		if (search != null && search.existsKey(field))
 			search.clear();

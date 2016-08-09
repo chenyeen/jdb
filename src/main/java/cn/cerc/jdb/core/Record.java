@@ -56,7 +56,7 @@ public class Record implements IRecord, Serializable {
 	}
 
 	public Record setField(String field, Object value) {
-		if (field == null)
+		if (field == null || "".equals(field))
 			throw new RuntimeException("field is null!");
 
 		if (!defs.exists(field))
@@ -84,7 +84,7 @@ public class Record implements IRecord, Serializable {
 		return this;
 	}
 
-	public void setValue(Map<String, Object> map, String field, Object value) {
+	private void setValue(Map<String, Object> map, String field, Object value) {
 		if (value == null || value instanceof Integer || value instanceof Double || value instanceof Boolean
 				|| value instanceof Long) {
 			map.put(field, value);
@@ -122,6 +122,8 @@ public class Record implements IRecord, Serializable {
 
 	@Override
 	public Object getField(String field) {
+		if (field == null || "".equals(field))
+			throw new RuntimeException("field is null!");
 		return items.get(field);
 	}
 
@@ -130,6 +132,8 @@ public class Record implements IRecord, Serializable {
 	}
 
 	public Object getOldField(String field) {
+		if (field == null || "".equals(field))
+			throw new RuntimeException("field is null!");
 		return delta.get(field);
 	}
 
