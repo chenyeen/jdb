@@ -36,27 +36,23 @@ public class DefaultOperator implements Operator {
 
 			bs.append("insert into ").append(tableName).append(" (");
 			int i = 0;
-			for (String field : record.getFieldDefs().getFields()) {
+			for (String field : record.getItems().keySet()) {
 				if (!useUID || !CONST_UID.equals(field)) {
-					if (record.getField(field) != null) {
-						i++;
-						if (i > 1)
-							bs.append(",");
-						bs.append(field);
-					}
+					i++;
+					if (i > 1)
+						bs.append(",");
+					bs.append(field);
 				}
 			}
 			bs.append(") values (");
 			i = 0;
-			for (String field : record.getFieldDefs().getFields()) {
+			for (String field : record.getItems().keySet()) {
 				if (!useUID || !CONST_UID.equals(field)) {
-					if (record.getField(field) != null) {
-						i++;
-						if (i == 1)
-							bs.append("?", record.getField(field));
-						else
-							bs.append(",?", record.getField(field));
-					}
+					i++;
+					if (i == 1)
+						bs.append("?", record.getField(field));
+					else
+						bs.append(",?", record.getField(field));
 				}
 			}
 			bs.append(")");
