@@ -38,21 +38,25 @@ public class DefaultOperator implements Operator {
 			int i = 0;
 			for (String field : record.getFieldDefs().getFields()) {
 				if (!useUID || !CONST_UID.equals(field)) {
-					i++;
-					if (i > 1)
-						bs.append(",");
-					bs.append(field);
+					if (record.getField(field) != null) {
+						i++;
+						if (i > 1)
+							bs.append(",");
+						bs.append(field);
+					}
 				}
 			}
 			bs.append(") values (");
 			i = 0;
 			for (String field : record.getFieldDefs().getFields()) {
 				if (!useUID || !CONST_UID.equals(field)) {
-					i++;
-					if (i == 1)
-						bs.append("?", record.getField(field));
-					else
-						bs.append(",?", record.getField(field));
+					if (record.getField(field) != null) {
+						i++;
+						if (i == 1)
+							bs.append("?", record.getField(field));
+						else
+							bs.append(",?", record.getField(field));
+					}
 				}
 			}
 			bs.append(")");
