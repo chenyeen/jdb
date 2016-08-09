@@ -406,7 +406,9 @@ public class Record implements IRecord, Serializable {
 			for (String field : delta.keySet()) {
 				Object value = items.get(field);
 				Object oldValue = delta.get(field);
-				if (!compareValue(value, oldValue))
+				if (compareValue(value, oldValue))
+					delta.remove(field);
+				else
 					return true;
 			}
 			return false;

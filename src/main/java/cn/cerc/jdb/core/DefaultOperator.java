@@ -83,6 +83,8 @@ public class DefaultOperator implements Operator {
 
 	@Override
 	public boolean update(Record record) {
+		if (!record.isModify())
+			return false;
 		Map<String, Object> delta = record.getDelta();
 		if (delta.size() == 0)
 			return true;
