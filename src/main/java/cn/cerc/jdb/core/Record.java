@@ -397,15 +397,23 @@ public class Record implements IRecord, Serializable {
 	}
 
 	public boolean isModify() {
-		if (delta.size() == 0)
+		switch (this.state) {
+		case dsInsert:
+			return true;
+		case dsEdit: {
+			if (delta.size() == 0)
+				return false;
+			for (String field : delta.keySet()) {
+				Object value = items.get(field);
+				Object oldValue = delta.get(field);
+				if (!compareValue(value, oldValue))
+					return true;
+			}
 			return false;
-		for (String field : delta.keySet()) {
-			Object value = items.get(field);
-			Object oldValue = delta.get(field);
-			if (!compareValue(value, oldValue))
-				return true;
 		}
-		return false;
+		default:
+			return false;
+		}
 	}
 
 	public static void main(String[] args) {
@@ -414,8 +422,8 @@ public class Record implements IRecord, Serializable {
 		record.setField("num", 12345);
 		record.setState(DataSetState.dsEdit);
 		record.setField("num", 0);
-		record.setField("num", 12345);
-		if (record.isModify()){
+		record.setField("num", 123452);
+		if (record.isModify()) {
 			System.out.println("num old: " + record.getOldField("num"));
 			System.out.println("num new: " + record.getField("num"));
 		}
