@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -403,15 +404,16 @@ public class Record implements IRecord, Serializable {
 		case dsEdit: {
 			if (delta.size() == 0)
 				return false;
+			List<String> delList = new ArrayList<>();
 			for (String field : delta.keySet()) {
 				Object value = items.get(field);
 				Object oldValue = delta.get(field);
 				if (compareValue(value, oldValue))
-					delta.remove(field);
-				else
-					return true;
+					delList.add(field);
 			}
-			return false;
+			for (String field : delList)
+				delta.remove(field);
+			return delta.size() > 0;
 		}
 		default:
 			return false;
