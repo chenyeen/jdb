@@ -110,12 +110,14 @@ public class Record implements IRecord, Serializable {
 	}
 
 	private boolean compareValue(Object value, Object compareValue) {
-		if (value == null && compareValue == null) { // 都为空
+		// 都为空
+		if (value == null && compareValue == null) {
 			return true;
 		}
-		if (value != null && compareValue != null) { // 都不为空
+		// 都不为空
+		if (value != null && compareValue != null) {
 			return value.equals(compareValue);
-		} else { // 一方为null 另一方不为null
+		} else {
 			return false;
 		}
 	}
@@ -394,10 +396,28 @@ public class Record implements IRecord, Serializable {
 		return dataSet;
 	}
 
+	public boolean isModify() {
+		if (delta.size() == 0)
+			return false;
+		for (String field : delta.keySet()) {
+			Object value = items.get(field);
+			Object oldValue = delta.get(field);
+			if (!compareValue(value, oldValue))
+				return true;
+		}
+		return false;
+	}
+
 	public static void main(String[] args) {
 		Record record = new Record();
-		record.getFieldDefs().add("num", new DoubleField(18, 4));
-		record.setField("num", 12345.12345677);
-		System.out.println(record);
+		// record.getFieldDefs().add("num", new DoubleField(18, 4));
+		record.setField("num", 12345);
+		record.setState(DataSetState.dsEdit);
+		record.setField("num", 0);
+		record.setField("num", 12345);
+		if (record.isModify()){
+			System.out.println("num old: " + record.getOldField("num"));
+			System.out.println("num new: " + record.getField("num"));
+		}
 	}
 }
