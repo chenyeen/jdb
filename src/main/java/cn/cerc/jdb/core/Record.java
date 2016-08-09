@@ -18,8 +18,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 
+import cn.cerc.jdb.field.DoubleField;
 import cn.cerc.jdb.field.FieldDefine;
 import cn.cerc.jdb.other.DelphiException;
+import cn.cerc.jdb.other.utils;
 
 public class Record implements IRecord, Serializable {
 	private static final long serialVersionUID = 4454304132898734723L;
@@ -65,6 +67,8 @@ public class Record implements IRecord, Serializable {
 			if (!define.validate(value))
 				throw new RuntimeException(
 						String.format("[%s]%s:%s validate error!", define.getClass().getName(), field, value));
+			if (define instanceof DoubleField)
+				value = utils.roundTo((double) value, -define.getScale());
 		}
 
 		if (this.state == DataSetState.dsEdit) {
@@ -384,5 +388,12 @@ public class Record implements IRecord, Serializable {
 		int recNo = dataSet.getRecords().indexOf(this) + 1;
 		dataSet.setRecNo(recNo);
 		return dataSet;
+	}
+
+	public static void main(String[] args) {
+		Record record = new Record();
+		record.getFieldDefs().add("num", new DoubleField(18, 4));
+		record.setField("num", 12345.12345677);
+		System.out.println(record);
 	}
 }
