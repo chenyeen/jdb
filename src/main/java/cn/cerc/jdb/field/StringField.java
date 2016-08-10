@@ -25,7 +25,10 @@ public class StringField extends CustomField {
 		if (object == null)
 			return true;
 		else if (object.getClass().equals(String.class))
-			return ((String) object).length() <= this.getLength();
+			if (this.getLength() == 0)
+				return true;
+			else
+				return ((String) object).length() <= this.getLength();
 		else
 			return false;
 	}
