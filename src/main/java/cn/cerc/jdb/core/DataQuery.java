@@ -252,7 +252,7 @@ public class DataQuery extends DataSet {
 		}
 	}
 
-	private Operator getDefaultOperator() {
+	protected Operator getDefaultOperator() {
 		if (operator == null) {
 			DefaultOperator def = new DefaultOperator(connection.getConnection());
 			String tableName = def.findTableName(this.commandText);
@@ -266,7 +266,7 @@ public class DataQuery extends DataSet {
 		return operator;
 	}
 
-	public void setOperator(DefaultOperator operator) {
+	public void setOperator(Operator operator) {
 		this.operator = operator;
 	}
 
