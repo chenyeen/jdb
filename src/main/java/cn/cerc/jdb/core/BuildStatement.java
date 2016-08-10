@@ -56,6 +56,13 @@ public class BuildStatement implements AutoCloseable {
 		return ps;
 	}
 
+	public String getCommand() {
+		if (ps == null)
+			return null;
+		String Result = ps.toString();
+		return Result.substring(Result.indexOf(':') + 2);
+	}
+
 	@Override
 	public void close() {
 		try {

@@ -4,6 +4,8 @@ public abstract class CustomField implements FieldDefine {
 	private String code;
 	private String name;
 	private int width = 0;
+	// 是否为计算字段，若为true则不予保存到数据库中
+	private boolean calculated;
 
 	@Override
 	public CustomField setCode(String code) {
@@ -40,5 +42,15 @@ public abstract class CustomField implements FieldDefine {
 	public String toString() {
 		return String.format("code:%s, name:%s, length:%s, precision:%d, scale:%d", getCode(), getName(), getLength(),
 				getPrecision(), getScale());
+	}
+
+	@Override
+	public boolean isCalculated() {
+		return calculated;
+	}
+
+	public CustomField setCalculated(boolean calculated) {
+		this.calculated = calculated;
+		return this;
 	}
 }

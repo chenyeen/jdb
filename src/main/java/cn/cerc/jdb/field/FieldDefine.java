@@ -35,4 +35,9 @@ public interface FieldDefine {
 	default public int getWidth() {
 		return 6;
 	}
+
+	// 是否为计算字段：若为计算字段，则不会写入到后台数据表
+	default public boolean isCalculated() {
+		return false;
+	}
 }

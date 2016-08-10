@@ -11,6 +11,8 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import cn.cerc.jdb.field.FieldDefine;
+
 public class DefaultOperator implements Operator {
 	private static final Logger log = Logger.getLogger(DefaultOperator.class);
 	private final String CONST_UID = "UID_";
@@ -34,31 +36,38 @@ public class DefaultOperator implements Operator {
 				initPrimaryKeys(record);
 			boolean useUID = primaryKeys.contains(CONST_UID) && record.getField(CONST_UID) == null;
 
+			FieldDefs defs = record.getFieldDefs();
 			bs.append("insert into ").append(tableName).append(" (");
 			int i = 0;
 			for (String field : record.getItems().keySet()) {
 				if (!useUID || !CONST_UID.equals(field)) {
-					i++;
-					if (i > 1)
-						bs.append(",");
-					bs.append(field);
+					FieldDefine define = defs.getDefine(field);
+					if (define == null || !define.isCalculated()) {
+						i++;
+						if (i > 1)
+							bs.append(",");
+						bs.append(field);
+					}
 				}
 			}
 			bs.append(") values (");
 			i = 0;
 			for (String field : record.getItems().keySet()) {
 				if (!useUID || !CONST_UID.equals(field)) {
-					i++;
-					if (i == 1)
-						bs.append("?", record.getField(field));
-					else
-						bs.append(",?", record.getField(field));
+					FieldDefine define = defs.getDefine(field);
+					if (define == null || !define.isCalculated()) {
+						i++;
+						if (i == 1)
+							bs.append("?", record.getField(field));
+						else
+							bs.append(",?", record.getField(field));
+					}
 				}
 			}
 			bs.append(")");
 
 			PreparedStatement ps = bs.build();
-			lastCommand = ps.toString().split(":")[1].trim();
+			lastCommand = bs.getCommand();
 			if (preview) {
 				log.info(lastCommand);
 				return false;
@@ -93,13 +102,17 @@ public class DefaultOperator implements Operator {
 			if (this.primaryKeys.size() == 0)
 				initPrimaryKeys(record);
 			bs.append("update ").append(tableName);
+			FieldDefs defs = record.getFieldDefs();
 			// 加入set条件
 			int i = 0;
 			for (String field : delta.keySet()) {
-				i++;
-				bs.append(i == 1 ? " set " : ",");
-				bs.append(field);
-				bs.append("=?", record.getField(field));
+				FieldDefine define = defs.getDefine(field);
+				if (define == null || !define.isCalculated()) {
+					i++;
+					bs.append(i == 1 ? " set " : ",");
+					bs.append(field);
+					bs.append("=?", record.getField(field));
+				}
 			}
 			// 加入where条件
 			i = 0;
@@ -114,18 +127,21 @@ public class DefaultOperator implements Operator {
 			}
 			for (String field : delta.keySet()) {
 				if (!primaryKeys.contains(field)) {
-					i++;
-					bs.append(i == 1 ? " where " : " and ").append(field);
-					Object value = delta.get(field);
-					if (value != null) {
-						bs.append("=?", value);
-					} else
-						bs.append(" is null ");
+					FieldDefine define = defs.getDefine(field);
+					if (define == null || !define.isCalculated()) {
+						i++;
+						bs.append(i == 1 ? " where " : " and ").append(field);
+						Object value = delta.get(field);
+						if (value != null) {
+							bs.append("=?", value);
+						} else
+							bs.append(" is null ");
+					}
 				}
 			}
 
 			PreparedStatement ps = bs.build();
-			lastCommand = ps.toString().split(":")[1].trim();
+			lastCommand = bs.getCommand();
 			if (preview) {
 				log.info(lastCommand);
 				return false;
@@ -164,7 +180,7 @@ public class DefaultOperator implements Operator {
 			}
 
 			PreparedStatement ps = bs.build();
-			lastCommand = ps.toString().split(":")[1].trim();
+			lastCommand = bs.getCommand();
 			if (preview) {
 				log.info(lastCommand);
 				return false;
