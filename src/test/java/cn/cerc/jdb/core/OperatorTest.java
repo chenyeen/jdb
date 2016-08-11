@@ -18,23 +18,6 @@ public class OperatorTest {
 
 	@Test
 	@Ignore
-	public void test_1_insert_old() {
-		handle.execute("delete from temp where name_='old'");
-		DataQueryOld ds = new DataQueryOld(handle);
-		ds.setMaximum(0);
-		ds.add("select * from temp");
-		ds.open();
-		for (int i = 0; i < maxTest; i++) {
-			ds.append();
-			ds.setField("Code_", "old" + i);
-			ds.setField("Name_", "old");
-			ds.setField("Value_", i + 1);
-			ds.post();
-		}
-	}
-
-	@Test
-	@Ignore
 	public void test_2_insert_new() {
 		handle.execute("delete from temp where name_='new'");
 		DataQuery ds = new DataQuery(handle);
@@ -67,20 +50,6 @@ public class OperatorTest {
 
 	@Test
 	@Ignore
-	public void test_3_update_old() {
-		DataQueryOld ds = new DataQueryOld(handle);
-		ds.add("select * from temp");
-		ds.open();
-		while (ds.fetch()) {
-			ds.edit();
-			ds.setField("Code_", ds.getString("Code_") + "a");
-			ds.setField("Value_", ds.getDouble("Value_") + 1);
-			ds.post();
-		}
-	}
-
-	@Test
-	@Ignore
 	public void test_4_update_new() {
 		DataQuery ds = new DataQuery(handle);
 		ds.add("select * from temp");
@@ -91,16 +60,6 @@ public class OperatorTest {
 			ds.setField("Value_", ds.getDouble("Value_") + 1);
 			ds.post();
 		}
-	}
-
-	@Test
-	@Ignore
-	public void test_5_delete_old() {
-		DataQueryOld ds = new DataQueryOld(handle);
-		ds.add("select * from temp where Name_='old'");
-		ds.open();
-		while (!ds.eof())
-			ds.delete();
 	}
 
 	@Test
