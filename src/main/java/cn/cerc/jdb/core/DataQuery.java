@@ -60,10 +60,10 @@ public class DataQuery extends DataSet {
 		Connection conn = connection.getConnection();
 		if (conn == null)
 			throw new RuntimeException("Connection is null");
+		String sql = getSelectCommand();
 		try {
 			this.fetchFinish = true;
 			try (Statement st = conn.createStatement()) {
-				String sql = getSelectCommand();
 				log.debug(sql.replaceAll("\r\n", " "));
 				st.execute(sql);
 				try (ResultSet rs = st.getResultSet()) {
@@ -75,6 +75,7 @@ public class DataQuery extends DataSet {
 				}
 			}
 		} catch (SQLException e) {
+			log.error(sql);
 			throw new RuntimeException(e.getMessage());
 		}
 	}
