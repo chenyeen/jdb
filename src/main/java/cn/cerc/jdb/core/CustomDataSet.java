@@ -114,7 +114,7 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		}
 	}
 
-	protected List<Record> getRecords() {
+	public List<Record> getRecords() {
 		return records;
 	}
 
@@ -343,7 +343,7 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 
 	@Override
 	public Iterator<Record> iterator() {
-		return new CustomDataSetIteratior(this);
+		return records.iterator();
 	}
 
 	@Override
