@@ -203,34 +203,31 @@ public class DataQuery extends DataSet {
 	}
 
 	public void post() {
+		if (batchSave)
+			return;
 		Record record = this.getCurrent();
 		if (record.getState() == DataSetState.dsInsert) {
-			if (batchSave)
-				return;
+			beforePost();
 			getDefaultOperator().insert(record);
-			record.setState(DataSetState.dsNone);
+			super.post();
 		} else if (record.getState() == DataSetState.dsEdit) {
-			if (batchSave)
-				return;
+			beforePost();
 			getDefaultOperator().update(record);
-			record.setState(DataSetState.dsNone);
-		} else {
-			throw new RuntimeException("post方法调用错误");
+			super.post();
 		}
 	}
 
 	@Override
 	public void delete() {
 		Record record = this.getCurrent();
-		if (record.getState() == DataSetState.dsInsert) {
-			super.delete();
-			return;
-		}
 		super.delete();
+		if (record.getState() == DataSetState.dsInsert)
+			return;
 		if (batchSave)
 			delList.add(record);
-		else
+		else {
 			getDefaultOperator().delete(record);
+		}
 	}
 
 	public void save() {
@@ -242,13 +239,16 @@ public class DataQuery extends DataSet {
 			operator.delete(record);
 		delList.clear();
 		// 再执行增加、修改
-		for (Record record : this) {
-			if (record.getState().equals(DataSetState.dsInsert)) {
-				operator.insert(record);
-				record.setState(DataSetState.dsNone);
-			} else if (record.getState().equals(DataSetState.dsEdit)) {
-				operator.update(record);
-				record.setState(DataSetState.dsNone);
+		this.first();
+		while (this.fetch()) {
+			if (this.getState().equals(DataSetState.dsInsert)) {
+				beforePost();
+				operator.insert(this.getCurrent());
+				super.post();
+			} else if (this.getState().equals(DataSetState.dsEdit)) {
+				beforePost();
+				operator.update(this.getCurrent());
+				super.post();
 			}
 		}
 	}
