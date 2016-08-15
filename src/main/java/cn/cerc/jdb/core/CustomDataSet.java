@@ -22,7 +22,8 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 	private int fetchNo = -1;
 	private FieldDefs fieldDefs = new FieldDefs();
 	private List<Record> records = new ArrayList<Record>();
-	public DataSetNotifyEvent OnNewRecord;
+	private DataSetEvent onAfterAppend;
+	private DataSetEvent onBeforePost;
 	private SearchDataSet search;
 
 	public CustomDataSet append() {
@@ -33,8 +34,8 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		ar.setState(DataSetState.dsInsert);
 		this.records.add(ar);
 		recNo = records.size();
-		if (OnNewRecord != null)
-			OnNewRecord.execute(this);
+		if (onAfterAppend != null)
+			onAfterAppend.execute(this);
 		return this;
 	}
 
@@ -374,6 +375,27 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 			items.put(key, rs.getObject(clazz));
 		}
 		return items;
+	}
+
+	public DataSetEvent getOnAfterAppend() {
+		return onAfterAppend;
+	}
+
+	public void setOnAfterAppend(DataSetEvent onAfterAppend) {
+		this.onAfterAppend = onAfterAppend;
+	}
+
+	protected void beforePost() {
+		if (onBeforePost != null)
+			onBeforePost.execute(this);
+	}
+
+	public DataSetEvent getOnBeforePost() {
+		return onBeforePost;
+	}
+
+	public void setOnBeforePost(DataSetEvent onBeforePost) {
+		this.onBeforePost = onBeforePost;
 	}
 
 	public static void main(String[] args) {
