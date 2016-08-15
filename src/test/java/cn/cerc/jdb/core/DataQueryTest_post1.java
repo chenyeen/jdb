@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import cn.cerc.jdb.field.StringField;
 
-public class DataQueryTest_post {
+public class DataQueryTest_post1 {
 	private StubConnection conn = new StubConnection();
 	private DataQuery ds = new DataQuery(conn);
 
