@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import cn.cerc.jdb.field.StringField;
 
-public class DataQueryTest_Post {
+public class DataQueryTest_post {
 	private StubConnection conn = new StubConnection();
 	private DataQuery ds = new DataQuery(conn);
 
@@ -25,6 +25,9 @@ public class DataQueryTest_Post {
 	public void post() {
 		ds.add("select * from Dept where CorpNo_='%s'", "144001");
 		ds.open();
+		ds.setOnBeforePost(ds -> {
+			System.out.println("before post");
+		});
 		ds.getFieldDefs().add("Test", new StringField(0).setCalculated(true));
 		ds.edit();
 		ds.setField("Test", "aOK");
