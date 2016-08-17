@@ -34,13 +34,12 @@ public class DefaultOperator implements Operator {
 		try (BuildStatement bs = new BuildStatement(conn);) {
 			if (primaryKeys.size() == 0)
 				initPrimaryKeys(record);
-			boolean useUID = primaryKeys.contains(CONST_UID) && record.getField(CONST_UID) == null;
 
 			FieldDefs defs = record.getFieldDefs();
 			bs.append("insert into ").append(tableName).append(" (");
 			int i = 0;
 			for (String field : record.getItems().keySet()) {
-				if (!useUID || !CONST_UID.equals(field)) {
+				if (!CONST_UID.equals(field)) {
 					FieldDefine define = defs.getDefine(field);
 					if (define == null || !define.isCalculated()) {
 						i++;
@@ -53,7 +52,7 @@ public class DefaultOperator implements Operator {
 			bs.append(") values (");
 			i = 0;
 			for (String field : record.getItems().keySet()) {
-				if (!useUID || !CONST_UID.equals(field)) {
+				if (!CONST_UID.equals(field)) {
 					FieldDefine define = defs.getDefine(field);
 					if (define == null || !define.isCalculated()) {
 						i++;
@@ -76,7 +75,7 @@ public class DefaultOperator implements Operator {
 
 			int result = ps.executeUpdate();
 
-			if (useUID) {
+			if (primaryKeys.contains(CONST_UID)) {
 				int uidvalue = findAutoUid(conn);
 				log.debug("自增列uid value：" + uidvalue);
 				record.setField(CONST_UID, uidvalue);
@@ -108,10 +107,12 @@ public class DefaultOperator implements Operator {
 			for (String field : delta.keySet()) {
 				FieldDefine define = defs.getDefine(field);
 				if (define == null || !define.isCalculated()) {
-					i++;
-					bs.append(i == 1 ? " set " : ",");
-					bs.append(field);
-					bs.append("=?", record.getField(field));
+					if (!CONST_UID.equals(field)) {
+						i++;
+						bs.append(i == 1 ? " set " : ",");
+						bs.append(field);
+						bs.append("=?", record.getField(field));
+					}
 				}
 			}
 			// 加入where条件
