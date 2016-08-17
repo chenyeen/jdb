@@ -95,7 +95,7 @@ public class DefaultOperator implements Operator {
 			return false;
 		Map<String, Object> delta = record.getDelta();
 		if (delta.size() == 0)
-			return true;
+			return false;
 
 		try (BuildStatement bs = new BuildStatement(this.conn);) {
 			if (this.primaryKeys.size() == 0)
@@ -115,6 +115,8 @@ public class DefaultOperator implements Operator {
 					}
 				}
 			}
+			if (i == 0)
+				return false;
 			// 加入where条件
 			i = 0;
 			for (String field : primaryKeys) {
