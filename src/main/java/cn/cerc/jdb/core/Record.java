@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 
+import cn.cerc.jdb.field.DoubleField;
+import cn.cerc.jdb.field.FieldDefine;
 import cn.cerc.jdb.other.DelphiException;
+import cn.cerc.jdb.other.utils;
 
 public class Record implements IRecord, Serializable {
 	private static final long serialVersionUID = 4454304132898734723L;
@@ -47,21 +51,32 @@ public class Record implements IRecord, Serializable {
 				return;
 			}
 		}
+		if (dataSetState.equals(DataSetState.dsNone))
+			delta.clear();
 		this.state = dataSetState;
 	}
 
 	public Record setField(String field, Object value) {
-		if (field == null)
+		if (field == null || "".equals(field))
 			throw new RuntimeException("field is null!");
 
 		if (!defs.exists(field))
 			defs.add(field);
 
+		FieldDefine define = defs.getDefine(field);
+		if (define != null) {
+			if (!define.validate(value))
+				throw new RuntimeException(
+						String.format("[%s]%s:%s validate error!", define.getClass().getName(), field, value));
+			if (define instanceof DoubleField)
+				value = utils.roundTo((double) value, -define.getScale());
+		}
+
 		if (this.state == DataSetState.dsEdit) {
 			Object oldValue = items.get(field);
 			// 只有值发生变更的时候 才做处理
 			if (!compareValue(value, oldValue)) {
-				if (delta.get(field) == null)
+				if (!delta.containsKey(field))
 					setValue(delta, field, oldValue);
 			}
 		}
@@ -70,7 +85,7 @@ public class Record implements IRecord, Serializable {
 		return this;
 	}
 
-	public void setValue(Map<String, Object> map, String field, Object value) {
+	private void setValue(Map<String, Object> map, String field, Object value) {
 		if (value == null || value instanceof Integer || value instanceof Double || value instanceof Boolean
 				|| value instanceof Long) {
 			map.put(field, value);
@@ -84,10 +99,6 @@ public class Record implements IRecord, Serializable {
 			map.put(field, ((BigDecimal) value).doubleValue());
 		} else if (value instanceof LinkedTreeMap) {
 			map.put(field, null);
-			// } else if (value instanceof JSONNull)
-			// map.put(field, null);
-			// else if (value instanceof JSONObject) {
-			// map.put(field, null);
 		} else if (value instanceof BigDecimal)
 			map.put(field, ((BigDecimal) value).doubleValue());
 		else if (value instanceof Date) {
@@ -100,19 +111,22 @@ public class Record implements IRecord, Serializable {
 	}
 
 	private boolean compareValue(Object value, Object compareValue) {
-
-		if (value == null && compareValue == null) { // 都为空
+		// 都为空
+		if (value == null && compareValue == null) {
 			return true;
 		}
-		if (value != null && compareValue != null) { // 都不为空
+		// 都不为空
+		if (value != null && compareValue != null) {
 			return value.equals(compareValue);
-		} else { // 一方为null 另一方不为null
+		} else {
 			return false;
 		}
 	}
 
 	@Override
 	public Object getField(String field) {
+		if (field == null || "".equals(field))
+			throw new RuntimeException("field is null!");
 		return items.get(field);
 	}
 
@@ -121,6 +135,8 @@ public class Record implements IRecord, Serializable {
 	}
 
 	public Object getOldField(String field) {
+		if (field == null || "".equals(field))
+			throw new RuntimeException("field is null!");
 		return delta.get(field);
 	}
 
@@ -379,5 +395,41 @@ public class Record implements IRecord, Serializable {
 		int recNo = dataSet.getRecords().indexOf(this) + 1;
 		dataSet.setRecNo(recNo);
 		return dataSet;
+	}
+
+	public boolean isModify() {
+		switch (this.state) {
+		case dsInsert:
+			return true;
+		case dsEdit: {
+			if (delta.size() == 0)
+				return false;
+			List<String> delList = new ArrayList<>();
+			for (String field : delta.keySet()) {
+				Object value = items.get(field);
+				Object oldValue = delta.get(field);
+				if (compareValue(value, oldValue))
+					delList.add(field);
+			}
+			for (String field : delList)
+				delta.remove(field);
+			return delta.size() > 0;
+		}
+		default:
+			return false;
+		}
+	}
+
+	public static void main(String[] args) {
+		Record record = new Record();
+		// record.getFieldDefs().add("num", new DoubleField(18, 4));
+		record.setField("num", 12345);
+		record.setState(DataSetState.dsEdit);
+		record.setField("num", 0);
+		record.setField("num", 123452);
+		if (record.isModify()) {
+			System.out.println("num old: " + record.getOldField("num"));
+			System.out.println("num new: " + record.getField("num"));
+		}
 	}
 }

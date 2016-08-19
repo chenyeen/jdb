@@ -22,7 +22,8 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 	private int fetchNo = -1;
 	private FieldDefs fieldDefs = new FieldDefs();
 	private List<Record> records = new ArrayList<Record>();
-	public DataSetNotifyEvent OnNewRecord;
+	private DataSetEvent onAfterAppend;
+	private DataSetEvent onBeforePost;
 	private SearchDataSet search;
 
 	public CustomDataSet append() {
@@ -33,8 +34,8 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		ar.setState(DataSetState.dsInsert);
 		this.records.add(ar);
 		recNo = records.size();
-		if (OnNewRecord != null)
-			OnNewRecord.execute(this);
+		if (onAfterAppend != null)
+			onAfterAppend.execute(this);
 		return this;
 	}
 
@@ -46,7 +47,7 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		this.getCurrent().setState(DataSetState.dsEdit);
 	}
 
-	public boolean delete() {
+	public void delete() {
 		if (bof() || eof())
 			throw new RuntimeException("当前记录为空，无法修改");
 		if (search != null)
@@ -57,7 +58,7 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		}
 		if (this.fetchNo > -1)
 			this.fetchNo--;
-		return true;
+		return;
 	}
 
 	public void post() {
@@ -114,7 +115,7 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		}
 	}
 
-	protected List<Record> getRecords() {
+	public List<Record> getRecords() {
 		return records;
 	}
 
@@ -262,7 +263,7 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 
 	@Override
 	public Record setField(String field, Object value) {
-		if (field == null)
+		if (field == null || "".equals(field))
 			throw new RuntimeException("field is null!");
 		if (search != null && search.existsKey(field))
 			search.clear();
@@ -343,7 +344,7 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 
 	@Override
 	public Iterator<Record> iterator() {
-		return new CustomDataSetIteratior(this);
+		return records.iterator();
 	}
 
 	@Override
@@ -374,6 +375,27 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 			items.put(key, rs.getObject(clazz));
 		}
 		return items;
+	}
+
+	public DataSetEvent getOnAfterAppend() {
+		return onAfterAppend;
+	}
+
+	public void setOnAfterAppend(DataSetEvent onAfterAppend) {
+		this.onAfterAppend = onAfterAppend;
+	}
+
+	protected void beforePost() {
+		if (onBeforePost != null)
+			onBeforePost.execute(this);
+	}
+
+	public DataSetEvent getOnBeforePost() {
+		return onBeforePost;
+	}
+
+	public void setOnBeforePost(DataSetEvent onBeforePost) {
+		this.onBeforePost = onBeforePost;
 	}
 
 	public static void main(String[] args) {
