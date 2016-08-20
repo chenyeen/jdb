@@ -204,4 +204,10 @@ public class DataSet extends CustomDataSet implements Serializable {
 			func.process(this.getCurrent());
 		}
 	}
+	
+	@Override
+	public DataSet appendDataSet(CustomDataSet source) {
+		super.appendDataSet(source);
+		return this;
+	}
 }

@@ -203,7 +203,7 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		Collections.sort(this.getRecords(), func);
 	}
 
-	public void appendDataSet(CustomDataSet source) {
+	public CustomDataSet appendDataSet(CustomDataSet source) {
 		if (search != null)
 			search.clear();
 		
@@ -223,6 +223,8 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 			}
 			this.post();
 		}
+		
+		return this;
 	}
 
 	public void close() {
