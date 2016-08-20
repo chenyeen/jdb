@@ -5,11 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-
 import org.apache.log4j.Logger;
 
 public class SqlConnection extends Component implements AutoCloseable {
@@ -18,7 +13,7 @@ public class SqlConnection extends Component implements AutoCloseable {
 	private Connection connection;
 
 	public SqlConnection() {
-		init_tomcat();
+
 	}
 
 	public SqlConnection(SqlConfig config) {
@@ -46,18 +41,18 @@ public class SqlConnection extends Component implements AutoCloseable {
 		}
 	}
 
-	private void init_tomcat() {
-		Context initContext, envContext;
-		try {
-			initContext = new InitialContext();
-			envContext = (Context) initContext.lookup("java:/comp/env");
-			DataSource ds = (DataSource) envContext.lookup("jdbc/webdb");
-			connection = ds.getConnection();
-		} catch (NamingException | SQLException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
-		}
-	}
+	// private void init_tomcat() {
+	// Context initContext, envContext;
+	// try {
+	// initContext = new InitialContext();
+	// envContext = (Context) initContext.lookup("java:/comp/env");
+	// DataSource ds = (DataSource) envContext.lookup("jdbc/vinedb");
+	// connection = ds.getConnection();
+	// } catch (NamingException | SQLException e) {
+	// e.printStackTrace();
+	// throw new RuntimeException(e.getMessage());
+	// }
+	// }
 
 	public boolean execute(String sql) {
 		try {
