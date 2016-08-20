@@ -109,52 +109,58 @@ public class DataQuery extends DataSet {
 	}
 
 	private void append(ResultSet rs) throws SQLException {
-		rs.last();
-		if (this.maximum > -1)
-			BigdataException.check(this, this.size() + rs.getRow());
-		// 取得字段清单
-		ResultSetMetaData meta = rs.getMetaData();
-		FieldDefs defs = this.getFieldDefs();
-		for (int i = 1; i <= meta.getColumnCount(); i++) {
-			String field = meta.getColumnLabel(i);
-			if (!defs.exists(field)) {
-				if (defs.isStrict()) {
-					FieldDefine define = null;
-					String type = meta.getColumnTypeName(i);
-					if ("VARCHAR".equals(type))
-						define = new StringField(meta.getColumnDisplaySize(i));
-					else if ("DECIMAL".equals(type) || "BIGINT".equals(type) || "INT UNSIGNED".equals(type))
-						define = new DoubleField(meta.getPrecision(i), meta.getScale(i));
-					else if ("INT".equals(type))
-						define = new IntegerField();
-					else if ("BIT".equals(type))
-						define = new BooleanField();
-					else if ("DATETIME".equals(type))
-						define = new TDateTimeField();
-					else
-						throw new RuntimeException("not support type: " + type);
-					defs.add(field, define);
-				} else
-					defs.add(field);
+		DataSetEvent onAfterAppend = this.getOnAfterAppend();
+		try {
+			this.setOnAfterAppend(null);
+			rs.last();
+			if (this.maximum > -1)
+				BigdataException.check(this, this.size() + rs.getRow());
+			// 取得字段清单
+			ResultSetMetaData meta = rs.getMetaData();
+			FieldDefs defs = this.getFieldDefs();
+			for (int i = 1; i <= meta.getColumnCount(); i++) {
+				String field = meta.getColumnLabel(i);
+				if (!defs.exists(field)) {
+					if (defs.isStrict()) {
+						FieldDefine define = null;
+						String type = meta.getColumnTypeName(i);
+						if ("VARCHAR".equals(type))
+							define = new StringField(meta.getColumnDisplaySize(i));
+						else if ("DECIMAL".equals(type) || "BIGINT".equals(type) || "INT UNSIGNED".equals(type))
+							define = new DoubleField(meta.getPrecision(i), meta.getScale(i));
+						else if ("INT".equals(type))
+							define = new IntegerField();
+						else if ("BIT".equals(type))
+							define = new BooleanField();
+						else if ("DATETIME".equals(type))
+							define = new TDateTimeField();
+						else
+							throw new RuntimeException("not support type: " + type);
+						defs.add(field, define);
+					} else
+						defs.add(field);
+				}
 			}
-		}
-		// 取得所有数据
-		if (rs.first()) {
-			int total = this.size();
-			do {
-				total++;
-				if (this.maximum > -1 && this.maximum < total) {
-					this.fetchFinish = false;
-					break;
-				}
-				Record record = append().getCurrent();
-				for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-					String fn = rs.getMetaData().getColumnLabel(i);
-					record.setField(fn, rs.getObject(fn));
-				}
-				record.setState(DataSetState.dsNone);
+			// 取得所有数据
+			if (rs.first()) {
+				int total = this.size();
+				do {
+					total++;
+					if (this.maximum > -1 && this.maximum < total) {
+						this.fetchFinish = false;
+						break;
+					}
+					Record record = append().getCurrent();
+					for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+						String fn = rs.getMetaData().getColumnLabel(i);
+						record.setField(fn, rs.getObject(fn));
+					}
+					record.setState(DataSetState.dsNone);
 
-			} while (rs.next());
+				} while (rs.next());
+			}
+		} finally {
+			this.setOnAfterAppend(onAfterAppend);
 		}
 	}
 
