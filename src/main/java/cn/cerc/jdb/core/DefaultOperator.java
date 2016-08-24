@@ -100,6 +100,9 @@ public class DefaultOperator implements Operator {
 		try (BuildStatement bs = new BuildStatement(this.conn);) {
 			if (this.primaryKeys.size() == 0)
 				initPrimaryKeys(record);
+			if (primaryKeys.size() == 0)
+				throw new RuntimeException("primary keys not exists");
+
 			bs.append("update ").append(tableName);
 			FieldDefs defs = record.getFieldDefs();
 			// 加入set条件
@@ -119,15 +122,19 @@ public class DefaultOperator implements Operator {
 				return false;
 			// 加入where条件
 			i = 0;
+			int pkCount = 0;
 			for (String field : primaryKeys) {
 				i++;
 				bs.append(i == 1 ? " where " : " and ").append(field);
 				Object value = delta.containsKey(field) ? delta.get(field) : record.getField(field);
 				if (value != null) {
 					bs.append("=?", value);
+					pkCount++;
 				} else
-					bs.append(" is null ");
+					throw new RuntimeException("primaryKey not is null: " + field);
 			}
+			if (pkCount == 0)
+				throw new RuntimeException("primary keys value not exists");
 			for (String field : delta.keySet()) {
 				if (!primaryKeys.contains(field)) {
 					FieldDefine define = defs.getDefine(field);
@@ -169,6 +176,8 @@ public class DefaultOperator implements Operator {
 		try (BuildStatement bs = new BuildStatement(conn);) {
 			if (this.primaryKeys.size() == 0)
 				initPrimaryKeys(record);
+			if (primaryKeys.size() == 0)
+				throw new RuntimeException("primary keys  not exists");
 
 			bs.append("delete from ").append(tableName);
 			int i = 0;
@@ -181,7 +190,6 @@ public class DefaultOperator implements Operator {
 				bs.append(i == 1 ? " where " : " and ");
 				bs.append(pk).append("=? ", value);
 			}
-
 			PreparedStatement ps = bs.build();
 			lastCommand = bs.getCommand();
 			if (preview) {
