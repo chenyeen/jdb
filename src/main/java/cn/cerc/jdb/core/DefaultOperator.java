@@ -102,7 +102,8 @@ public class DefaultOperator implements Operator {
 				initPrimaryKeys(record);
 			if (primaryKeys.size() == 0)
 				throw new RuntimeException("primary keys not exists");
-
+			if (!primaryKeys.contains(CONST_UID))
+				log.warn(String.format("not find primary key %s in %s", CONST_UID, this.tableName));
 			bs.append("update ").append(tableName);
 			FieldDefs defs = record.getFieldDefs();
 			// 加入set条件
@@ -178,6 +179,8 @@ public class DefaultOperator implements Operator {
 				initPrimaryKeys(record);
 			if (primaryKeys.size() == 0)
 				throw new RuntimeException("primary keys  not exists");
+			if (!primaryKeys.contains(CONST_UID))
+				log.warn(String.format("not find primary key %s in %s", CONST_UID, this.tableName));
 
 			bs.append("delete from ").append(tableName);
 			int i = 0;
