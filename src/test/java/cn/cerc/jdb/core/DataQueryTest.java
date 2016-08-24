@@ -2,11 +2,12 @@ package cn.cerc.jdb.core;
 
 import static org.junit.Assert.assertEquals;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
 public class DataQueryTest {
-	// private static final Logger log = Logger.getLogger(AppQueryTest.class);
+	private static final Logger log = Logger.getLogger(DataQueryTest.class);
 	private StubConnection conn = new StubConnection();
 	private static final String Account = "Account";
 	private DataQuery ds;
@@ -46,4 +47,21 @@ public class DataQueryTest {
 		assertEquals(String.format("%s limit %s", sql, String.valueOf(BigdataException.MAX_RECORDS + 2)),
 				ds.getSelectCommand());
 	}
+
+	@Test
+	public void test_open_2() {
+		ds.setMaximum(1);
+		String str = "\\小王233\\";
+		ds.add("select * from %s where Name_='%s'", Account, str);
+		log.info(ds.getCommandText());
+		ds.open();
+
+		ds.clear();
+		str = "\\\\小王233\\\\";
+		ds.add("select * from %s where Name_='%s'", Account, str);
+		log.info(ds.getCommandText());
+		ds.open();
+
+	}
+
 }
