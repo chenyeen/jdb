@@ -5,11 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-
 import org.apache.log4j.Logger;
 
 public class SqlConnection extends Component implements AutoCloseable {
@@ -17,16 +12,7 @@ public class SqlConnection extends Component implements AutoCloseable {
 
 	private Connection connection;
 
-	public SqlConnection() {
-		init_tomcat();
-	}
-
-	public SqlConnection(SqlConfig config) {
-		// if (Config.getAppLevel() == Config.appTest)
-		init_ace(config);
-	}
-
-	private void init_ace(SqlConfig config) {
+	public void init(SqlConfig config) throws SqlConnectionException {
 		String host = config.get_rds_host();
 		String user = config.get_rds_account();
 		String pwd = config.get_rds_password();
@@ -41,23 +27,25 @@ public class SqlConnection extends Component implements AutoCloseable {
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("找不到 mysql.jdbc 驱动");
 		} catch (SQLException e) {
-			log.error("无法连接到主机：" + host, e);
-			throw new RuntimeException(e.getMessage());
+			SqlConnectionException err = new SqlConnectionException(e.getMessage());
+			err.addSuppressed(e);
+			err.setHost(host);
+			throw err;
 		}
 	}
 
-	private void init_tomcat() {
-		Context initContext, envContext;
-		try {
-			initContext = new InitialContext();
-			envContext = (Context) initContext.lookup("java:/comp/env");
-			DataSource ds = (DataSource) envContext.lookup("jdbc/webdb");
-			connection = ds.getConnection();
-		} catch (NamingException | SQLException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e.getMessage());
-		}
-	}
+	// private void init_tomcat() {
+	// Context initContext, envContext;
+	// try {
+	// initContext = new InitialContext();
+	// envContext = (Context) initContext.lookup("java:/comp/env");
+	// DataSource ds = (DataSource) envContext.lookup("jdbc/vinedb");
+	// connection = ds.getConnection();
+	// } catch (NamingException | SQLException e) {
+	// e.printStackTrace();
+	// throw new RuntimeException(e.getMessage());
+	// }
+	// }
 
 	public boolean execute(String sql) {
 		try {

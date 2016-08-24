@@ -29,10 +29,10 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 	public CustomDataSet append() {
 		if (search != null)
 			search.clear();
-		Record ar = new Record(this.fieldDefs);
-		ar.setDataSet(this);
-		ar.setState(DataSetState.dsInsert);
-		this.records.add(ar);
+		Record record = new Record(this.fieldDefs);
+		record.setDataSet(this);
+		record.setState(DataSetState.dsInsert);
+		this.records.add(record);
 		recNo = records.size();
 		if (onAfterAppend != null)
 			onAfterAppend.execute(this);
@@ -203,9 +203,10 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		Collections.sort(this.getRecords(), func);
 	}
 
-	protected void copyDataSet(CustomDataSet source) {
+	public CustomDataSet appendDataSet(CustomDataSet source) {
 		if (search != null)
 			search.clear();
+		
 		// 先复制字段定义
 		FieldDefs tarDefs = this.getFieldDefs();
 		for (String field : source.getFieldDefs().getFields()) {
@@ -222,6 +223,8 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 			}
 			this.post();
 		}
+		
+		return this;
 	}
 
 	public void close() {

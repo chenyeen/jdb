@@ -30,7 +30,7 @@ public class SyncDataSetTest {
 	}
 
 	@Test
-	public void test() {
+	public void test() throws DataUpdateException {
 		SyncDataSet sds = new SyncDataSet(src, tar, "code");
 		int total = sds.execute((src, tar) -> {
 			if (tar == null)

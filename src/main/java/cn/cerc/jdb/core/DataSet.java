@@ -150,13 +150,32 @@ public class DataSet extends CustomDataSet implements Serializable {
 		return getJSON();
 	}
 
+	@Deprecated
+	/**
+	 * 请改使用  appendDataSet;
+	 * @param source
+	 * @return
+	 */
 	public DataSet loadFrom(DataSet source) {
-		this.copyDataSet(source);
+		this.appendDataSet(source);
 		return this;
 	}
 
+	@Deprecated
 	public void loadFrom(DataSet source, boolean includeHead) {
-		this.copyDataSet(source);
+		this.appendDataSet(source);
+		if (includeHead) {
+			this.getHead().copyValues(source.getHead(), source.getHead().getFieldDefs());
+		}
+	}
+
+	/**
+	 * 请改使用  appendDataSet;
+	 * @param source
+	 * @param includeHead
+	 */
+	public void appendDataSet(DataSet source, boolean includeHead) {
+		this.appendDataSet(source);
 		if (includeHead) {
 			this.getHead().copyValues(source.getHead(), source.getHead().getFieldDefs());
 		}
@@ -184,5 +203,11 @@ public class DataSet extends CustomDataSet implements Serializable {
 		while (this.fetch()) {
 			func.process(this.getCurrent());
 		}
+	}
+	
+	@Override
+	public DataSet appendDataSet(CustomDataSet source) {
+		super.appendDataSet(source);
+		return this;
 	}
 }
