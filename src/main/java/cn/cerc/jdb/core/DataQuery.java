@@ -65,7 +65,7 @@ public class DataQuery extends DataSet {
 			this.fetchFinish = true;
 			try (Statement st = conn.createStatement()) {
 				log.debug(sql.replaceAll("\r\n", " "));
-				st.execute(sql);
+				st.execute(sql.replace("\\", "\\\\"));
 				try (ResultSet rs = st.getResultSet()) {
 					// 取出所有数据
 					append(rs);
@@ -96,7 +96,7 @@ public class DataQuery extends DataSet {
 		try {
 			try (Statement st = conn.createStatement()) {
 				log.debug(sql.replaceAll("\r\n", " "));
-				st.execute(sql);
+				st.execute(sql.replace("\\", "\\\\"));
 				try (ResultSet rs = st.getResultSet()) {
 					int oldSize = this.size();
 					append(rs);
