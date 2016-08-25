@@ -228,6 +228,7 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 	}
 
 	public void close() {
+		this.search = null;
 		fieldDefs.clear();
 		records.clear();
 		recNo = 0;
