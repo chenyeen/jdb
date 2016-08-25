@@ -39,6 +39,7 @@ public class DataQuery extends DataSet {
 	@Override
 	public void close() {
 		this.active = false;
+		this.operator = null;
 		super.close();
 	}
 
@@ -337,6 +338,7 @@ public class DataQuery extends DataSet {
 	}
 
 	public void clear() {
+		close();
 		this.commandText = null;
 	}
 
