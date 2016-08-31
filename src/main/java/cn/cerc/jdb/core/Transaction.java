@@ -3,7 +3,10 @@ package cn.cerc.jdb.core;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 public class Transaction implements AutoCloseable {
+	private static final Logger log = Logger.getLogger(Transaction.class);
 	private Connection conn;
 	private boolean active = false;
 	private boolean locked = false;
@@ -16,7 +19,7 @@ public class Transaction implements AutoCloseable {
 				this.active = true;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -31,7 +34,7 @@ public class Transaction implements AutoCloseable {
 			locked = true;
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -47,7 +50,7 @@ public class Transaction implements AutoCloseable {
 				conn.setAutoCommit(true);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			throw new RuntimeException(e);
 		}
 	}
