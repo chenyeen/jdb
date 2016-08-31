@@ -24,6 +24,10 @@ public class Transaction implements AutoCloseable {
 		}
 	}
 
+	public Transaction(IConnection conn) {
+		this(conn.getConnection().getConnection());
+	}
+
 	public boolean commit() {
 		if (!active)
 			return false;
