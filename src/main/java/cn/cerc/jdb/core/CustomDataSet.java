@@ -53,9 +53,6 @@ public class CustomDataSet extends Component implements IRecord, Iterable<Record
 		if (search != null)
 			search.clear();
 		records.remove(recNo - 1);
-		if (recNo > records.size()) {
-			recNo = records.size();
-		}
 		if (this.fetchNo > -1)
 			this.fetchNo--;
 		return;
