@@ -75,7 +75,9 @@ public class Record implements IRecord, Serializable {
 		if (this.state == DataSetState.dsEdit) {
 			Object oldValue = items.get(field);
 			// 只有值发生变更的时候 才做处理
-			if (!compareValue(value, oldValue)) {
+			if (compareValue(value, oldValue)) {
+				return this;
+			} else {
 				if (!delta.containsKey(field))
 					setValue(delta, field, oldValue);
 			}
@@ -117,7 +119,12 @@ public class Record implements IRecord, Serializable {
 		}
 		// 都不为空
 		if (value != null && compareValue != null) {
-			return value.equals(compareValue);
+			if ((value instanceof Integer) && (compareValue instanceof Double)) {
+				Integer v1 = (Integer) value;
+				Double v2 = (Double) compareValue;
+				return v2 - v1 == 0;
+			} else
+				return value.equals(compareValue);
 		} else {
 			return false;
 		}
