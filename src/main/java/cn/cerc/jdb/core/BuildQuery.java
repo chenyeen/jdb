@@ -19,6 +19,7 @@ public class BuildQuery {
 		this.dataSet = dataSet;
 	}
 
+	@Deprecated
 	public BuildQuery(DataQuery owner) {
 		super();
 		// this.init(owner);
