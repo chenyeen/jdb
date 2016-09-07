@@ -5,9 +5,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.cerc.jdb.core.DataSet;
-import cn.cerc.jdb.core.SyncDataSet;
-
 public class SyncDataSetTest {
 	private DataSet src = new DataSet();
 	private DataSet tar = new DataSet();
@@ -30,7 +27,7 @@ public class SyncDataSetTest {
 	}
 
 	@Test
-	public void test() throws DataUpdateException {
+	public void test() {
 		SyncDataSet sds = new SyncDataSet(src, tar, "code");
 		int total = sds.execute((src, tar) -> {
 			if (tar == null)

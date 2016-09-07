@@ -11,7 +11,7 @@ public class SyncDataSet {
 		this.keyFields = keyFields;
 	}
 
-	public int execute(SyncDataSetProcess sync) throws DataUpdateException {
+	public int execute(SyncDataSetProcess sync) {
 		int result = 0;
 		source.first();
 		while (source.fetch()) {
