@@ -291,8 +291,12 @@ public class Record implements IRecord, Serializable {
 			defs.add(field);
 
 		Object obj = this.getField(field);
-		if (obj instanceof String)
+		if (obj instanceof String) {
+			String str = (String) obj;
+			if ("".equals(str))
+				return 0;
 			return Double.parseDouble((String) obj);
+		}
 		if (obj instanceof Integer)
 			return ((Integer) obj) * 1.0;
 		else if (obj == null)
