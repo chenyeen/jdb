@@ -324,6 +324,8 @@ public class Record implements IRecord, Serializable {
 
 	@Override
 	public String getString(String field) {
+		if (field == null)
+			throw new RuntimeException("field is null");
 		if (!defs.exists(field))
 			defs.add(field);
 
