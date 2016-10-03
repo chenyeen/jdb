@@ -13,22 +13,20 @@ public class BuildQuery {
 
 	private String orderText;
 	private String sql;
-	private IConnection conn = null;
+	private SqlConnection conn = null;
 
 	public void setDataSet(DataQuery dataSet) {
 		this.dataSet = dataSet;
 	}
 
-	@Deprecated
-	public BuildQuery(DataQuery owner) {
+	public BuildQuery(SqlConnection conn) {
 		super();
-		// this.init(owner);
-		this.dataSet = owner;
+		this.conn = conn;
 	}
 
 	public BuildQuery(IConnection conn) {
 		super();
-		this.conn = conn;
+		this.conn = conn.getConnection();
 	}
 
 	public BuildQuery byParam(String param) {
