@@ -9,9 +9,9 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.cerc.jdb.core.SqlConfig;
+import cn.cerc.jdb.core.IRDSConfig;
 
-public class StubConfig implements SqlConfig {
+public class StubConfig implements IRDSConfig {
 	private static final Log log = LogFactory.getLog(StubConfig.class);
 
 	private static final String SETTINGS_FILE_NAME = System.getProperty("user.home")

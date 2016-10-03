@@ -20,7 +20,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 
 import cn.cerc.jdb.field.DoubleField;
-import cn.cerc.jdb.field.FieldDefine;
+import cn.cerc.jdb.field.IField;
 import cn.cerc.jdb.other.DelphiException;
 import cn.cerc.jdb.other.utils;
 
@@ -63,7 +63,7 @@ public class Record implements IRecord, Serializable {
 		if (!defs.exists(field))
 			defs.add(field);
 
-		FieldDefine define = defs.getDefine(field);
+		IField define = defs.getDefine(field);
 		if (define != null) {
 			if (!define.validate(value))
 				throw new RuntimeException(

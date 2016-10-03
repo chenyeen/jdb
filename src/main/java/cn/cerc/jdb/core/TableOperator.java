@@ -11,10 +11,10 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import cn.cerc.jdb.field.FieldDefine;
+import cn.cerc.jdb.field.IField;
 
-public class DefaultOperator implements Operator {
-	private static final Logger log = Logger.getLogger(DefaultOperator.class);
+public class TableOperator implements ITableOperator {
+	private static final Logger log = Logger.getLogger(TableOperator.class);
 	private final String CONST_UID = "UID_";
 	private Connection conn;
 	private String tableName;
@@ -22,7 +22,7 @@ public class DefaultOperator implements Operator {
 	private boolean preview = false;
 	private List<String> primaryKeys = new ArrayList<>();
 
-	public DefaultOperator(Connection connection) {
+	public TableOperator(Connection connection) {
 		this.conn = connection;
 	}
 
@@ -40,7 +40,7 @@ public class DefaultOperator implements Operator {
 			int i = 0;
 			for (String field : record.getItems().keySet()) {
 				if (!CONST_UID.equals(field)) {
-					FieldDefine define = defs.getDefine(field);
+					IField define = defs.getDefine(field);
 					if (define == null || !define.isCalculated()) {
 						i++;
 						if (i > 1)
@@ -53,7 +53,7 @@ public class DefaultOperator implements Operator {
 			i = 0;
 			for (String field : record.getItems().keySet()) {
 				if (!CONST_UID.equals(field)) {
-					FieldDefine define = defs.getDefine(field);
+					IField define = defs.getDefine(field);
 					if (define == null || !define.isCalculated()) {
 						i++;
 						if (i == 1)
@@ -109,7 +109,7 @@ public class DefaultOperator implements Operator {
 			// 加入set条件
 			int i = 0;
 			for (String field : delta.keySet()) {
-				FieldDefine define = defs.getDefine(field);
+				IField define = defs.getDefine(field);
 				if (define == null || !define.isCalculated()) {
 					if (!CONST_UID.equals(field)) {
 						i++;
@@ -138,7 +138,7 @@ public class DefaultOperator implements Operator {
 				throw new RuntimeException("primary keys value not exists");
 			for (String field : delta.keySet()) {
 				if (!primaryKeys.contains(field)) {
-					FieldDefine define = defs.getDefine(field);
+					IField define = defs.getDefine(field);
 					if (define == null || !define.isCalculated()) {
 						i++;
 						bs.append(i == 1 ? " where " : " and ").append(field);

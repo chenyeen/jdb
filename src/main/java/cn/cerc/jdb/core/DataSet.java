@@ -197,13 +197,6 @@ public class DataSet extends CustomDataSet implements Serializable {
 		String json = new String(strBytes, Charset.forName("UTF-8"));
 		this.setJSON(json);
 	}
-
-	public void map(DataSetMap func) {
-		this.first();
-		while (this.fetch()) {
-			func.process(this.getCurrent());
-		}
-	}
 	
 	@Override
 	public DataSet appendDataSet(CustomDataSet source) {

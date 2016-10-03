@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cn.cerc</groupId>
 	<artifactId>jdb</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1</version>
 	<name>java database utils</name>
 	<build>
 		<plugins>
@@ -206,5 +206,6 @@
 			</plugin>
 		</plugins>
 	</reporting>
-	<description>提供DataSet，简化数据库操作，功能类同 hibernate</description>
+	<description>提供DataSet及派生类，满足内存表与实体表使用需要</description>
+	<url>https://github.com/cn-cerc/jdb</url>
 </project>

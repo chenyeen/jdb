@@ -9,11 +9,11 @@ import org.junit.Test;
 public class OperatorTest {
 	private StubConnection handle = new StubConnection();
 	private int maxTest = 50;
-	private DefaultOperator obj;
+	private TableOperator obj;
 
 	@Before
 	public void setUp() throws Exception {
-		obj = new DefaultOperator(handle.getConnection());
+		obj = new TableOperator(handle.getConnection());
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class OperatorTest {
 	@Test
 	@Ignore
 	public void test_3_insert_new() {
-		DefaultOperator obj = new DefaultOperator(handle.getConnection());
+		TableOperator obj = new TableOperator(handle.getConnection());
 		obj.setTableName("temp");
 		for (int i = 0; i < maxTest; i++) {
 			Record record = new Record();

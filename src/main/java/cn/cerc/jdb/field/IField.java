@@ -1,6 +1,6 @@
 package cn.cerc.jdb.field;
 
-public interface FieldDefine {
+public interface IField {
 	// 设置字段代码
 	public CustomField setCode(String code);
 

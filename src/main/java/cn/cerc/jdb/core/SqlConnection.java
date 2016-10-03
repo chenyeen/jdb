@@ -12,7 +12,7 @@ public class SqlConnection extends Component implements AutoCloseable {
 
 	private Connection connection;
 
-	public void init(SqlConfig config) throws SqlConnectionException {
+	public void init(IRDSConfig config) throws SqlConnectionException {
 		String host = config.get_rds_host();
 		String user = config.get_rds_account();
 		String pwd = config.get_rds_password();

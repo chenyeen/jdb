@@ -1,5 +1,5 @@
 package cn.cerc.jdb.core;
 
-public interface SyncDataSetProcess {
+public interface ISyncDataSet {
 	public void process(Record src, Record tar) throws SyncUpdateException;
 }

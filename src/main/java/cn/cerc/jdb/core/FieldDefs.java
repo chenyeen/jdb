@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import cn.cerc.jdb.field.FieldDefine;
+import cn.cerc.jdb.field.IField;
 
 public class FieldDefs implements Serializable, Iterable<String> {
 	private static final long serialVersionUID = 7478897050846245325L;
-	private Map<String, FieldDefine> fields = new TreeMap<>();
+	private Map<String, IField> fields = new TreeMap<>();
 	// 设置字段为强类型，必须预先定义，默认为弱类型
 	private boolean strict = false;
 	// 设置是否不再允许添加字段，默认为可随时添加
@@ -45,7 +45,7 @@ public class FieldDefs implements Serializable, Iterable<String> {
 		return this;
 	}
 
-	public FieldDefs add(String field, FieldDefine fieldDefine) {
+	public FieldDefs add(String field, IField fieldDefine) {
 		if (this.locked)
 			throw new RuntimeException("locked is true");
 		if (this.strict && fieldDefine == null)
@@ -60,7 +60,7 @@ public class FieldDefs implements Serializable, Iterable<String> {
 		return this;
 	}
 
-	public FieldDefine getDefine(String field) {
+	public IField getDefine(String field) {
 		return fields.get(field);
 	}
 

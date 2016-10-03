@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 import cn.cerc.jdb.field.BooleanField;
 import cn.cerc.jdb.field.DoubleField;
-import cn.cerc.jdb.field.FieldDefine;
+import cn.cerc.jdb.field.IField;
 import cn.cerc.jdb.field.IntegerField;
 import cn.cerc.jdb.field.StringField;
 import cn.cerc.jdb.field.TDateTimeField;
@@ -30,7 +30,7 @@ public class DataQuery extends DataSet {
 	// 若数据有取完，则为true，否则为false
 	private boolean fetchFinish;
 	// 数据库保存操作执行对象
-	private Operator operator;
+	private ITableOperator operator;
 	// 批次保存模式，默认为post与delete立即保存
 	private boolean batchSave = false;
 	// 仅当batchSave为true时，delList才有记录存在
@@ -123,7 +123,7 @@ public class DataQuery extends DataSet {
 				String field = meta.getColumnLabel(i);
 				if (!defs.exists(field)) {
 					if (defs.isStrict()) {
-						FieldDefine define = null;
+						IField define = null;
 						String type = meta.getColumnTypeName(i);
 						if ("VARCHAR".equals(type))
 							define = new StringField(meta.getColumnDisplaySize(i));
@@ -240,7 +240,7 @@ public class DataQuery extends DataSet {
 	public void save() {
 		if (!batchSave)
 			throw new RuntimeException("batchSave is false");
-		Operator operator = getDefaultOperator();
+		ITableOperator operator = getDefaultOperator();
 		// 先执行删除
 		for (Record record : delList)
 			operator.delete(record);
@@ -260,9 +260,9 @@ public class DataQuery extends DataSet {
 		}
 	}
 
-	protected Operator getDefaultOperator() {
+	protected ITableOperator getDefaultOperator() {
 		if (operator == null) {
-			DefaultOperator def = new DefaultOperator(connection.getConnection());
+			TableOperator def = new TableOperator(connection.getConnection());
 			String tableName = def.findTableName(this.commandText);
 			def.setTableName(tableName);
 			operator = def;
@@ -270,11 +270,11 @@ public class DataQuery extends DataSet {
 		return operator;
 	}
 
-	public Operator getOperator() {
+	public ITableOperator getOperator() {
 		return operator;
 	}
 
-	public void setOperator(Operator operator) {
+	public void setOperator(ITableOperator operator) {
 		this.operator = operator;
 	}
 

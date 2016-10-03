@@ -1,6 +1,6 @@
 package cn.cerc.jdb.field;
 
-public abstract class CustomField implements FieldDefine {
+public abstract class CustomField implements IField {
 	private String code;
 	private String name;
 	private int width = 0;
