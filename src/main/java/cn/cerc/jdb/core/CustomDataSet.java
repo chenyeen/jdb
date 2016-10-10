@@ -17,7 +17,7 @@ import cn.cerc.jdb.other.DelphiException;
  * @author ZhangGong
  * 
  */
-public class CustomDataSet extends Component implements IRecord, Iterable<Record> {
+public class CustomDataSet implements IRecord, Iterable<Record> {
 	private int recNo = 0;
 	private int fetchNo = -1;
 	private FieldDefs fieldDefs = new FieldDefs();

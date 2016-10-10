@@ -7,10 +7,10 @@ import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
-public class SqlConnection extends Component implements AutoCloseable {
+public class SqlConnection implements AutoCloseable {
 	private static final Logger log = Logger.getLogger(SqlConnection.class);
-
 	private Connection connection;
+	private int tag;
 
 	public void init(IRDSConfig config) throws SqlConnectionException {
 		String host = config.get_rds_host();
@@ -75,6 +75,14 @@ public class SqlConnection extends Component implements AutoCloseable {
 		}
 	}
 
+	public int getTag() {
+		return tag;
+	}
+
+	public void setTag(int tag) {
+		this.tag = tag;
+	}
+
 	//
 	// public String getDB()
 	// {
@@ -114,5 +122,4 @@ public class SqlConnection extends Component implements AutoCloseable {
 	// }
 	// return Result;
 	// }
-
 }

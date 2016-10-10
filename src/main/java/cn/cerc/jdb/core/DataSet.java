@@ -22,10 +22,10 @@ public class DataSet extends CustomDataSet implements Serializable {
 
 	private Record head = null;
 	private FieldDefs head_defs = null;
-
-	public DataSet() {
-		init(null);
-	}
+	//
+	// public DataSet() {
+	// init(null);
+	// }
 
 	@Override
 	public void close() {
@@ -152,7 +152,8 @@ public class DataSet extends CustomDataSet implements Serializable {
 
 	@Deprecated
 	/**
-	 * 请改使用  appendDataSet;
+	 * 请改使用 appendDataSet;
+	 * 
 	 * @param source
 	 * @return
 	 */
@@ -170,7 +171,8 @@ public class DataSet extends CustomDataSet implements Serializable {
 	}
 
 	/**
-	 * 请改使用  appendDataSet;
+	 * 请改使用 appendDataSet;
+	 * 
 	 * @param source
 	 * @param includeHead
 	 */
@@ -197,7 +199,7 @@ public class DataSet extends CustomDataSet implements Serializable {
 		String json = new String(strBytes, Charset.forName("UTF-8"));
 		this.setJSON(json);
 	}
-	
+
 	@Override
 	public DataSet appendDataSet(CustomDataSet source) {
 		super.appendDataSet(source);

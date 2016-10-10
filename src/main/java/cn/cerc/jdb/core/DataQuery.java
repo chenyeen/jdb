@@ -45,13 +45,13 @@ public class DataQuery extends DataSet {
 
 	public DataQuery(SqlConnection conn) {
 		super();
-		super.init(conn);
+		// super.init(conn);
 		this.connection = conn;
 	}
 
 	public DataQuery(IConnection conn) {
 		super();
-		super.init(conn.getConnection());
+		// super.init(conn.getConnection());
 		this.connection = conn.getConnection();
 	}
 
