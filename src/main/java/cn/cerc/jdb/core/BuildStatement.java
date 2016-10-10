@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 生成原生sql操作对象
+ * @author 张弓
+ *
+ */
 public class BuildStatement implements AutoCloseable {
 	private Connection conn;
 	private StringBuffer sb = new StringBuffer();

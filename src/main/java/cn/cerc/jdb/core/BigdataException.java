@@ -2,6 +2,11 @@ package cn.cerc.jdb.core;
 
 import java.io.Serializable;
 
+/**
+ * 单次数据请求，超过最大笔数限制
+ * @author 张弓
+ *
+ */
 public class BigdataException extends RuntimeException implements Serializable {
 	private static final long serialVersionUID = -7618888023082541077L;
 

@@ -4,6 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 用于组合生成select指令，便于多条件查询编写
+ * @author 张弓
+ *
+ */
 public class BuildQuery {
 	// private static final Logger log = Logger.getLogger(BuildSQL.class);
 	private DataQuery dataSet;
