@@ -1,10 +1,13 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import org.junit.Test;
 
-public class DataQueryTest_attach {
+import cn.cerc.jdb.core.Record;
+import cn.cerc.jdb.core.StubConnection;
+
+public class SqlQueryTest_attach {
 	private StubConnection conn = new StubConnection();
-	private DataQuery ds = new DataQuery(conn);
+	private SqlQuery ds = new SqlQuery(conn);
 
 	@Test
 	public void test() {

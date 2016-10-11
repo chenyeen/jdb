@@ -4,6 +4,8 @@ import static cn.cerc.jdb.other.utils.vbCrLf;
 
 import org.apache.log4j.Logger;
 
+import cn.cerc.jdb.mysql.SqlQuery;
+
 public class BatchScript {
 	private static final Logger log = Logger.getLogger(BatchScript.class);
 	private StringBuffer items = new StringBuffer();
@@ -67,7 +69,7 @@ public class BatchScript {
 		for (String item : tmp) {
 			if (!item.trim().equals("")) {
 				log.debug(item.trim() + ";");
-				DataQuery ds = new DataQuery(conn);
+				SqlQuery ds = new SqlQuery(conn);
 				ds.add(item.trim());
 				ds.open();
 				if (ds.eof())

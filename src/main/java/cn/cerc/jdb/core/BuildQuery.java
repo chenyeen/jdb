@@ -4,14 +4,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.cerc.jdb.mysql.SqlQuery;
+
 /**
  * 用于组合生成select指令，便于多条件查询编写
+ * 
  * @author 张弓
  *
  */
 public class BuildQuery {
 	// private static final Logger log = Logger.getLogger(BuildSQL.class);
-	private DataQuery dataSet;
+	private SqlQuery dataSet;
 	private List<String> sqlWhere = new ArrayList<String>();
 	private List<String> sqlText = new ArrayList<String>();
 	public static final String vbCrLf = "\r\n";
@@ -20,7 +23,7 @@ public class BuildQuery {
 	private String sql;
 	private SqlConnection conn = null;
 
-	public void setDataSet(DataQuery dataSet) {
+	public void setDataSet(SqlQuery dataSet) {
 		this.dataSet = dataSet;
 	}
 
@@ -187,9 +190,9 @@ public class BuildQuery {
 		return this;
 	}
 
-	public DataQuery getDataSet() {
+	public SqlQuery getDataSet() {
 		if (this.dataSet == null)
-			this.dataSet = new DataQuery(conn);
+			this.dataSet = new SqlQuery(conn);
 		return this.dataSet;
 	}
 
@@ -231,15 +234,15 @@ public class BuildQuery {
 			return sql;
 	}
 
-	public DataQuery open() {
-		DataQuery ds = getDataSet();
+	public SqlQuery open() {
+		SqlQuery ds = getDataSet();
 		ds.setCommandText(this.getSelectCommand());
 		ds.open();
 		return ds;
 	}
 
-	public DataQuery open(Record head, Record foot) {
-		DataQuery ds = getDataSet();
+	public SqlQuery open(Record head, Record foot) {
+		SqlQuery ds = getDataSet();
 		if (head.exists("__offset__"))
 			this.setOffset(head.getInt("__offset__"));
 		ds.setCommandText(this.getSelectCommand());
