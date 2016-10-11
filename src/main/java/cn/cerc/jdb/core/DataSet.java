@@ -173,8 +173,8 @@ public class DataSet extends CustomDataSet implements Serializable {
 	/**
 	 * 请改使用 appendDataSet;
 	 * 
-	 * @param source
-	 * @param includeHead
+	 * @param source 要复制的数据源
+	 * @param includeHead 是否连头部一起复制
 	 */
 	public void appendDataSet(DataSet source, boolean includeHead) {
 		this.appendDataSet(source);

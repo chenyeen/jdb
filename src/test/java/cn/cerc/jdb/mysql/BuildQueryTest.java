@@ -1,4 +1,4 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import static org.junit.Assert.assertEquals;
 

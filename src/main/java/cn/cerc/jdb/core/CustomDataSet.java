@@ -137,9 +137,7 @@ public class CustomDataSet implements IRecord, Iterable<Record> {
 		return this.fieldDefs;
 	}
 
-	/**
-	 * 仅用于查找一次时，调用此函数，速度最快
-	 */
+	// 仅用于查找一次时，调用此函数，速度最快
 	public boolean locateOnlyOne(String fields, Object... values) {
 		if (fields == null || "".equals(fields))
 			throw new DelphiException("参数名称不能为空");
@@ -161,9 +159,7 @@ public class CustomDataSet implements IRecord, Iterable<Record> {
 		return false;
 	}
 
-	/**
-	 * 用于查找多次，调用时，会先进行排序，以方便后续的相同Key查找
-	 */
+	// 用于查找多次，调用时，会先进行排序，以方便后续的相同Key查找
 	public boolean locate(String fields, Object... values) {
 		if (search == null)
 			search = new SearchDataSet(this);
@@ -203,7 +199,7 @@ public class CustomDataSet implements IRecord, Iterable<Record> {
 	public CustomDataSet appendDataSet(CustomDataSet source) {
 		if (search != null)
 			search.clear();
-		
+
 		// 先复制字段定义
 		FieldDefs tarDefs = this.getFieldDefs();
 		for (String field : source.getFieldDefs().getFields()) {
@@ -220,7 +216,7 @@ public class CustomDataSet implements IRecord, Iterable<Record> {
 			}
 			this.post();
 		}
-		
+
 		return this;
 	}
 
