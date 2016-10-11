@@ -1,4 +1,4 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,21 +6,24 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cn.cerc.jdb.core.Record;
+import cn.cerc.jdb.core.StubConnection;
+
 public class OperatorTest {
 	private StubConnection handle = new StubConnection();
 	private int maxTest = 50;
-	private TableOperator obj;
+	private SqlOperator obj;
 
 	@Before
 	public void setUp() throws Exception {
-		obj = new TableOperator(handle.getConnection());
+		obj = new SqlOperator(handle.getConnection());
 	}
 
 	@Test
 	@Ignore
 	public void test_2_insert_new() {
 		handle.execute("delete from temp where name_='new'");
-		DataQuery ds = new DataQuery(handle);
+		SqlQuery ds = new SqlQuery(handle);
 		ds.setMaximum(0);
 		ds.add("select * from temp");
 		ds.open();
@@ -36,7 +39,7 @@ public class OperatorTest {
 	@Test
 	@Ignore
 	public void test_3_insert_new() {
-		TableOperator obj = new TableOperator(handle.getConnection());
+		SqlOperator obj = new SqlOperator(handle.getConnection());
 		obj.setTableName("temp");
 		for (int i = 0; i < maxTest; i++) {
 			Record record = new Record();
@@ -51,7 +54,7 @@ public class OperatorTest {
 	@Test
 	@Ignore
 	public void test_4_update_new() {
-		DataQuery ds = new DataQuery(handle);
+		SqlQuery ds = new SqlQuery(handle);
 		ds.add("select * from temp");
 		ds.open();
 		while (ds.fetch()) {
@@ -65,7 +68,7 @@ public class OperatorTest {
 	@Test
 	@Ignore
 	public void test_6_delete_new() {
-		DataQuery ds = new DataQuery(handle);
+		SqlQuery ds = new SqlQuery(handle);
 		ds.add("select * from temp where Name_='new'");
 		ds.open();
 		while (!ds.eof())

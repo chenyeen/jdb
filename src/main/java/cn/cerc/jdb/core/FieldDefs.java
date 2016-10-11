@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import cn.cerc.jdb.field.IField;
+import cn.cerc.jdb.mysql.DataQuery;
 
 public class FieldDefs implements Serializable, Iterable<String> {
 	private static final long serialVersionUID = 7478897050846245325L;

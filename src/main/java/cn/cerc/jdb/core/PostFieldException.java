@@ -5,11 +5,11 @@ import java.util.List;
 public class PostFieldException extends RuntimeException {
 	private static final long serialVersionUID = -7000564918024722819L;
 	// Post之DataQuery
-	private DataQuery query;
+	private DataSet query;
 	// 数据表中的原始字段
 	private List<String> fields;
 
-	public PostFieldException(DataQuery dataQuery, List<String> fields) {
+	public PostFieldException(DataSet dataQuery, List<String> fields) {
 		this.query = dataQuery;
 		this.fields = fields;
 	}
@@ -22,11 +22,11 @@ public class PostFieldException extends RuntimeException {
 		this.fields = fields;
 	}
 
-	public DataQuery getQuery() {
+	public DataSet getQuery() {
 		return query;
 	}
 
-	public void setQuery(DataQuery query) {
+	public void setQuery(DataSet query) {
 		this.query = query;
 	}
 	

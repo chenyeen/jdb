@@ -1,4 +1,4 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import static org.junit.Assert.assertEquals;
 
@@ -6,15 +6,17 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
-public class DataQueryTest {
-	private static final Logger log = Logger.getLogger(DataQueryTest.class);
+import cn.cerc.jdb.core.StubConnection;
+
+public class SqlQueryTest {
+	private static final Logger log = Logger.getLogger(SqlQueryTest.class);
 	private StubConnection conn = new StubConnection();
 	private static final String Account = "Account";
-	private DataQuery ds;
+	private SqlQuery ds;
 
 	@Before
 	public void setUp() {
-		ds = new DataQuery(conn);
+		ds = new SqlQuery(conn);
 	}
 
 	@Test

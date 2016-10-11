@@ -1,4 +1,4 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 public interface IRDSConfig {
 	public String get_rds_host();

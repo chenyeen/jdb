@@ -1,11 +1,12 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import cn.cerc.jdb.core.BatchScript;
+import cn.cerc.jdb.core.StubConnection;
+import cn.cerc.jdb.mysql.BatchScript;
 
 public class BatchScriptTest {
 	private BatchScript bs;

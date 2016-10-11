@@ -1,12 +1,12 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import cn.cerc.jdb.core.BuildQuery;
 import cn.cerc.jdb.core.IConnection;
-import cn.cerc.jdb.core.SqlConnection;
+import cn.cerc.jdb.mysql.BuildQuery;
+import cn.cerc.jdb.mysql.SqlConnection;
 
 public class BuildQueryTest implements IConnection {
 	// private static final Logger log = Logger.getLogger(BuildSQLTest.class);

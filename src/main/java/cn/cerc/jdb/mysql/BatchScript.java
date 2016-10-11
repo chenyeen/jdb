@@ -1,4 +1,4 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import static cn.cerc.jdb.other.utils.vbCrLf;
 
@@ -67,7 +67,7 @@ public class BatchScript {
 		for (String item : tmp) {
 			if (!item.trim().equals("")) {
 				log.debug(item.trim() + ";");
-				DataQuery ds = new DataQuery(conn);
+				SqlQuery ds = new SqlQuery(conn);
 				ds.add(item.trim());
 				ds.open();
 				if (ds.eof())

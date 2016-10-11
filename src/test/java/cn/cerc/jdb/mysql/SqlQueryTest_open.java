@@ -1,13 +1,14 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import cn.cerc.jdb.core.StubConnection;
 import cn.cerc.jdb.field.StringField;
 
-public class DataQueryTest_open {
+public class SqlQueryTest_open {
 	private StubConnection conn = new StubConnection();
-	private DataQuery ds = new DataQuery(conn);
+	private SqlQuery ds = new SqlQuery(conn);
 
 	@Before
 	public void setUp() throws Exception {

@@ -1,18 +1,20 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class DataQueryTest_save {
+import cn.cerc.jdb.core.StubConnection;
+
+public class SqlQueryTest_save {
 	private StubConnection conn = new StubConnection();
 
 	@Test
 	@Ignore
 	public void test_delete() {
 		conn.execute("delete from temp");
-		DataQuery ds = new DataQuery(conn);
+		SqlQuery ds = new SqlQuery(conn);
 		ds.setBatchSave(true);
 		System.out.println("before insert, record count: " + getTotal("temp"));
 
@@ -53,7 +55,7 @@ public class DataQueryTest_save {
 	}
 
 	private void insertTest(boolean batchSave) {
-		DataQuery ds = new DataQuery(conn);
+		SqlQuery ds = new SqlQuery(conn);
 		ds.setBatchSave(batchSave);
 		ds.add("select * from temp");
 		ds.open();
@@ -80,7 +82,7 @@ public class DataQueryTest_save {
 	}
 
 	private int getTotal(String table) {
-		DataQuery ds = new DataQuery(conn);
+		SqlQuery ds = new SqlQuery(conn);
 		ds.add("select count(*) as total from %s", table);
 		ds.open();
 		return ds.getInt("total");

@@ -1,4 +1,4 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 public class SqlConnectionException extends Exception {
 	private static final long serialVersionUID = 811290515551429913L;

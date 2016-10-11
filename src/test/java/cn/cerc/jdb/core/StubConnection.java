@@ -1,5 +1,8 @@
 package cn.cerc.jdb.core;
 
+import cn.cerc.jdb.mysql.SqlConnection;
+import cn.cerc.jdb.mysql.SqlConnectionException;
+
 public class StubConnection extends SqlConnection {
 	public StubConnection() {
 		super();

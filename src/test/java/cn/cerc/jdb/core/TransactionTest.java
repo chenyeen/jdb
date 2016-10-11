@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cn.cerc.jdb.mysql.Transaction;
+
 public class TransactionTest {
 	private StubConnection conn = new StubConnection();
 

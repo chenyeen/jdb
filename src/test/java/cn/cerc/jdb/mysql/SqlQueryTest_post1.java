@@ -1,13 +1,16 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cn.cerc.jdb.core.PostFieldException;
+import cn.cerc.jdb.core.StubConnection;
+import cn.cerc.jdb.core.TDateTime;
 import cn.cerc.jdb.field.StringField;
 
-public class DataQueryTest_post1 {
+public class SqlQueryTest_post1 {
 	private StubConnection conn = new StubConnection();
-	private DataQuery ds = new DataQuery(conn);
+	private SqlQuery ds = new SqlQuery(conn);
 
 	@Test(expected = PostFieldException.class)
 	@Ignore(value = "仅允许在测试数据库运行")

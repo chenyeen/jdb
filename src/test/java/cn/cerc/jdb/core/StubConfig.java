@@ -9,7 +9,7 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.cerc.jdb.core.IRDSConfig;
+import cn.cerc.jdb.mysql.IRDSConfig;
 
 public class StubConfig implements IRDSConfig {
 	private static final Log log = LogFactory.getLog(StubConfig.class);

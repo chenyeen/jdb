@@ -1,4 +1,4 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,10 +11,13 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import cn.cerc.jdb.core.FieldDefs;
+import cn.cerc.jdb.core.IDataOperator;
+import cn.cerc.jdb.core.Record;
 import cn.cerc.jdb.field.IField;
 
-public class TableOperator implements ITableOperator {
-	private static final Logger log = Logger.getLogger(TableOperator.class);
+public class SqlOperator implements IDataOperator {
+	private static final Logger log = Logger.getLogger(SqlOperator.class);
 	private final String CONST_UID = "UID_";
 	private Connection conn;
 	private String tableName;
@@ -22,7 +25,7 @@ public class TableOperator implements ITableOperator {
 	private boolean preview = false;
 	private List<String> primaryKeys = new ArrayList<>();
 
-	public TableOperator(Connection connection) {
+	public SqlOperator(Connection connection) {
 		this.conn = connection;
 	}
 

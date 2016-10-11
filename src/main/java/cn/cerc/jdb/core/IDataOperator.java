@@ -1,6 +1,6 @@
 package cn.cerc.jdb.core;
 
-public interface ITableOperator {
+public interface IDataOperator {
 
 	public boolean insert(Record record);
 

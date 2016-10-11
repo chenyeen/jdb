@@ -1,4 +1,4 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import static cn.cerc.jdb.other.utils.roundTo;
 
@@ -10,6 +10,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cn.cerc.jdb.core.TDateTime;
+
+/**
+ * 生成原生sql操作对象
+ * @author 张弓
+ *
+ */
 public class BuildStatement implements AutoCloseable {
 	private Connection conn;
 	private StringBuffer sb = new StringBuffer();
@@ -17,7 +24,7 @@ public class BuildStatement implements AutoCloseable {
 	private List<Object> items = new ArrayList<>();
 	private SimpleDateFormat sdf;
 
-	BuildStatement(Connection conn) {
+	public BuildStatement(Connection conn) {
 		this.conn = conn;
 	}
 

@@ -1,4 +1,4 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -10,6 +10,13 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import cn.cerc.jdb.core.DataSet;
+import cn.cerc.jdb.core.DataSetEvent;
+import cn.cerc.jdb.core.DataSetState;
+import cn.cerc.jdb.core.FieldDefs;
+import cn.cerc.jdb.core.IConnection;
+import cn.cerc.jdb.core.IDataOperator;
+import cn.cerc.jdb.core.Record;
 import cn.cerc.jdb.field.BooleanField;
 import cn.cerc.jdb.field.DoubleField;
 import cn.cerc.jdb.field.IField;
@@ -17,8 +24,8 @@ import cn.cerc.jdb.field.IntegerField;
 import cn.cerc.jdb.field.StringField;
 import cn.cerc.jdb.field.TDateTimeField;
 
-public class DataQuery extends DataSet {
-	private static final Logger log = Logger.getLogger(DataQuery.class);
+public class SqlQuery extends DataSet {
+	private static final Logger log = Logger.getLogger(SqlQuery.class);
 
 	private static final long serialVersionUID = 7316772894058168187L;
 	private SqlConnection connection;
@@ -30,7 +37,7 @@ public class DataQuery extends DataSet {
 	// 若数据有取完，则为true，否则为false
 	private boolean fetchFinish;
 	// 数据库保存操作执行对象
-	private ITableOperator operator;
+	private IDataOperator operator;
 	// 批次保存模式，默认为post与delete立即保存
 	private boolean batchSave = false;
 	// 仅当batchSave为true时，delList才有记录存在
@@ -43,19 +50,19 @@ public class DataQuery extends DataSet {
 		super.close();
 	}
 
-	public DataQuery(SqlConnection conn) {
+	public SqlQuery(SqlConnection conn) {
 		super();
-		super.init(conn);
+		// super.init(conn);
 		this.connection = conn;
 	}
 
-	public DataQuery(IConnection conn) {
+	public SqlQuery(IConnection conn) {
 		super();
-		super.init(conn.getConnection());
+		// super.init(conn.getConnection());
 		this.connection = conn.getConnection();
 	}
 
-	public DataQuery open() {
+	public SqlQuery open() {
 		if (connection == null)
 			throw new RuntimeException("SqlConnection is null");
 		Connection conn = connection.getConnection();
@@ -165,7 +172,7 @@ public class DataQuery extends DataSet {
 		}
 	}
 
-	public DataQuery setActive(boolean value) {
+	public SqlQuery setActive(boolean value) {
 		if (value) {
 			if (!this.active)
 				this.open();
@@ -188,7 +195,7 @@ public class DataQuery extends DataSet {
 		return connection;
 	}
 
-	public DataQuery add(String sql) {
+	public SqlQuery add(String sql) {
 		if (commandText == null)
 			commandText = sql;
 		else
@@ -196,11 +203,11 @@ public class DataQuery extends DataSet {
 		return this;
 	}
 
-	public DataQuery add(String format, Object... args) {
+	public SqlQuery add(String format, Object... args) {
 		return this.add(String.format(format, args));
 	}
 
-	public DataQuery setCommandText(String sql) {
+	public SqlQuery setCommandText(String sql) {
 		this.commandText = sql;
 		return this;
 	}
@@ -240,7 +247,7 @@ public class DataQuery extends DataSet {
 	public void save() {
 		if (!batchSave)
 			throw new RuntimeException("batchSave is false");
-		ITableOperator operator = getDefaultOperator();
+		IDataOperator operator = getDefaultOperator();
 		// 先执行删除
 		for (Record record : delList)
 			operator.delete(record);
@@ -260,9 +267,9 @@ public class DataQuery extends DataSet {
 		}
 	}
 
-	protected ITableOperator getDefaultOperator() {
+	protected IDataOperator getDefaultOperator() {
 		if (operator == null) {
-			TableOperator def = new TableOperator(connection.getConnection());
+			SqlOperator def = new SqlOperator(connection.getConnection());
 			String tableName = def.findTableName(this.commandText);
 			def.setTableName(tableName);
 			operator = def;
@@ -270,11 +277,11 @@ public class DataQuery extends DataSet {
 		return operator;
 	}
 
-	public ITableOperator getOperator() {
+	public IDataOperator getOperator() {
 		return operator;
 	}
 
-	public void setOperator(ITableOperator operator) {
+	public void setOperator(IDataOperator operator) {
 		this.operator = operator;
 	}
 
@@ -291,7 +298,7 @@ public class DataQuery extends DataSet {
 		return offset;
 	}
 
-	public DataQuery setOffset(int offset) {
+	public SqlQuery setOffset(int offset) {
 		this.offset = offset;
 		return this;
 	}
@@ -300,7 +307,7 @@ public class DataQuery extends DataSet {
 		return maximum;
 	}
 
-	public DataQuery setMaximum(int maximum) {
+	public SqlQuery setMaximum(int maximum) {
 		if (maximum > BigdataException.MAX_RECORDS) {
 			String str = String.format("本次请求的记录数超出了系统最大笔数为  %d 的限制！", BigdataException.MAX_RECORDS);
 			throw new RuntimeException(str);
