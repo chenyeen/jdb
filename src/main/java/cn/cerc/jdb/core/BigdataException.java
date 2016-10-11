@@ -2,6 +2,8 @@ package cn.cerc.jdb.core;
 
 import java.io.Serializable;
 
+import cn.cerc.jdb.mysql.SqlQuery;
+
 /**
  * 单次数据请求，超过最大笔数限制
  * @author 张弓
@@ -14,7 +16,7 @@ public class BigdataException extends RuntimeException implements Serializable {
 
 	private String commandText;
 
-	public BigdataException(DataQuery dataset, int rows) {
+	public BigdataException(SqlQuery dataset, int rows) {
 		super(String.format("本次请求的记录数超出了系统最大笔数为  %d 的限制！", MAX_RECORDS));
 		this.commandText = dataset.getCommandText();
 	}
@@ -23,7 +25,7 @@ public class BigdataException extends RuntimeException implements Serializable {
 		return commandText;
 	}
 
-	public static void check(DataQuery dataset, int rows) {
+	public static void check(SqlQuery dataset, int rows) {
 		if (rows > (MAX_RECORDS + 1)) {
 			throw new BigdataException(dataset, rows);
 		}

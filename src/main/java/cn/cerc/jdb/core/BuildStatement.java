@@ -22,7 +22,7 @@ public class BuildStatement implements AutoCloseable {
 	private List<Object> items = new ArrayList<>();
 	private SimpleDateFormat sdf;
 
-	BuildStatement(Connection conn) {
+	public BuildStatement(Connection conn) {
 		this.conn = conn;
 	}
 
