@@ -1,9 +1,11 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
+
+import cn.cerc.jdb.core.IConnection;
 
 public class Transaction implements AutoCloseable {
 	private static final Logger log = Logger.getLogger(Transaction.class);

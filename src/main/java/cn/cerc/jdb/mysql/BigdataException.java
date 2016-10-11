@@ -1,8 +1,6 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import java.io.Serializable;
-
-import cn.cerc.jdb.mysql.SqlQuery;
 
 /**
  * 单次数据请求，超过最大笔数限制

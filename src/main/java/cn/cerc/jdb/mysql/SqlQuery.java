@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import cn.cerc.jdb.core.BigdataException;
 import cn.cerc.jdb.core.DataSet;
 import cn.cerc.jdb.core.DataSetEvent;
 import cn.cerc.jdb.core.DataSetState;
@@ -18,7 +17,6 @@ import cn.cerc.jdb.core.FieldDefs;
 import cn.cerc.jdb.core.IConnection;
 import cn.cerc.jdb.core.IDataOperator;
 import cn.cerc.jdb.core.Record;
-import cn.cerc.jdb.core.SqlConnection;
 import cn.cerc.jdb.field.BooleanField;
 import cn.cerc.jdb.field.DoubleField;
 import cn.cerc.jdb.field.IField;

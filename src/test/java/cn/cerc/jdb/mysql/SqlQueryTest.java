@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.cerc.jdb.core.BigdataException;
 import cn.cerc.jdb.core.StubConnection;
 
 public class SqlQueryTest {

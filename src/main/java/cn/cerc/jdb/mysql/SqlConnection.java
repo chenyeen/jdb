@@ -1,4 +1,4 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,8 +1,6 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import java.sql.Connection;
-
-import cn.cerc.jdb.mysql.SqlOperator;
 
 @Deprecated
 public class TableOperator extends SqlOperator {

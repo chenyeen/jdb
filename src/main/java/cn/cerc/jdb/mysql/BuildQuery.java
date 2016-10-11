@@ -1,10 +1,12 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.cerc.jdb.mysql.SqlQuery;
+import cn.cerc.jdb.core.IConnection;
+import cn.cerc.jdb.core.Record;
+import cn.cerc.jdb.core.TDateTime;
 
 /**
  * 用于组合生成select指令，便于多条件查询编写

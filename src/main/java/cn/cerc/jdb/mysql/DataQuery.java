@@ -1,6 +1,6 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
-import cn.cerc.jdb.mysql.SqlQuery;
+import cn.cerc.jdb.core.IConnection;
 
 @Deprecated
 public class DataQuery extends SqlQuery {

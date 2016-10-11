@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import cn.cerc.jdb.core.BatchScript;
+import cn.cerc.jdb.mysql.BatchScript;
 
 public class BatchScriptTest {
 	private BatchScript bs;

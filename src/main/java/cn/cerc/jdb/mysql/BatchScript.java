@@ -1,10 +1,8 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mysql;
 
 import static cn.cerc.jdb.other.utils.vbCrLf;
 
 import org.apache.log4j.Logger;
-
-import cn.cerc.jdb.mysql.SqlQuery;
 
 public class BatchScript {
 	private static final Logger log = Logger.getLogger(BatchScript.class);

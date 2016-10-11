@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import cn.cerc.jdb.core.BuildStatement;
 import cn.cerc.jdb.core.FieldDefs;
 import cn.cerc.jdb.core.IDataOperator;
 import cn.cerc.jdb.core.Record;
