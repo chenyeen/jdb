@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import cn.cerc.jdb.core.DataSet;
 import cn.cerc.jdb.core.DataSetEvent;
 import cn.cerc.jdb.core.DataSetState;
 import cn.cerc.jdb.core.FieldDefs;
@@ -24,7 +23,7 @@ import cn.cerc.jdb.field.IntegerField;
 import cn.cerc.jdb.field.StringField;
 import cn.cerc.jdb.field.TDateTimeField;
 
-public class SqlQuery extends DataSet {
+public class SqlQuery extends DataQuery {
 	private static final Logger log = Logger.getLogger(SqlQuery.class);
 
 	private static final long serialVersionUID = 7316772894058168187L;
@@ -38,8 +37,6 @@ public class SqlQuery extends DataSet {
 	private boolean fetchFinish;
 	// 数据库保存操作执行对象
 	private IDataOperator operator;
-	// 批次保存模式，默认为post与delete立即保存
-	private boolean batchSave = false;
 	// 仅当batchSave为true时，delList才有记录存在
 	private List<Record> delList = new ArrayList<>();
 
@@ -62,7 +59,8 @@ public class SqlQuery extends DataSet {
 		this.connection = conn.getConnection();
 	}
 
-	public SqlQuery open() {
+	@Override
+	public DataQuery open() {
 		if (connection == null)
 			throw new RuntimeException("SqlConnection is null");
 		Connection conn = connection.getConnection();
@@ -216,8 +214,9 @@ public class SqlQuery extends DataSet {
 		return this.commandText;
 	}
 
+	@Override
 	public void post() {
-		if (batchSave)
+		if (this.isBatchSave())
 			return;
 		Record record = this.getCurrent();
 		if (record.getState() == DataSetState.dsInsert) {
@@ -237,15 +236,16 @@ public class SqlQuery extends DataSet {
 		super.delete();
 		if (record.getState() == DataSetState.dsInsert)
 			return;
-		if (batchSave)
+		if (this.isBatchSave())
 			delList.add(record);
 		else {
 			getDefaultOperator().delete(record);
 		}
 	}
 
+	@Override
 	public void save() {
-		if (!batchSave)
+		if (!this.isBatchSave())
 			throw new RuntimeException("batchSave is false");
 		IDataOperator operator = getDefaultOperator();
 		// 先执行删除
@@ -277,6 +277,7 @@ public class SqlQuery extends DataSet {
 		return operator;
 	}
 
+	@Override
 	public IDataOperator getOperator() {
 		return operator;
 	}
@@ -349,14 +350,6 @@ public class SqlQuery extends DataSet {
 		this.commandText = null;
 	}
 
-	public boolean isBatchSave() {
-		return batchSave;
-	}
-
-	public void setBatchSave(boolean batchSave) {
-		this.batchSave = batchSave;
-	}
-
 	public boolean isStrict() {
 		return this.getFieldDefs().isStrict();
 	}
@@ -364,5 +357,4 @@ public class SqlQuery extends DataSet {
 	public void setStrict(boolean strict) {
 		this.getFieldDefs().setStrict(strict);
 	}
-
 }
