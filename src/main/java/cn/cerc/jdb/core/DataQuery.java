@@ -1,7 +1,4 @@
-package cn.cerc.jdb.mysql;
-
-import cn.cerc.jdb.core.DataSet;
-import cn.cerc.jdb.core.IDataOperator;
+package cn.cerc.jdb.core;
 
 public abstract class DataQuery extends DataSet {
 	private static final long serialVersionUID = 7316772894058168187L;

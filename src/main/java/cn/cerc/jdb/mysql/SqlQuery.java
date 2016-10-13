@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import cn.cerc.jdb.core.DataQuery;
 import cn.cerc.jdb.core.DataSetEvent;
 import cn.cerc.jdb.core.DataSetState;
 import cn.cerc.jdb.core.FieldDefs;

@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import cn.cerc.jdb.field.IField;
-import cn.cerc.jdb.mysql.DataQuery;
 
 public class FieldDefs implements Serializable, Iterable<String> {
 	private static final long serialVersionUID = 7478897050846245325L;
@@ -72,7 +71,7 @@ public class FieldDefs implements Serializable, Iterable<String> {
 	}
 
 	@Deprecated
-	public void add(DataQuery query) {
+	public void add(DataSet query) {
 		FieldDefs fds = query.getFieldDefs();
 		for (String field : query.getFieldDefs())
 			this.add(field, fds.getDefine(field));
