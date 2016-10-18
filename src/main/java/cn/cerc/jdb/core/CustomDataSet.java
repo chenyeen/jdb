@@ -350,6 +350,7 @@ public class CustomDataSet implements IRecord, Iterable<Record> {
 	}
 
 	// 将内容转成List
+	@Deprecated
 	public <T> List<T> getList(Class<T> clazz) {
 		List<T> items = new ArrayList<T>();
 		for (Record rs : this) {
