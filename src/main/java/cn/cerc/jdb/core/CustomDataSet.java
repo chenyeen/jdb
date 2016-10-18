@@ -358,8 +358,14 @@ public class CustomDataSet implements IRecord, Iterable<Record> {
 		return items;
 	}
 
-	// 将内容转成Map
+	// 将内容转成Map，此函数名已改为 asMap
+	@Deprecated
 	public <T> Map<String, T> getMap(Class<T> clazz, String... keys) {
+		return asMap(clazz, keys);
+	}
+
+	// 将内容转成 Map
+	public <T> Map<String, T> asMap(Class<T> clazz, String... keys) {
 		Map<String, T> items = new HashMap<String, T>();
 		for (Record rs : this) {
 			String key = "";
@@ -371,6 +377,14 @@ public class CustomDataSet implements IRecord, Iterable<Record> {
 			}
 			items.put(key, rs.getObject(clazz));
 		}
+		return items;
+	}
+
+	// 将内容转成 List
+	public <T> List<T> asList(Class<T> clazz) {
+		List<T> items = new ArrayList<T>();
+		for (Record rs : this)
+			items.add(rs.getObject(clazz));
 		return items;
 	}
 
