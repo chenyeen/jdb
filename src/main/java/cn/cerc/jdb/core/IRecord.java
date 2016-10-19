@@ -33,8 +33,14 @@ public interface IRecord {
 
 	public Object getField(String field);
 
-	// 转成指定类型的对象
+	// 转成指定类型的对象, 名称改为asObject
+	@Deprecated
 	default public <T> T getObject(Class<T> clazz) {
+		return asObject(clazz);
+	}
+	
+	// 转成指定类型的对象
+	default public <T> T asObject(Class<T> clazz) {
 		T obj;
 		try {
 			obj = clazz.newInstance();

@@ -376,7 +376,7 @@ public class CustomDataSet implements IRecord, Iterable<Record> {
 				else
 					key += ";" + rs.getString(field);
 			}
-			items.put(key, rs.getObject(clazz));
+			items.put(key, rs.asObject(clazz));
 		}
 		return items;
 	}
@@ -385,7 +385,7 @@ public class CustomDataSet implements IRecord, Iterable<Record> {
 	public <T> List<T> asList(Class<T> clazz) {
 		List<T> items = new ArrayList<T>();
 		for (Record rs : this)
-			items.add(rs.getObject(clazz));
+			items.add(rs.asObject(clazz));
 		return items;
 	}
 
