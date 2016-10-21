@@ -4,11 +4,17 @@ import static cn.cerc.jdb.other.utils.vbCrLf;
 
 import org.apache.log4j.Logger;
 
+import cn.cerc.jdb.core.IHandle;
+
 public class BatchScript {
 	private static final Logger log = Logger.getLogger(BatchScript.class);
 	private StringBuffer items = new StringBuffer();
-	private SqlConnection conn = null;
+	private SqlConnection conn;
 	private boolean newLine = false;
+
+	public BatchScript(IHandle handle) {
+		this.conn = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
+	}
 
 	public BatchScript(SqlConnection conn) {
 		this.conn = conn;

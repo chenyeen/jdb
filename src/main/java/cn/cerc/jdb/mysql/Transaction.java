@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
-import cn.cerc.jdb.core.IConnection;
+import cn.cerc.jdb.core.IHandle;
 
 public class Transaction implements AutoCloseable {
 	private static final Logger log = Logger.getLogger(Transaction.class);
@@ -26,8 +26,18 @@ public class Transaction implements AutoCloseable {
 		}
 	}
 
-	public Transaction(IConnection conn) {
-		this(conn.getConnection().getConnection());
+	public Transaction(IHandle handle) {
+		SqlConnection cn = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
+		this.conn = cn.getConnection();
+		try {
+			if (conn.getAutoCommit()) {
+				conn.setAutoCommit(false);
+				this.active = true;
+			}
+		} catch (SQLException e) {
+			log.error(e.getMessage(), e);
+			throw new RuntimeException(e);
+		}
 	}
 
 	public boolean commit() {

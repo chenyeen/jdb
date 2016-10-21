@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import cn.cerc.jdb.core.FieldDefs;
 import cn.cerc.jdb.core.IDataOperator;
+import cn.cerc.jdb.core.IHandle;
 import cn.cerc.jdb.core.Record;
 import cn.cerc.jdb.field.IField;
 
@@ -27,6 +28,11 @@ public class SqlOperator implements IDataOperator {
 
 	public SqlOperator(Connection connection) {
 		this.conn = connection;
+	}
+	
+	public SqlOperator(IHandle handle) {
+		SqlConnection cn =	(SqlConnection) handle.getProperty(SqlQuery.sessionId);
+		this.conn = cn.getConnection();
 	}
 
 	@Override

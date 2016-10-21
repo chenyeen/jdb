@@ -14,8 +14,8 @@ import cn.cerc.jdb.core.DataQuery;
 import cn.cerc.jdb.core.DataSetEvent;
 import cn.cerc.jdb.core.DataSetState;
 import cn.cerc.jdb.core.FieldDefs;
-import cn.cerc.jdb.core.IConnection;
 import cn.cerc.jdb.core.IDataOperator;
+import cn.cerc.jdb.core.IHandle;
 import cn.cerc.jdb.core.Record;
 import cn.cerc.jdb.field.BooleanField;
 import cn.cerc.jdb.field.DoubleField;
@@ -40,6 +40,8 @@ public class SqlQuery extends DataQuery {
 	private IDataOperator operator;
 	// 仅当batchSave为true时，delList才有记录存在
 	private List<Record> delList = new ArrayList<>();
+	// IHandle中识别码
+	public static String sessionId = "mysqlSession";
 
 	@Override
 	public void close() {
@@ -50,14 +52,12 @@ public class SqlQuery extends DataQuery {
 
 	public SqlQuery(SqlConnection conn) {
 		super();
-		// super.init(conn);
 		this.connection = conn;
 	}
 
-	public SqlQuery(IConnection conn) {
+	public SqlQuery(IHandle handle) {
 		super();
-		// super.init(conn.getConnection());
-		this.connection = conn.getConnection();
+		this.connection = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
 	}
 
 	@Override

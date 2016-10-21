@@ -1,7 +1,7 @@
 package cn.cerc.jdb.core;
 
-import cn.cerc.jdb.mysql.SqlConnection;
-
 public interface IConnection {
-	public SqlConnection getConnection();
+
+	// 返回连接
+	public Object getConnection();
 }

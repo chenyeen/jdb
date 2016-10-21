@@ -4,19 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import cn.cerc.jdb.core.IConnection;
-import cn.cerc.jdb.mysql.BuildQuery;
-import cn.cerc.jdb.mysql.SqlConnection;
+import cn.cerc.jdb.core.StubConnection;
 
-public class BuildQueryTest implements IConnection {
+public class BuildQueryTest {
 	// private static final Logger log = Logger.getLogger(BuildSQLTest.class);
 
-	private BuildQuery bs = new BuildQuery(this);
-
-	@Override
-	public SqlConnection getConnection() {
-		return null;
-	}
+	private BuildQuery bs = new BuildQuery(new StubConnection());
 
 	@Test
 	public void test_close() {

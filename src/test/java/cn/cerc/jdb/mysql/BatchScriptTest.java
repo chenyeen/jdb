@@ -13,7 +13,8 @@ public class BatchScriptTest {
 
 	@Test
 	public void test_getItems() {
-		bs = new BatchScript(null);
+		StubConnection conn = new StubConnection();
+		bs = new BatchScript(conn);
 		bs.add("select * from a");
 		bs.addSemicolon();
 		bs.add("select * from b");
