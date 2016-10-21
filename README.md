@@ -3,8 +3,8 @@
 基于DataSet所派生的DataQuery，为操作各类数据仓库的基类，其派生有：
 
 ### rds数据库操作：
-* SqlQuery：用于操作mysql数据表，可取代hibernate，特别适用各类组合条件查询，支持批处理与事务，也支持与hibernate互转。
-* MssQuery：用于操作mssql数据表，可取代hibernate，特别适用各类组合条件查询，支持批处理与事务，也支持与hibernate互转。
+* SqlQuery：用于操作mysql数据表，可取代hibernate/mybatis，特别适用各类组合条件查询，支持批处理与事务，也支持与hibernate互转。
+* MssQuery：用于操作mssql数据表，可取代hibernate/mybatis，特别适用各类组合条件查询，支持批处理与事务，也支持与hibernate互转。
 
 ### nosql数据库操作：
 * NasQuery：用于以类似mysql的操作方式，操作网络文件或本地文件，降低学习成本，以及由mysql迁移到nas的成本。
