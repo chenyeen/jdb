@@ -2,7 +2,7 @@
 创建用于java使用的数据表操作工具，其核心为DataSet类，用于建立内存表。
 基于DataSet所派生的DataQuery，为操作各类数据仓库的基类，其派生有：
 
-# rds数据库类操作：
+# rds数据库操作：
 * SqlQuery：用于操作mysql数据表，可取代hibernate，特别适用各类组合条件查询，支持批处理与事务，也支持与hibernate互转。
 * MssQuery：用于操作mssql数据表，可取代hibernate，特别适用各类组合条件查询，支持批处理与事务，也支持与hibernate互转。
 
