@@ -1,4 +1,4 @@
-# jdb
+# jdb 项目简介：
 创建用于java使用的数据表操作工具，其核心为DataSet类，用于建立内存表。
 基于DataSet所派生的DataQuery，为操作各类数据仓库的基类，其派生有：
 
