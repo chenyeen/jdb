@@ -9,10 +9,12 @@ import cn.cerc.jdb.core.IHandle;
 public class BatchScript {
 	private static final Logger log = Logger.getLogger(BatchScript.class);
 	private StringBuffer items = new StringBuffer();
+	private IHandle handle;
 	private SqlConnection conn;
 	private boolean newLine = false;
 
 	public BatchScript(IHandle handle) {
+		this.handle = handle;
 		this.conn = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
 	}
 
@@ -69,7 +71,7 @@ public class BatchScript {
 		for (String item : tmp) {
 			if (!item.trim().equals("")) {
 				log.debug(item.trim() + ";");
-				SqlQuery ds = new SqlQuery(conn);
+				SqlQuery ds = new SqlQuery(handle);
 				ds.add(item.trim());
 				ds.open();
 				if (ds.eof())

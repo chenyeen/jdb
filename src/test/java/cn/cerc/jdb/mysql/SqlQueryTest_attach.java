@@ -4,16 +4,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cn.cerc.jdb.core.Record;
-import cn.cerc.jdb.core.StubConnection;
+import cn.cerc.jdb.core.StubHandle;
 
 public class SqlQueryTest_attach {
 	private SqlQuery ds;
-	private SqlConnection conn;
+	private StubHandle handle;
 
 	@Before
 	public void setUp() {
-		conn = new StubConnection();
-		ds = new SqlQuery(conn);
+		handle = new StubHandle();
+		ds = new SqlQuery(handle);
 	}
 
 	@Test

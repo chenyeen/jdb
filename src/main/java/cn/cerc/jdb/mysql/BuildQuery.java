@@ -23,20 +23,15 @@ public class BuildQuery {
 
 	private String orderText;
 	private String sql;
-	private SqlConnection conn = null;
+	private IHandle handle;
 
 	public void setDataSet(SqlQuery dataSet) {
 		this.dataSet = dataSet;
 	}
 
-	public BuildQuery(SqlConnection conn) {
-		super();
-		this.conn = conn;
-	}
-
 	public BuildQuery(IHandle handle) {
 		super();
-		this.conn = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
+		this.handle = handle;
 	}
 
 	public BuildQuery byParam(String param) {
@@ -194,7 +189,7 @@ public class BuildQuery {
 
 	public SqlQuery getDataSet() {
 		if (this.dataSet == null)
-			this.dataSet = new SqlQuery(conn);
+			this.dataSet = new SqlQuery(handle);
 		return this.dataSet;
 	}
 

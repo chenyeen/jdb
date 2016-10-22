@@ -5,18 +5,18 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.cerc.jdb.core.StubConnection;
+import cn.cerc.jdb.core.StubHandle;
 
 public class BuildQueryTest {
 	// private static final Logger log = Logger.getLogger(BuildSQLTest.class);
 
 	private BuildQuery bs;
-	private SqlConnection conn;
+	private StubHandle handle;
 
 	@Before
 	public void setUp() {
-		conn = new StubConnection();
-		bs = new BuildQuery(conn);
+		handle = new StubHandle();
+		bs = new BuildQuery(handle);
 	}
 
 	@Test

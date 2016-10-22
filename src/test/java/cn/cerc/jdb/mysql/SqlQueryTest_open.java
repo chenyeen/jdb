@@ -3,17 +3,17 @@ package cn.cerc.jdb.mysql;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.cerc.jdb.core.StubConnection;
+import cn.cerc.jdb.core.StubHandle;
 import cn.cerc.jdb.field.StringField;
 
 public class SqlQueryTest_open {
 	private SqlQuery ds;
-	private SqlConnection conn;
+	private StubHandle handl;
 
 	@Before
 	public void setUp() {
-		conn = new StubConnection();
-		ds = new SqlQuery(conn);
+		handl = new StubHandle();
+		ds = new SqlQuery(handl);
 		ds.setMaximum(1);
 		ds.add("select CorpNo_,CWCode_,PartCode_ from TranB1B where CorpNo_='%s'", "911001");
 	}

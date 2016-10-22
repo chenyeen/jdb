@@ -23,7 +23,7 @@ public class StubConfig implements IConfig {
 			File file2 = new File(SETTINGS_FILE_NAME);
 			if (file2.exists()) {
 				properties.load(new FileInputStream(SETTINGS_FILE_NAME));
-				log.info("read properties from localhost[app.properties].");
+				log.info("read properties from " + SETTINGS_FILE_NAME);
 			}
 		} catch (FileNotFoundException e) {
 			log.warn("The settings file '" + SETTINGS_FILE_NAME + "' does not exist.");

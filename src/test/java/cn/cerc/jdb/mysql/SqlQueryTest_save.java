@@ -6,21 +6,23 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.cerc.jdb.core.StubConnection;
+import cn.cerc.jdb.core.StubHandle;
 
 public class SqlQueryTest_save {
+	private StubHandle handle;
 	private SqlConnection conn;
 
 	@Before
 	public void setUp() {
-		conn = new StubConnection();
+		handle = new StubHandle();
+		conn = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
 	}
 
 	@Test
 	@Ignore
 	public void test_delete() {
 		conn.execute("delete from temp");
-		SqlQuery ds = new SqlQuery(conn);
+		SqlQuery ds = new SqlQuery(handle);
 		ds.setBatchSave(true);
 		System.out.println("before insert, record count: " + getTotal("temp"));
 
@@ -61,7 +63,7 @@ public class SqlQueryTest_save {
 	}
 
 	private void insertTest(boolean batchSave) {
-		SqlQuery ds = new SqlQuery(conn);
+		SqlQuery ds = new SqlQuery(handle);
 		ds.setBatchSave(batchSave);
 		ds.add("select * from temp");
 		ds.open();
@@ -88,7 +90,7 @@ public class SqlQueryTest_save {
 	}
 
 	private int getTotal(String table) {
-		SqlQuery ds = new SqlQuery(conn);
+		SqlQuery ds = new SqlQuery(handle);
 		ds.add("select count(*) as total from %s", table);
 		ds.open();
 		return ds.getInt("total");

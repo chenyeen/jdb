@@ -6,18 +6,18 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.cerc.jdb.core.StubConnection;
+import cn.cerc.jdb.core.StubHandle;
 
 public class SqlQueryTest {
 	private static final Logger log = Logger.getLogger(SqlQueryTest.class);
 	private static final String Account = "Account";
 	private SqlQuery ds;
-	private SqlConnection conn;
+	private StubHandle handle;
 
 	@Before
 	public void setUp() {
-		conn = new StubConnection();
-		ds = new SqlQuery(conn);
+		handle = new StubHandle();
+		ds = new SqlQuery(handle);
 	}
 
 	@Test

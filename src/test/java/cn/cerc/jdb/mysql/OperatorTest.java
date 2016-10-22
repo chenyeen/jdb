@@ -7,24 +7,25 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.cerc.jdb.core.Record;
-import cn.cerc.jdb.core.StubConnection;
+import cn.cerc.jdb.core.StubHandle;
 
 public class OperatorTest {
 	private int maxTest = 50;
 	private SqlOperator obj;
 
-	private SqlConnection handle;
+	private StubHandle handle;
 
 	@Before
 	public void setUp() {
-		handle = new StubConnection();
+		handle = new StubHandle();
 		obj = new SqlOperator(handle);
 	}
 
 	@Test
 	@Ignore
 	public void test_2_insert_new() {
-		handle.execute("delete from temp where name_='new'");
+		SqlConnection conn = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
+		conn.execute("delete from temp where name_='new'");
 		SqlQuery ds = new SqlQuery(handle);
 		ds.setMaximum(0);
 		ds.add("select * from temp");

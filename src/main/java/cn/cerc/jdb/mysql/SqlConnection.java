@@ -8,9 +8,8 @@ import java.sql.Statement;
 import org.apache.log4j.Logger;
 
 import cn.cerc.jdb.core.IConnection;
-import cn.cerc.jdb.core.IHandle;
 
-public class SqlConnection implements IHandle, IConnection {
+public class SqlConnection implements IConnection {
 	public static final String rds_site = "rds.site";
 	public static final String rds_database = "rds.database";
 	public static final String rds_username = "rds.username";
@@ -44,7 +43,7 @@ public class SqlConnection implements IHandle, IConnection {
 	// }
 
 	public boolean execute(String sql) {
-		initSession();
+		openSession();
 		try {
 			log.debug(sql);
 			Statement st = conn.createStatement();
@@ -58,16 +57,12 @@ public class SqlConnection implements IHandle, IConnection {
 
 	@Override
 	public Object getSession() {
-		initSession();
+		openSession();
 		return this;
 	}
 
-	public Connection getConnection() {
-		initSession();
-		return conn;
-	}
-
-	private void initSession() {
+	@Override
+	public void openSession() {
 		if (!this.active) {
 			String host = config.getProperty(rds_site, "127.0.0.1:3306");
 			String db = config.getProperty(rds_database, "appdb");
@@ -90,7 +85,7 @@ public class SqlConnection implements IHandle, IConnection {
 	}
 
 	@Override
-	public final void close() {
+	public void closeSession() {
 		try {
 			if (conn != null) {
 				log.debug("close connection.");
@@ -101,29 +96,17 @@ public class SqlConnection implements IHandle, IConnection {
 		}
 	}
 
+	public Connection getConnection() {
+		openSession();
+		return conn;
+	}
+
 	public int getTag() {
 		return tag;
 	}
 
 	public void setTag(int tag) {
 		this.tag = tag;
-	}
-
-	@Override
-	public String getCorpNo() {
-		throw new RuntimeException("corpNo is null");
-	}
-
-	@Override
-	public String getUserCode() {
-		throw new RuntimeException("userCode is null");
-	}
-
-	@Override
-	public Object getProperty(String key) {
-		if (SqlQuery.sessionId.equals(key))
-			return this;
-		return null;
 	}
 
 	//

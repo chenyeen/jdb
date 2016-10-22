@@ -6,15 +6,15 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.cerc.jdb.core.StubConnection;
+import cn.cerc.jdb.core.StubHandle;
 
 public class BatchScriptTest {
-	private SqlConnection handle;
+	private StubHandle handle;
 	private BatchScript bs;
 
 	@Before
 	public void setUp() {
-		handle = new StubConnection();
+		handle = new StubHandle();
 	}
 
 	@Test

@@ -5,17 +5,17 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.cerc.jdb.core.PostFieldException;
-import cn.cerc.jdb.core.StubConnection;
+import cn.cerc.jdb.core.StubHandle;
 import cn.cerc.jdb.core.TDateTime;
 import cn.cerc.jdb.field.StringField;
 
 public class SqlQueryTest_post1 {
 	private SqlQuery ds;
-	private SqlConnection conn;
+	private StubHandle conn;
 
 	@Before
 	public void setUp() {
-		conn = new StubConnection();
+		conn = new StubHandle();
 		ds = new SqlQuery(conn);
 	}
 
