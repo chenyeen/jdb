@@ -10,15 +10,19 @@ import org.apache.log4j.Logger;
 import cn.cerc.jdb.core.IHandle;
 
 public class SqlConnection implements IHandle, AutoCloseable {
+	public static final String rds_site = "rds.site";
+	public static final String rds_database = "rds.database";
+	public static final String rds_username = "rds.username";
+	public static final String rds_password = "rds.password";
 	private static final Logger log = Logger.getLogger(SqlConnection.class);
 	private Connection connection;
 	private int tag;
 
 	public SqlConnection(IConfig config) {
-		String host = config.getProperty("rds.site", "127.0.0.1:3306");
-		String user = config.getProperty("rds.database", "appdb");
-		String pwd = config.getProperty("rds.username", "appdb_user");
-		String db = config.getProperty("rds.password", "appdb_password");
+		String host = config.getProperty(rds_site, "127.0.0.1:3306");
+		String user = config.getProperty(rds_database, "appdb");
+		String pwd = config.getProperty(rds_username, "appdb_user");
+		String db = config.getProperty(rds_password, "appdb_password");
 		if (host == null || user == null || pwd == null || db == null)
 			throw new RuntimeException("RDS配置为空，无法连接主机！");
 		try {
