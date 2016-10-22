@@ -21,7 +21,7 @@ public class SqlSession implements IConnection {
 	private static final Logger log = Logger.getLogger(SqlSession.class);
 	private IConfig config;
 	private boolean active = false;
-	private Connection conn;
+	private Connection connection;
 	private int tag;
 
 	@Override
@@ -50,7 +50,7 @@ public class SqlSession implements IConnection {
 		openSession();
 		try {
 			log.debug(sql);
-			Statement st = conn.createStatement();
+			Statement st = connection.createStatement();
 			st.execute(sql);
 			return true;
 		} catch (SQLException e) {
@@ -78,7 +78,7 @@ public class SqlSession implements IConnection {
 				log.debug("create connection for mysql: " + host);
 				String url = String.format("jdbc:mysql://%s/%s", host, db);
 				Class.forName("com.mysql.jdbc.Driver");
-				conn = DriverManager.getConnection(url, user, pwd);
+				connection = DriverManager.getConnection(url, user, pwd);
 			} catch (ClassNotFoundException e) {
 				throw new RuntimeException("找不到 mysql.jdbc 驱动");
 			} catch (SQLException e) {
@@ -91,9 +91,10 @@ public class SqlSession implements IConnection {
 	@Override
 	public void closeSession() {
 		try {
-			if (conn != null) {
+			if (connection != null) {
 				log.debug("close connection.");
-				conn.close();
+				connection.close();
+				connection = null;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -102,7 +103,7 @@ public class SqlSession implements IConnection {
 
 	public Connection getConnection() {
 		openSession();
-		return conn;
+		return connection;
 	}
 
 	public int getTag() {
@@ -111,6 +112,11 @@ public class SqlSession implements IConnection {
 
 	public void setTag(int tag) {
 		this.tag = tag;
+	}
+
+	public void setConnection(Connection connection) {
+		this.active = connection != null;
+		this.connection = connection;
 	}
 
 	//
