@@ -70,9 +70,9 @@ public class SqlConnection implements IHandle, IConnection {
 	private void initSession() {
 		if (!this.active) {
 			String host = config.getProperty(rds_site, "127.0.0.1:3306");
-			String user = config.getProperty(rds_database, "appdb");
-			String pwd = config.getProperty(rds_username, "appdb_user");
-			String db = config.getProperty(rds_password, "appdb_password");
+			String db = config.getProperty(rds_database, "appdb");
+			String user = config.getProperty(rds_username, "appdb_user");
+			String pwd = config.getProperty(rds_password, "appdb_password");
 			if (host == null || user == null || pwd == null || db == null)
 				throw new RuntimeException("RDS配置为空，无法连接主机！");
 			try {
