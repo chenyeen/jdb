@@ -7,31 +7,27 @@ import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
-public class SqlConnection implements AutoCloseable {
+import cn.cerc.jdb.core.IConnection;
+import cn.cerc.jdb.core.IHandle;
+
+public class SqlConnection implements IHandle, IConnection {
+	public static final String rds_site = "rds.site";
+	public static final String rds_database = "rds.database";
+	public static final String rds_username = "rds.username";
+	public static final String rds_password = "rds.password";
 	private static final Logger log = Logger.getLogger(SqlConnection.class);
-	private Connection connection;
+	private IConfig config;
+	private boolean active = false;
+	private Connection conn;
 	private int tag;
 
-	public void init(IRDSConfig config) throws SqlConnectionException {
-		String host = config.get_rds_host();
-		String user = config.get_rds_account();
-		String pwd = config.get_rds_password();
-		String db = config.get_rds_database();
-		if (host == null || user == null || pwd == null || db == null)
-			throw new RuntimeException("RDS配置为空，无法连接主机！");
-		try {
-			log.debug("create connection for mysql: " + host);
-			String url = String.format("jdbc:mysql://%s/%s", host, db);
-			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection(url, user, pwd);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException("找不到 mysql.jdbc 驱动");
-		} catch (SQLException e) {
-			SqlConnectionException err = new SqlConnectionException(e.getMessage());
-			err.addSuppressed(e);
-			err.setHost(host);
-			throw err;
-		}
+	@Override
+	public void setConfig(IConfig config) {
+		this.config = config;
+	}
+
+	public IConfig getConfig() {
+		return config;
 	}
 
 	// private void init_tomcat() {
@@ -48,9 +44,10 @@ public class SqlConnection implements AutoCloseable {
 	// }
 
 	public boolean execute(String sql) {
+		initSession();
 		try {
 			log.debug(sql);
-			Statement st = connection.createStatement();
+			Statement st = conn.createStatement();
 			st.execute(sql);
 			return true;
 		} catch (SQLException e) {
@@ -59,16 +56,45 @@ public class SqlConnection implements AutoCloseable {
 		}
 	}
 
+	@Override
+	public Object getSession() {
+		initSession();
+		return this;
+	}
+
 	public Connection getConnection() {
-		return connection;
+		initSession();
+		return conn;
+	}
+
+	private void initSession() {
+		if (!this.active) {
+			String host = config.getProperty(rds_site, "127.0.0.1:3306");
+			String db = config.getProperty(rds_database, "appdb");
+			String user = config.getProperty(rds_username, "appdb_user");
+			String pwd = config.getProperty(rds_password, "appdb_password");
+			if (host == null || user == null || pwd == null || db == null)
+				throw new RuntimeException("RDS配置为空，无法连接主机！");
+			try {
+				log.debug("create connection for mysql: " + host);
+				String url = String.format("jdbc:mysql://%s/%s", host, db);
+				Class.forName("com.mysql.jdbc.Driver");
+				conn = DriverManager.getConnection(url, user, pwd);
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException("找不到 mysql.jdbc 驱动");
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			}
+			this.active = true;
+		}
 	}
 
 	@Override
 	public final void close() {
 		try {
-			if (connection != null) {
+			if (conn != null) {
 				log.debug("close connection.");
-				connection.close();
+				conn.close();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -81,6 +107,23 @@ public class SqlConnection implements AutoCloseable {
 
 	public void setTag(int tag) {
 		this.tag = tag;
+	}
+
+	@Override
+	public String getCorpNo() {
+		throw new RuntimeException("corpNo is null");
+	}
+
+	@Override
+	public String getUserCode() {
+		throw new RuntimeException("userCode is null");
+	}
+
+	@Override
+	public Object getProperty(String key) {
+		if (SqlQuery.sessionId.equals(key))
+			return this;
+		return null;
 	}
 
 	//

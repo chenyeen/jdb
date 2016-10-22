@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.cerc.jdb.core.IConnection;
+import cn.cerc.jdb.core.IHandle;
 import cn.cerc.jdb.core.Record;
 import cn.cerc.jdb.core.TDateTime;
 
@@ -34,9 +34,9 @@ public class BuildQuery {
 		this.conn = conn;
 	}
 
-	public BuildQuery(IConnection conn) {
+	public BuildQuery(IHandle handle) {
 		super();
-		this.conn = conn.getConnection();
+		this.conn = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
 	}
 
 	public BuildQuery byParam(String param) {

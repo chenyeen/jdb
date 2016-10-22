@@ -70,13 +70,6 @@ public class FieldDefs implements Serializable, Iterable<String> {
 		}
 	}
 
-	@Deprecated
-	public void add(DataSet query) {
-		FieldDefs fds = query.getFieldDefs();
-		for (String field : query.getFieldDefs())
-			this.add(field, fds.getDefine(field));
-	}
-
 	public void clear() {
 		fields.clear();
 	}

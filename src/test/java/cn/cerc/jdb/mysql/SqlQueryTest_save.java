@@ -2,13 +2,19 @@ package cn.cerc.jdb.mysql;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.cerc.jdb.core.StubConnection;
 
 public class SqlQueryTest_save {
-	private StubConnection conn = new StubConnection();
+	private SqlConnection conn;
+
+	@Before
+	public void setUp() {
+		conn = new StubConnection();
+	}
 
 	@Test
 	@Ignore

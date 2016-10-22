@@ -150,31 +150,12 @@ public class DataSet extends CustomDataSet implements Serializable {
 		return getJSON();
 	}
 
-	@Deprecated
 	/**
-	 * 请改使用 appendDataSet;
 	 * 
 	 * @param source
-	 * @return
-	 */
-	public DataSet loadFrom(DataSet source) {
-		this.appendDataSet(source);
-		return this;
-	}
-
-	@Deprecated
-	public void loadFrom(DataSet source, boolean includeHead) {
-		this.appendDataSet(source);
-		if (includeHead) {
-			this.getHead().copyValues(source.getHead(), source.getHead().getFieldDefs());
-		}
-	}
-
-	/**
-	 * 请改使用 appendDataSet;
-	 * 
-	 * @param source 要复制的数据源
-	 * @param includeHead 是否连头部一起复制
+	 *            要复制的数据源
+	 * @param includeHead
+	 *            是否连头部一起复制
 	 */
 	public void appendDataSet(DataSet source, boolean includeHead) {
 		this.appendDataSet(source);

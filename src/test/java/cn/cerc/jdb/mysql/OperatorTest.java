@@ -10,13 +10,15 @@ import cn.cerc.jdb.core.Record;
 import cn.cerc.jdb.core.StubConnection;
 
 public class OperatorTest {
-	private StubConnection handle = new StubConnection();
 	private int maxTest = 50;
 	private SqlOperator obj;
 
+	private SqlConnection handle;
+
 	@Before
-	public void setUp() throws Exception {
-		obj = new SqlOperator(handle.getConnection());
+	public void setUp() {
+		handle = new StubConnection();
+		obj = new SqlOperator(handle);
 	}
 
 	@Test
@@ -39,7 +41,7 @@ public class OperatorTest {
 	@Test
 	@Ignore
 	public void test_3_insert_new() {
-		SqlOperator obj = new SqlOperator(handle.getConnection());
+		SqlOperator obj = new SqlOperator(handle);
 		obj.setTableName("temp");
 		for (int i = 0; i < maxTest; i++) {
 			Record record = new Record();

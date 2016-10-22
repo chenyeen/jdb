@@ -7,7 +7,7 @@ public class SyncUpdateException extends Exception {
 		super(e.getMessage());
 		this.addSuppressed(e);
 	}
-	
+
 	public SyncUpdateException(String message) {
 		super(message);
 	}

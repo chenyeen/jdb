@@ -1,5 +1,6 @@
 package cn.cerc.jdb.mysql;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -9,8 +10,14 @@ import cn.cerc.jdb.core.TDateTime;
 import cn.cerc.jdb.field.StringField;
 
 public class SqlQueryTest_post1 {
-	private StubConnection conn = new StubConnection();
-	private SqlQuery ds = new SqlQuery(conn);
+	private SqlQuery ds;
+	private SqlConnection conn;
+
+	@Before
+	public void setUp() {
+		conn = new StubConnection();
+		ds = new SqlQuery(conn);
+	}
 
 	@Test(expected = PostFieldException.class)
 	@Ignore(value = "仅允许在测试数据库运行")

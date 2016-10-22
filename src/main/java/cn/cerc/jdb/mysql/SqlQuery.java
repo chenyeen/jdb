@@ -14,8 +14,8 @@ import cn.cerc.jdb.core.DataQuery;
 import cn.cerc.jdb.core.DataSetEvent;
 import cn.cerc.jdb.core.DataSetState;
 import cn.cerc.jdb.core.FieldDefs;
-import cn.cerc.jdb.core.IConnection;
 import cn.cerc.jdb.core.IDataOperator;
+import cn.cerc.jdb.core.IHandle;
 import cn.cerc.jdb.core.Record;
 import cn.cerc.jdb.field.BooleanField;
 import cn.cerc.jdb.field.DoubleField;
@@ -28,6 +28,7 @@ public class SqlQuery extends DataQuery {
 	private static final Logger log = Logger.getLogger(SqlQuery.class);
 
 	private static final long serialVersionUID = 7316772894058168187L;
+	private IHandle handle;
 	private SqlConnection connection;
 	private String commandText;
 	private boolean active = false;
@@ -40,6 +41,8 @@ public class SqlQuery extends DataQuery {
 	private IDataOperator operator;
 	// 仅当batchSave为true时，delList才有记录存在
 	private List<Record> delList = new ArrayList<>();
+	// IHandle中识别码
+	public static String sessionId = "mysqlSession";
 
 	@Override
 	public void close() {
@@ -48,16 +51,10 @@ public class SqlQuery extends DataQuery {
 		super.close();
 	}
 
-	public SqlQuery(SqlConnection conn) {
+	public SqlQuery(IHandle handle) {
 		super();
-		// super.init(conn);
-		this.connection = conn;
-	}
-
-	public SqlQuery(IConnection conn) {
-		super();
-		// super.init(conn.getConnection());
-		this.connection = conn.getConnection();
+		this.handle = handle;
+		this.connection = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
 	}
 
 	@Override
@@ -186,14 +183,6 @@ public class SqlQuery extends DataQuery {
 		return active;
 	}
 
-	public void setConnection(SqlConnection connection) {
-		this.connection = connection;
-	}
-
-	public SqlConnection getConnection() {
-		return connection;
-	}
-
 	public SqlQuery add(String sql) {
 		if (commandText == null)
 			commandText = sql;
@@ -270,7 +259,7 @@ public class SqlQuery extends DataQuery {
 
 	protected IDataOperator getDefaultOperator() {
 		if (operator == null) {
-			SqlOperator def = new SqlOperator(connection.getConnection());
+			SqlOperator def = new SqlOperator(handle);
 			String tableName = def.findTableName(this.commandText);
 			def.setTableName(tableName);
 			operator = def;

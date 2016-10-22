@@ -10,12 +10,13 @@ import cn.cerc.jdb.core.StubConnection;
 
 public class SqlQueryTest {
 	private static final Logger log = Logger.getLogger(SqlQueryTest.class);
-	private StubConnection conn = new StubConnection();
 	private static final String Account = "Account";
 	private SqlQuery ds;
+	private SqlConnection conn;
 
 	@Before
 	public void setUp() {
+		conn = new StubConnection();
 		ds = new SqlQuery(conn);
 	}
 
