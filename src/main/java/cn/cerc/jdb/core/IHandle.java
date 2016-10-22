@@ -12,7 +12,8 @@ public interface IHandle {
 	public Object getProperty(String key);
 
 	// 关闭资源
-	public void close();
+	default public void closeConnections() {
+	}
 
 	// 用户姓名
 	default public String getUserName() {
