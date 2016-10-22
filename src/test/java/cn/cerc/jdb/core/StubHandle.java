@@ -1,14 +1,14 @@
 package cn.cerc.jdb.core;
 
 import cn.cerc.jdb.mysql.IConfig;
-import cn.cerc.jdb.mysql.MysqlSession;
+import cn.cerc.jdb.mysql.SqlSession;
 
 public class StubHandle implements IHandle {
-	private MysqlSession conn;
+	private SqlSession conn;
 
 	public StubHandle() {
 		super();
-		conn = new MysqlSession();
+		conn = new SqlSession();
 		IConfig config = new StubConfig();
 		conn.setConfig(config);
 	}
@@ -25,7 +25,7 @@ public class StubHandle implements IHandle {
 
 	@Override
 	public Object getProperty(String key) {
-		if (MysqlSession.sessionId.equals(key))
+		if (SqlSession.sessionId.equals(key))
 			return conn;
 		return null;
 	}

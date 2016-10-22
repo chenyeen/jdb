@@ -24,7 +24,7 @@ public class OperatorTest {
 	@Test
 	@Ignore
 	public void test_2_insert_new() {
-		MysqlSession conn = (MysqlSession) handle.getProperty(MysqlSession.sessionId);
+		SqlSession conn = (SqlSession) handle.getProperty(SqlSession.sessionId);
 		conn.execute("delete from temp where name_='new'");
 		SqlQuery ds = new SqlQuery(handle);
 		ds.setMaximum(0);

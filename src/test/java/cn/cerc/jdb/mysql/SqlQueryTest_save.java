@@ -10,12 +10,12 @@ import cn.cerc.jdb.core.StubHandle;
 
 public class SqlQueryTest_save {
 	private StubHandle handle;
-	private MysqlSession conn;
+	private SqlSession conn;
 
 	@Before
 	public void setUp() {
 		handle = new StubHandle();
-		conn = (MysqlSession) handle.getProperty(MysqlSession.sessionId);
+		conn = (SqlSession) handle.getProperty(SqlSession.sessionId);
 	}
 
 	@Test

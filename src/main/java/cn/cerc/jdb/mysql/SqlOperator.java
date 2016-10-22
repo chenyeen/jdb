@@ -27,7 +27,7 @@ public class SqlOperator implements IDataOperator {
 	private List<String> primaryKeys = new ArrayList<>();
 
 	public SqlOperator(IHandle handle) {
-		MysqlSession cn = (MysqlSession) handle.getProperty(MysqlSession.sessionId);
+		SqlSession cn = (SqlSession) handle.getProperty(SqlSession.sessionId);
 		this.conn = cn.getConnection();
 	}
 

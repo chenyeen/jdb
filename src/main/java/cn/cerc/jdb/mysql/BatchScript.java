@@ -10,12 +10,12 @@ public class BatchScript {
 	private static final Logger log = Logger.getLogger(BatchScript.class);
 	private StringBuffer items = new StringBuffer();
 	private IHandle handle;
-	private MysqlSession conn;
+	private SqlSession conn;
 	private boolean newLine = false;
 
 	public BatchScript(IHandle handle) {
 		this.handle = handle;
-		this.conn = (MysqlSession) handle.getProperty(MysqlSession.sessionId);
+		this.conn = (SqlSession) handle.getProperty(SqlSession.sessionId);
 	}
 
 	public BatchScript addSemicolon() {

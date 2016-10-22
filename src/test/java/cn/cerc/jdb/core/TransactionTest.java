@@ -6,17 +6,17 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.cerc.jdb.mysql.MysqlSession;
+import cn.cerc.jdb.mysql.SqlSession;
 import cn.cerc.jdb.mysql.Transaction;
 
 public class TransactionTest {
 	private StubHandle handle;
-	private MysqlSession conn;
+	private SqlSession conn;
 
 	@Before
 	public void setUp() {
 		handle = new StubHandle();
-		conn = (MysqlSession) handle.getProperty(MysqlSession.sessionId);
+		conn = (SqlSession) handle.getProperty(SqlSession.sessionId);
 	}
 
 	@Test

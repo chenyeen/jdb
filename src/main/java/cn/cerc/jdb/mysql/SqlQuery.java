@@ -29,7 +29,7 @@ public class SqlQuery extends DataQuery {
 
 	private static final long serialVersionUID = 7316772894058168187L;
 	private IHandle handle;
-	private MysqlSession connection;
+	private SqlSession connection;
 	private String commandText;
 	private boolean active = false;
 	// private boolean closeMax = false;
@@ -52,7 +52,7 @@ public class SqlQuery extends DataQuery {
 	public SqlQuery(IHandle handle) {
 		super();
 		this.handle = handle;
-		this.connection = (MysqlSession) handle.getProperty(MysqlSession.sessionId);
+		this.connection = (SqlSession) handle.getProperty(SqlSession.sessionId);
 	}
 
 	@Override
