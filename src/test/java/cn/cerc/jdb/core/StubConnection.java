@@ -8,6 +8,6 @@ public class StubConnection extends SqlConnection {
 	public StubConnection() {
 		super();
 		IConfig config = new StubConfig();
-		this.init(config);
+		this.setConfig(config);
 	}
 }

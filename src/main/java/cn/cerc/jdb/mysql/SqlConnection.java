@@ -22,8 +22,12 @@ public class SqlConnection implements IHandle, IConnection {
 	private int tag;
 
 	@Override
-	public void init(IConfig config) {
+	public void setConfig(IConfig config) {
 		this.config = config;
+	}
+
+	public IConfig getConfig() {
+		return config;
 	}
 
 	// private void init_tomcat() {

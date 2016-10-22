@@ -6,16 +6,15 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.cerc.jdb.core.StubConfig;
+import cn.cerc.jdb.core.StubConnection;
 
 public class BatchScriptTest {
 	private SqlConnection handle;
 	private BatchScript bs;
-	
+
 	@Before
-	public void setUp(){
-		handle = new SqlConnection();
-		handle.init(new StubConfig());
+	public void setUp() {
+		handle = new StubConnection();
 	}
 
 	@Test
@@ -57,9 +56,9 @@ public class BatchScriptTest {
 		assertEquals(bs.size(), 2);
 		assertEquals(bs.getItem(2), "select * from a");
 	}
-	
+
 	@Test
-	public void test_clean(){
+	public void test_clean() {
 		bs = new BatchScript(handle);
 		bs.add("select * from a;");
 		bs.clean();
