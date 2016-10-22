@@ -16,7 +16,7 @@ public class SqlConnection implements IHandle, IConnection {
 	public static final String rds_username = "rds.username";
 	public static final String rds_password = "rds.password";
 	private static final Logger log = Logger.getLogger(SqlConnection.class);
-	private Connection connection;
+	private Connection conn;
 	private int tag;
 
 	public SqlConnection(IConfig config) {
@@ -30,7 +30,7 @@ public class SqlConnection implements IHandle, IConnection {
 			log.debug("create connection for mysql: " + host);
 			String url = String.format("jdbc:mysql://%s/%s", host, db);
 			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection(url, user, pwd);
+			conn = DriverManager.getConnection(url, user, pwd);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("找不到 mysql.jdbc 驱动");
 		} catch (SQLException e) {
@@ -54,7 +54,7 @@ public class SqlConnection implements IHandle, IConnection {
 	public boolean execute(String sql) {
 		try {
 			log.debug(sql);
-			Statement st = connection.createStatement();
+			Statement st = conn.createStatement();
 			st.execute(sql);
 			return true;
 		} catch (SQLException e) {
@@ -65,15 +65,15 @@ public class SqlConnection implements IHandle, IConnection {
 
 	@Override
 	public Connection getConnection() {
-		return connection;
+		return conn;
 	}
 
 	@Override
 	public final void close() {
 		try {
-			if (connection != null) {
+			if (conn != null) {
 				log.debug("close connection.");
-				connection.close();
+				conn.close();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
