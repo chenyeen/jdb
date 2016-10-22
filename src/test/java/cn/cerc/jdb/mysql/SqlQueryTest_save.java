@@ -6,14 +6,14 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cn.cerc.jdb.core.StubConfig;
+import cn.cerc.jdb.core.StubConnection;
 
 public class SqlQueryTest_save {
 	private SqlConnection conn;
 
 	@Before
 	public void setUp() {
-		conn = new SqlConnection(new StubConfig());
+		conn = new StubConnection();
 	}
 
 	@Test

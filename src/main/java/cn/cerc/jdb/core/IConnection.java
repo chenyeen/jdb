@@ -1,7 +1,12 @@
 package cn.cerc.jdb.core;
 
+import cn.cerc.jdb.mysql.IConfig;
+
 public interface IConnection extends AutoCloseable {
 
-	// 返回连接
-	public Object getConnection();
+	//设置连接
+	public void init(IConfig config);
+
+	// 返回会话环境
+	public Object getSession();
 }

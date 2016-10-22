@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cn.cerc.jdb.core.Record;
-import cn.cerc.jdb.core.StubConfig;
+import cn.cerc.jdb.core.StubConnection;
 
 public class SqlQueryTest_attach {
 	private SqlQuery ds;
@@ -12,7 +12,7 @@ public class SqlQueryTest_attach {
 
 	@Before
 	public void setUp() {
-		conn = new SqlConnection(new StubConfig());
+		conn = new StubConnection();
 		ds = new SqlQuery(conn);
 	}
 

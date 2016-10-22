@@ -14,7 +14,7 @@ public class TransactionTest {
 
 	@Before
 	public void setUp() {
-		handle = new SqlConnection(new StubConfig());
+		handle = new StubConnection();
 	}
 
 	@Test

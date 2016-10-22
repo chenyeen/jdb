@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.cerc.jdb.core.StubConfig;
+import cn.cerc.jdb.core.StubConnection;
 
 public class SqlQueryTest {
 	private static final Logger log = Logger.getLogger(SqlQueryTest.class);
@@ -16,7 +16,7 @@ public class SqlQueryTest {
 
 	@Before
 	public void setUp() {
-		conn = new SqlConnection(new StubConfig());
+		conn = new StubConnection();
 		ds = new SqlQuery(conn);
 	}
 

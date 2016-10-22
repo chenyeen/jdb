@@ -7,7 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.cerc.jdb.core.Record;
-import cn.cerc.jdb.core.StubConfig;
+import cn.cerc.jdb.core.StubConnection;
 
 public class OperatorTest {
 	private int maxTest = 50;
@@ -17,7 +17,7 @@ public class OperatorTest {
 
 	@Before
 	public void setUp() {
-		handle = new SqlConnection(new StubConfig());
+		handle = new StubConnection();
 		obj = new SqlOperator(handle);
 	}
 

@@ -16,26 +16,14 @@ public class SqlConnection implements IHandle, IConnection {
 	public static final String rds_username = "rds.username";
 	public static final String rds_password = "rds.password";
 	private static final Logger log = Logger.getLogger(SqlConnection.class);
+	private IConfig config;
+	private boolean active = false;
 	private Connection conn;
 	private int tag;
 
-	public SqlConnection(IConfig config) {
-		String host = config.getProperty(rds_site, "127.0.0.1:3306");
-		String user = config.getProperty(rds_database, "appdb");
-		String pwd = config.getProperty(rds_username, "appdb_user");
-		String db = config.getProperty(rds_password, "appdb_password");
-		if (host == null || user == null || pwd == null || db == null)
-			throw new RuntimeException("RDS配置为空，无法连接主机！");
-		try {
-			log.debug("create connection for mysql: " + host);
-			String url = String.format("jdbc:mysql://%s/%s", host, db);
-			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection(url, user, pwd);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException("找不到 mysql.jdbc 驱动");
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+	@Override
+	public void init(IConfig config) {
+		this.config = config;
 	}
 
 	// private void init_tomcat() {
@@ -64,8 +52,36 @@ public class SqlConnection implements IHandle, IConnection {
 	}
 
 	@Override
+	public Object getSession() {
+		initSession();
+		return this;
+	}
+
 	public Connection getConnection() {
+		initSession();
 		return conn;
+	}
+
+	private void initSession() {
+		if (!this.active) {
+			String host = config.getProperty(rds_site, "127.0.0.1:3306");
+			String user = config.getProperty(rds_database, "appdb");
+			String pwd = config.getProperty(rds_username, "appdb_user");
+			String db = config.getProperty(rds_password, "appdb_password");
+			if (host == null || user == null || pwd == null || db == null)
+				throw new RuntimeException("RDS配置为空，无法连接主机！");
+			try {
+				log.debug("create connection for mysql: " + host);
+				String url = String.format("jdbc:mysql://%s/%s", host, db);
+				Class.forName("com.mysql.jdbc.Driver");
+				conn = DriverManager.getConnection(url, user, pwd);
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException("找不到 mysql.jdbc 驱动");
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			}
+			this.active = true;
+		}
 	}
 
 	@Override

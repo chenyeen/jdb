@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.cerc.jdb.core.StubConfig;
+import cn.cerc.jdb.core.StubConnection;
 
 public class BuildQueryTest {
 	// private static final Logger log = Logger.getLogger(BuildSQLTest.class);
@@ -15,7 +15,7 @@ public class BuildQueryTest {
 
 	@Before
 	public void setUp() {
-		conn = new SqlConnection(new StubConfig());
+		conn = new StubConnection();
 		bs = new BuildQuery(conn);
 	}
 

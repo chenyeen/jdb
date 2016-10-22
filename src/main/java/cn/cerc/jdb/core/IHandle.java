@@ -1,6 +1,6 @@
 package cn.cerc.jdb.core;
 
-public interface IHandle extends AutoCloseable {
+public interface IHandle {
 
 	// 帐套代码（公司别）
 	public String getCorpNo();
@@ -10,6 +10,9 @@ public interface IHandle extends AutoCloseable {
 
 	// 自定义参数，注：若key=null则返回实现接口的对象本身
 	public Object getProperty(String key);
+
+	// 关闭资源
+	public void close();
 
 	// 用户姓名
 	default public String getUserName() {

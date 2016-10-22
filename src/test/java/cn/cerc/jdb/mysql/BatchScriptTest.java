@@ -14,7 +14,8 @@ public class BatchScriptTest {
 	
 	@Before
 	public void setUp(){
-		handle = new SqlConnection(new StubConfig());
+		handle = new SqlConnection();
+		handle.init(new StubConfig());
 	}
 
 	@Test
