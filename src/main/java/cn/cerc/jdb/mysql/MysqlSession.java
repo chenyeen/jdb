@@ -9,12 +9,16 @@ import org.apache.log4j.Logger;
 
 import cn.cerc.jdb.core.IConnection;
 
-public class SqlConnection implements IConnection {
+public class MysqlSession implements IConnection {
+	// Propertys中识别码
 	public static final String rds_site = "rds.site";
 	public static final String rds_database = "rds.database";
 	public static final String rds_username = "rds.username";
 	public static final String rds_password = "rds.password";
-	private static final Logger log = Logger.getLogger(SqlConnection.class);
+	// IHandle中识别码
+	public static String sessionId = "mysqlSession";
+
+	private static final Logger log = Logger.getLogger(MysqlSession.class);
 	private IConfig config;
 	private boolean active = false;
 	private Connection conn;

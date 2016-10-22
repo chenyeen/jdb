@@ -29,7 +29,7 @@ public class SqlQuery extends DataQuery {
 
 	private static final long serialVersionUID = 7316772894058168187L;
 	private IHandle handle;
-	private SqlConnection connection;
+	private MysqlSession connection;
 	private String commandText;
 	private boolean active = false;
 	// private boolean closeMax = false;
@@ -41,8 +41,6 @@ public class SqlQuery extends DataQuery {
 	private IDataOperator operator;
 	// 仅当batchSave为true时，delList才有记录存在
 	private List<Record> delList = new ArrayList<>();
-	// IHandle中识别码
-	public static String sessionId = "mysqlSession";
 
 	@Override
 	public void close() {
@@ -54,7 +52,7 @@ public class SqlQuery extends DataQuery {
 	public SqlQuery(IHandle handle) {
 		super();
 		this.handle = handle;
-		this.connection = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
+		this.connection = (MysqlSession) handle.getProperty(MysqlSession.sessionId);
 	}
 
 	@Override

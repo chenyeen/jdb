@@ -27,7 +27,7 @@ public class Transaction implements AutoCloseable {
 	}
 
 	public Transaction(IHandle handle) {
-		SqlConnection cn = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
+		MysqlSession cn = (MysqlSession) handle.getProperty(MysqlSession.sessionId);
 		this.conn = cn.getConnection();
 		try {
 			if (conn.getAutoCommit()) {
