@@ -7,9 +7,10 @@ import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
+import cn.cerc.jdb.core.IConnection;
 import cn.cerc.jdb.core.IHandle;
 
-public class SqlConnection implements IHandle, AutoCloseable {
+public class SqlConnection implements IHandle, IConnection {
 	public static final String rds_site = "rds.site";
 	public static final String rds_database = "rds.database";
 	public static final String rds_username = "rds.username";
@@ -62,6 +63,7 @@ public class SqlConnection implements IHandle, AutoCloseable {
 		}
 	}
 
+	@Override
 	public Connection getConnection() {
 		return connection;
 	}
@@ -99,7 +101,7 @@ public class SqlConnection implements IHandle, AutoCloseable {
 	@Override
 	public Object getProperty(String key) {
 		if (SqlQuery.sessionId.equals(key))
-			return connection;
+			return this;
 		return null;
 	}
 
