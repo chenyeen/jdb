@@ -44,6 +44,7 @@ public class SqlConnection implements IHandle, IConnection {
 	// }
 
 	public boolean execute(String sql) {
+		initSession();
 		try {
 			log.debug(sql);
 			Statement st = conn.createStatement();
