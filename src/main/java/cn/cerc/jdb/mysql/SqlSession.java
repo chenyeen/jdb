@@ -1,15 +1,14 @@
 package cn.cerc.jdb.mysql;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
-import cn.cerc.jdb.core.IConnection;
+import cn.cerc.jdb.core.ISession;
 
-public class SqlSession implements IConnection {
+public class SqlSession implements ISession {
 	// Propertys中识别码
 	public static final String rds_site = "rds.site";
 	public static final String rds_database = "rds.database";
@@ -19,19 +18,8 @@ public class SqlSession implements IConnection {
 	public static String sessionId = "sqlSession";
 
 	private static final Logger log = Logger.getLogger(SqlSession.class);
-	private IConfig config;
-	private boolean active = false;
 	private Connection connection;
 	private int tag;
-
-	@Override
-	public void setConfig(IConfig config) {
-		this.config = config;
-	}
-
-	public IConfig getConfig() {
-		return config;
-	}
 
 	// private void init_tomcat() {
 	// Context initContext, envContext;
@@ -47,7 +35,6 @@ public class SqlSession implements IConnection {
 	// }
 
 	public boolean execute(String sql) {
-		openSession();
 		try {
 			log.debug(sql);
 			Statement st = connection.createStatement();
@@ -56,35 +43,6 @@ public class SqlSession implements IConnection {
 		} catch (SQLException e) {
 			log.error("error sql: " + sql);
 			throw new RuntimeException(e.getMessage());
-		}
-	}
-
-	@Override
-	public Object getSession() {
-		openSession();
-		return this;
-	}
-
-	@Override
-	public void openSession() {
-		if (!this.active) {
-			String host = config.getProperty(rds_site, "127.0.0.1:3306");
-			String db = config.getProperty(rds_database, "appdb");
-			String user = config.getProperty(rds_username, "appdb_user");
-			String pwd = config.getProperty(rds_password, "appdb_password");
-			if (host == null || user == null || pwd == null || db == null)
-				throw new RuntimeException("RDS配置为空，无法连接主机！");
-			try {
-				log.debug("create connection for mysql: " + host);
-				String url = String.format("jdbc:mysql://%s/%s", host, db);
-				Class.forName("com.mysql.jdbc.Driver");
-				connection = DriverManager.getConnection(url, user, pwd);
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException("找不到 mysql.jdbc 驱动");
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
-			}
-			this.active = true;
 		}
 	}
 
@@ -102,7 +60,6 @@ public class SqlSession implements IConnection {
 	}
 
 	public Connection getConnection() {
-		openSession();
 		return connection;
 	}
 
@@ -115,7 +72,6 @@ public class SqlSession implements IConnection {
 	}
 
 	public void setConnection(Connection connection) {
-		this.active = connection != null;
 		this.connection = connection;
 	}
 

@@ -9,8 +9,6 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.cerc.jdb.mysql.IConfig;
-
 public class StubConfig implements IConfig {
 	private static final Log log = LogFactory.getLog(StubConfig.class);
 
