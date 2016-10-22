@@ -9,24 +9,20 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import cn.cerc.jdb.mysql.IRDSConfig;
+import cn.cerc.jdb.mysql.IConfig;
 
-public class StubConfig implements IRDSConfig {
+public class StubConfig implements IConfig {
 	private static final Log log = LogFactory.getLog(StubConfig.class);
 
 	private static final String SETTINGS_FILE_NAME = System.getProperty("user.home")
-			+ System.getProperty("file.separator") + "delphi-vcl.properties";
+			+ System.getProperty("file.separator") + "mysql.properties";
 
-	private static Properties config = new Properties();
+	private static Properties properties = new Properties();
 	static {
-		load();
-	}
-
-	public static void load() {
 		try {
 			File file2 = new File(SETTINGS_FILE_NAME);
 			if (file2.exists()) {
-				config.load(new FileInputStream(SETTINGS_FILE_NAME));
+				properties.load(new FileInputStream(SETTINGS_FILE_NAME));
 				log.info("read properties from localhost[app.properties].");
 			}
 		} catch (FileNotFoundException e) {
@@ -37,27 +33,8 @@ public class StubConfig implements IRDSConfig {
 	}
 
 	@Override
-	public String get_rds_host() {
-		return getProperty("rds.site", "vine2008.mysql.rds.aliyuncs.com:3306");
-	}
-
-	@Override
-	public String get_rds_database() {
-		return getProperty("rds.database", "vinedb");
-	}
-
-	@Override
-	public String get_rds_account() {
-		return getProperty("rds.username", "vine_user");
-	}
-
-	@Override
-	public String get_rds_password() {
-		return getProperty("rds.password", "Vine2013user");
-	}
-
-	private static String getProperty(String key, String def1) {
-		String result = config.getProperty(key);
+	public String getProperty(String key, String def) {
+		String result = properties.getProperty(key);
 		if (result == null)
 			throw new RuntimeException("请先准备好测试配置文件：" + SETTINGS_FILE_NAME);
 		return result;

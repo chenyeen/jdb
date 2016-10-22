@@ -6,16 +6,17 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.cerc.jdb.core.StubConnection;
+import cn.cerc.jdb.core.StubConfig;
 
 public class SqlQueryTest {
 	private static final Logger log = Logger.getLogger(SqlQueryTest.class);
-	private StubConnection conn = new StubConnection();
 	private static final String Account = "Account";
 	private SqlQuery ds;
+	private SqlConnection conn;
 
 	@Before
 	public void setUp() {
+		conn = new SqlConnection(new StubConfig());
 		ds = new SqlQuery(conn);
 	}
 

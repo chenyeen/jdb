@@ -3,18 +3,23 @@ package cn.cerc.jdb.mysql;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 
-import cn.cerc.jdb.core.StubConnection;
-import cn.cerc.jdb.mysql.BatchScript;
+import cn.cerc.jdb.core.StubConfig;
 
 public class BatchScriptTest {
+	private SqlConnection handle;
 	private BatchScript bs;
+	
+	@Before
+	public void setUp(){
+		handle = new SqlConnection(new StubConfig());
+	}
 
 	@Test
 	public void test_getItems() {
-		StubConnection conn = new StubConnection();
-		bs = new BatchScript(conn);
+		bs = new BatchScript(handle);
 		bs.add("select * from a");
 		bs.addSemicolon();
 		bs.add("select * from b");
@@ -24,8 +29,7 @@ public class BatchScriptTest {
 
 	@Test
 	public void test_exists() {
-		StubConnection conn = new StubConnection();
-		bs = new BatchScript(conn);
+		bs = new BatchScript(handle);
 		bs.add("select * from Account where Code_='%s';", "admin");
 		bs.add("select * from Account where Code_='%s';", "99900101");
 		bs.exec();
@@ -34,8 +38,7 @@ public class BatchScriptTest {
 
 	@Test
 	public void test_getItem() {
-		StubConnection conn = new StubConnection();
-		bs = new BatchScript(conn);
+		bs = new BatchScript(handle);
 		bs.add("select * from a");
 		bs.addSemicolon();
 		bs.add("select * from b");
@@ -46,8 +49,7 @@ public class BatchScriptTest {
 
 	@Test(expected = RuntimeException.class)
 	public void test_getItem_err() {
-		StubConnection conn = new StubConnection();
-		bs = new BatchScript(conn);
+		bs = new BatchScript(handle);
 		bs.add("select * from a");
 		bs.addSemicolon();
 		bs.add("select * from b");
@@ -57,8 +59,7 @@ public class BatchScriptTest {
 	
 	@Test
 	public void test_clean(){
-		StubConnection conn = new StubConnection();
-		bs = new BatchScript(conn);
+		bs = new BatchScript(handle);
 		bs.add("select * from a;");
 		bs.clean();
 		bs.add("select * from b;");

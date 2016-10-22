@@ -7,16 +7,18 @@ import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
-public class SqlConnection implements AutoCloseable {
+import cn.cerc.jdb.core.IHandle;
+
+public class SqlConnection implements IHandle, AutoCloseable {
 	private static final Logger log = Logger.getLogger(SqlConnection.class);
 	private Connection connection;
 	private int tag;
 
-	public void init(IRDSConfig config) throws SqlConnectionException {
-		String host = config.get_rds_host();
-		String user = config.get_rds_account();
-		String pwd = config.get_rds_password();
-		String db = config.get_rds_database();
+	public SqlConnection(IConfig config) {
+		String host = config.getProperty("rds.site", "127.0.0.1:3306");
+		String user = config.getProperty("rds.database", "appdb");
+		String pwd = config.getProperty("rds.username", "appdb_user");
+		String db = config.getProperty("rds.password", "appdb_password");
 		if (host == null || user == null || pwd == null || db == null)
 			throw new RuntimeException("RDS配置为空，无法连接主机！");
 		try {
@@ -27,10 +29,7 @@ public class SqlConnection implements AutoCloseable {
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("找不到 mysql.jdbc 驱动");
 		} catch (SQLException e) {
-			SqlConnectionException err = new SqlConnectionException(e.getMessage());
-			err.addSuppressed(e);
-			err.setHost(host);
-			throw err;
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -81,6 +80,23 @@ public class SqlConnection implements AutoCloseable {
 
 	public void setTag(int tag) {
 		this.tag = tag;
+	}
+
+	@Override
+	public String getCorpNo() {
+		throw new RuntimeException("corpNo is null");
+	}
+
+	@Override
+	public String getUserCode() {
+		throw new RuntimeException("userCode is null");
+	}
+
+	@Override
+	public Object getProperty(String key) {
+		if (SqlQuery.sessionId.equals(key))
+			return connection;
+		return null;
 	}
 
 	//

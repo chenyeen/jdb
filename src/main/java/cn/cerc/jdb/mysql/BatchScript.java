@@ -16,10 +16,6 @@ public class BatchScript {
 		this.conn = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
 	}
 
-	public BatchScript(SqlConnection conn) {
-		this.conn = conn;
-	}
-
 	public BatchScript addSemicolon() {
 		items.append(";" + vbCrLf);
 		return this;

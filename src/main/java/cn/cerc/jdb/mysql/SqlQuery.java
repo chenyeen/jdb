@@ -50,11 +50,6 @@ public class SqlQuery extends DataQuery {
 		super.close();
 	}
 
-	public SqlQuery(SqlConnection conn) {
-		super();
-		this.connection = conn;
-	}
-
 	public SqlQuery(IHandle handle) {
 		super();
 		this.connection = (SqlConnection) handle.getProperty(SqlQuery.sessionId);

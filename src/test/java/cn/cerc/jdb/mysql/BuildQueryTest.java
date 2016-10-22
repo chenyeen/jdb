@@ -2,14 +2,22 @@ package cn.cerc.jdb.mysql;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
 import org.junit.Test;
 
-import cn.cerc.jdb.core.StubConnection;
+import cn.cerc.jdb.core.StubConfig;
 
 public class BuildQueryTest {
 	// private static final Logger log = Logger.getLogger(BuildSQLTest.class);
 
-	private BuildQuery bs = new BuildQuery(new StubConnection());
+	private BuildQuery bs;
+	private SqlConnection conn;
+
+	@Before
+	public void setUp() {
+		conn = new SqlConnection(new StubConfig());
+		bs = new BuildQuery(conn);
+	}
 
 	@Test
 	public void test_close() {
