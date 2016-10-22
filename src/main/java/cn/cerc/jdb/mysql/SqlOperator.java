@@ -26,10 +26,6 @@ public class SqlOperator implements IDataOperator {
 	private boolean preview = false;
 	private List<String> primaryKeys = new ArrayList<>();
 
-	public SqlOperator(Connection connection) {
-		this.conn = connection;
-	}
-
 	public SqlOperator(IHandle handle) {
 		SqlConnection cn = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
 		this.conn = cn.getConnection();

@@ -28,6 +28,7 @@ public class SqlQuery extends DataQuery {
 	private static final Logger log = Logger.getLogger(SqlQuery.class);
 
 	private static final long serialVersionUID = 7316772894058168187L;
+	private IHandle handle;
 	private SqlConnection connection;
 	private String commandText;
 	private boolean active = false;
@@ -52,6 +53,7 @@ public class SqlQuery extends DataQuery {
 
 	public SqlQuery(IHandle handle) {
 		super();
+		this.handle = handle;
 		this.connection = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
 	}
 
@@ -181,14 +183,6 @@ public class SqlQuery extends DataQuery {
 		return active;
 	}
 
-	public void setConnection(SqlConnection connection) {
-		this.connection = connection;
-	}
-
-	public SqlConnection getConnection() {
-		return connection;
-	}
-
 	public SqlQuery add(String sql) {
 		if (commandText == null)
 			commandText = sql;
@@ -265,7 +259,7 @@ public class SqlQuery extends DataQuery {
 
 	protected IDataOperator getDefaultOperator() {
 		if (operator == null) {
-			SqlOperator def = new SqlOperator(connection.getConnection());
+			SqlOperator def = new SqlOperator(handle);
 			String tableName = def.findTableName(this.commandText);
 			def.setTableName(tableName);
 			operator = def;
