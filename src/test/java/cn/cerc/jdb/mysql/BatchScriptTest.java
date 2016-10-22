@@ -34,7 +34,8 @@ public class BatchScriptTest {
 
 	@Test
 	public void test_getItem() {
-		bs = new BatchScript(null);
+		StubConnection conn = new StubConnection();
+		bs = new BatchScript(conn);
 		bs.add("select * from a");
 		bs.addSemicolon();
 		bs.add("select * from b");
@@ -45,7 +46,8 @@ public class BatchScriptTest {
 
 	@Test(expected = RuntimeException.class)
 	public void test_getItem_err() {
-		bs = new BatchScript(null);
+		StubConnection conn = new StubConnection();
+		bs = new BatchScript(conn);
 		bs.add("select * from a");
 		bs.addSemicolon();
 		bs.add("select * from b");
@@ -55,7 +57,8 @@ public class BatchScriptTest {
 	
 	@Test
 	public void test_clean(){
-		bs = new BatchScript(null);
+		StubConnection conn = new StubConnection();
+		bs = new BatchScript(conn);
 		bs.add("select * from a;");
 		bs.clean();
 		bs.add("select * from b;");

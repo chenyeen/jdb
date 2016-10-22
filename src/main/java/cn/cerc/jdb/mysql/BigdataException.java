@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * 单次数据请求，超过最大笔数限制
+ * 
  * @author 张弓
  *
  */

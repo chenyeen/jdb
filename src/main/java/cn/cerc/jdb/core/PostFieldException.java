@@ -29,13 +29,13 @@ public class PostFieldException extends RuntimeException {
 	public void setQuery(DataSet query) {
 		this.query = query;
 	}
-	
+
 	@Override
-	public String getMessage(){ 
+	public String getMessage() {
 		StringBuffer buff = new StringBuffer();
 		buff.append("not find field:");
-		for(String field : query.getFieldDefs().getFields()){
-			if(!fields.contains(field))
+		for (String field : query.getFieldDefs().getFields()) {
+			if (!fields.contains(field))
 				buff.append(" " + field);
 		}
 		return buff.toString();

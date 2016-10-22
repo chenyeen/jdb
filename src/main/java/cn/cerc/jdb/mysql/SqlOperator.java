@@ -29,9 +29,9 @@ public class SqlOperator implements IDataOperator {
 	public SqlOperator(Connection connection) {
 		this.conn = connection;
 	}
-	
+
 	public SqlOperator(IHandle handle) {
-		SqlConnection cn =	(SqlConnection) handle.getProperty(SqlQuery.sessionId);
+		SqlConnection cn = (SqlConnection) handle.getProperty(SqlQuery.sessionId);
 		this.conn = cn.getConnection();
 	}
 

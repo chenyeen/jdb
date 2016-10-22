@@ -201,14 +201,6 @@ public class Record implements IRecord, Serializable {
 		return gson.toJson(items);
 	}
 
-	@Deprecated
-	/*
-	 * 此函数请改使用setJSON
-	 */
-	public void setDatas(String jsonStr) {
-		this.setJSON(jsonStr);
-	}
-
 	public void setJSON(Object jsonObj) {
 		if (!(jsonObj instanceof Map<?, ?>)) {
 			throw new RuntimeException("不支持的类型：" + jsonObj.getClass().getName());
