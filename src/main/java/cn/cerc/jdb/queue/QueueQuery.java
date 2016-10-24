@@ -3,7 +3,6 @@ package cn.cerc.jdb.queue;
 import org.apache.commons.lang.StringUtils;
 
 import com.aliyun.mns.client.CloudQueue;
-import com.aliyun.mns.model.Message;
 
 import cn.cerc.jdb.core.DataQuery;
 import cn.cerc.jdb.core.IDataOperator;
@@ -58,38 +57,40 @@ public class QueueQuery extends DataQuery {
 	@Override
 	public void save() {
 		// 将json作为消息内容进行发送
-		this.session.append(this.queque, this.getJSON());
-	}
-
-	@Override
-	public Object getField(String field) {
-		if (!"msg".equals(field)) {
-			throw new RuntimeException("参数值只能是:msg");
+		String msgBody = this.getJSON();
+		try {
+			this.session.append(this.queque, msgBody);
+		} catch (Exception e) {// 如果是第一次访问队列,则需要创建队列
+			this.session.createQueue(this.topicName);
+			log.info("创建队列:" + this.topicName);
+			this.session.append(this.queque, msgBody);
 		}
-		return this.session.receive(this.queque).getMessageBody();
+		log.info("消息发送成功,消息内容为:" + msgBody);
 	}
 
 	/**
-	 * 少数情况下可能需要操作message对象,使用此方法
+	 * 获取消息
 	 * 
 	 * @Description
 	 * @author rick_zhou
 	 * @return
 	 */
-	public Message getField() {
-		return this.session.receive(this.queque);
+	public void getMsg() {
+		String json = this.session.receive(this.queque).getMessageBody();
+		this.setJSON(json);
 	}
 
 	/**
-	 * 删除消息
+	 * 删除消息(暂不提供)
 	 * 
 	 * @Description
 	 * @author rick_zhou
 	 * @param msgId
 	 */
-	public void delete(String msgId) {
-		this.session.delete(this.queque, msgId);
-	}
+	/*
+	 * public void delete(String msgId) { this.session.delete(this.queque,
+	 * msgId); }
+	 */
 
 	public void delete() {
 		throw new RuntimeException("本方法不提供服务,禁止调用");
@@ -115,4 +116,32 @@ public class QueueQuery extends DataQuery {
 		});
 	}
 
+	/**
+	 * 拼接查询语句
+	 * 
+	 * @Description
+	 * @author rick_zhou
+	 * @param queryString
+	 * @return
+	 */
+	public QueueQuery add(String queryString) {
+		if (queryStr.length() == 0)
+			queryStr.append(queryString);
+		else
+			queryStr.append(" ").append(queryString);
+		return this;
+	}
+
+	/**
+	 * 替换拼接查询语句
+	 * 
+	 * @Description
+	 * @author rick_zhou
+	 * @param format
+	 * @param args
+	 * @return
+	 */
+	public QueueQuery add(String format, Object... args) {
+		return this.add(String.format(format, args));
+	}
 }

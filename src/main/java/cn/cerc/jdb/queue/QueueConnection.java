@@ -10,8 +10,15 @@ public class QueueConnection implements IConnection {
 	private static MNSClient client;
 	private static CloudAccount account;
 
+	private IConfig config;
+
+	public IConfig getConfig() {
+		return config;
+	}
+
 	@Override
 	public void setConfig(IConfig config) {
+		this.config = config;
 		if (account == null) {
 			String server = config.getProperty(QueueSession.AccountEndpoint, null);
 			String userCode = config.getProperty(QueueSession.AccessKeyId, null);
