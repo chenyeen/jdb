@@ -1,4 +1,4 @@
-package cn.cerc.jdb.queue.aliyun;
+package cn.cerc.jdb.queue;
 
 import org.apache.log4j.Logger;
 

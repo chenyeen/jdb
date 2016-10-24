@@ -1,4 +1,4 @@
-package cn.cerc.jdb.queue.aliyun;
+package cn.cerc.jdb.queue;
 
 import com.aliyun.mns.client.CloudAccount;
 import com.aliyun.mns.client.MNSClient;

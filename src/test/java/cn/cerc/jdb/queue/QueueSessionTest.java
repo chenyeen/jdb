@@ -1,4 +1,4 @@
-package cn.cerc.jdb.queue.aliyun;
+package cn.cerc.jdb.queue;
 
 import org.junit.Test;
 
@@ -7,6 +7,8 @@ import com.aliyun.mns.model.Message;
 
 import cn.cerc.jdb.core.StubConfig;
 import cn.cerc.jdb.core.TDateTime;
+import cn.cerc.jdb.queue.QueueConnection;
+import cn.cerc.jdb.queue.QueueSession;
 
 public class QueueSessionTest {
 
