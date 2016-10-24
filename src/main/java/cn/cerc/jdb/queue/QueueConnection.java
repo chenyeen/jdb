@@ -18,7 +18,7 @@ public class QueueConnection implements IConnection {
 
 	@Override
 	public QueueSession getSession() {
-		init(config);
+		init();
 		QueueSession sess = new QueueSession();
 		sess.setClient(client);
 		return sess;
@@ -28,7 +28,8 @@ public class QueueConnection implements IConnection {
 		return config;
 	}
 
-	private void init(IConfig config) {
+	@Override
+	public void init() {
 		if (account == null) {
 			String server = config.getProperty(QueueSession.AccountEndpoint, null);
 			String userCode = config.getProperty(QueueSession.AccessKeyId, null);
