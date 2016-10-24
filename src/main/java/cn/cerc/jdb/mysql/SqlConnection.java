@@ -13,6 +13,7 @@ public class SqlConnection implements IConnection {
 	private static final Logger log = Logger.getLogger(SqlConnection.class);
 	private String url;
 	private String host;
+	private String db;
 	private String user;
 	private String pwd;
 	private IConfig config;
@@ -42,7 +43,6 @@ public class SqlConnection implements IConnection {
 
 	@Override
 	public void init() {
-		String db = null;
 		if (url == null) {
 			try {
 				host = config.getProperty(SqlSession.rds_site, "127.0.0.1:3306");
