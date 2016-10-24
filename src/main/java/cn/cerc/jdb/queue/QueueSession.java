@@ -41,6 +41,7 @@ public class QueueSession implements ISession {
 	/**
 	 * 
 	 * @param queueCode
+	 *            队列代码
 	 * @return 返回具体的消息队列
 	 */
 	public CloudQueue openQueue(String queueCode) {
@@ -50,6 +51,7 @@ public class QueueSession implements ISession {
 	/**
 	 * 
 	 * @param queueCode
+	 *            队列代码
 	 * @return 返回创建的队列
 	 */
 	public CloudQueue createQueue(String queueCode) {
@@ -62,8 +64,10 @@ public class QueueSession implements ISession {
 
 	/**
 	 * 
-	 * @param 消息队列
-	 * @param 消息内容
+	 * @param queue
+	 *            消息队列
+	 * @param content
+	 *            消息内容
 	 * @return 发送消息
 	 */
 	public boolean append(CloudQueue queue, String content) {
@@ -75,7 +79,8 @@ public class QueueSession implements ISession {
 
 	/**
 	 * 
-	 * @param 消息队列
+	 * @param queue
+	 *            消息队列
 	 * @return 请求接受消息
 	 */
 	public Message receive(CloudQueue queue) {
@@ -94,7 +99,9 @@ public class QueueSession implements ISession {
 	 * 删除消息
 	 * 
 	 * @param queue
+	 *            队列
 	 * @param msgId
+	 *            消息Id
 	 */
 	public void delete(CloudQueue queue, String msgId) {
 		queue.deleteMessage(msgId);
@@ -102,6 +109,8 @@ public class QueueSession implements ISession {
 
 	/**
 	 * 
+	 * @param queue
+	 *            队列
 	 * @return 检查消息
 	 */
 	public Message peek(CloudQueue queue) {
@@ -112,7 +121,9 @@ public class QueueSession implements ISession {
 	 * 延长消息不可见时间
 	 * 
 	 * @param queue
+	 *            队列
 	 * @param msgId
+	 *            消息Id
 	 */
 	public void changeVisibility(CloudQueue queue, String msgId) {
 		// 第一个参数为旧的ReceiptHandle值，第二个参数为新的不可见时间（VisibilityTimeout）
