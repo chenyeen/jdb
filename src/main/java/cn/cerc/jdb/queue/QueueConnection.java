@@ -14,6 +14,21 @@ public class QueueConnection implements IConnection {
 	@Override
 	public void setConfig(IConfig config) {
 		this.config = config;
+	}
+
+	@Override
+	public QueueSession getSession() {
+		init(config);
+		QueueSession sess = new QueueSession();
+		sess.setClient(client);
+		return sess;
+	}
+
+	public IConfig getConfig() {
+		return config;
+	}
+
+	private void init(IConfig config) {
 		if (account == null) {
 			String server = config.getProperty(QueueSession.AccountEndpoint, null);
 			String userCode = config.getProperty(QueueSession.AccessKeyId, null);
@@ -24,17 +39,6 @@ public class QueueConnection implements IConnection {
 			account = new CloudAccount(userCode, password, server, token);
 			client = account.getMNSClient();
 		}
-	}
-
-	@Override
-	public QueueSession getSession() {
-		QueueSession sess = new QueueSession();
-		sess.setClient(client);
-		return sess;
-	}
-
-	public IConfig getConfig() {
-		return config;
 	}
 
 }
