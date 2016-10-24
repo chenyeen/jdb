@@ -9,9 +9,11 @@ import cn.cerc.jdb.core.IConnection;
 public class QueueConnection implements IConnection {
 	private static MNSClient client;
 	private static CloudAccount account;
+	private IConfig config;
 
 	@Override
 	public void setConfig(IConfig config) {
+		this.config = config;
 		if (account == null) {
 			String server = config.getProperty(QueueSession.AccountEndpoint, null);
 			String userCode = config.getProperty(QueueSession.AccessKeyId, null);
@@ -27,6 +29,10 @@ public class QueueConnection implements IConnection {
 		QueueSession sess = new QueueSession();
 		sess.setClient(client);
 		return sess;
+	}
+
+	public IConfig getConfig() {
+		return config;
 	}
 
 }
