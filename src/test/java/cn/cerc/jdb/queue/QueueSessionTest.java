@@ -1,5 +1,6 @@
 package cn.cerc.jdb.queue;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import com.aliyun.mns.client.CloudQueue;
@@ -7,10 +8,9 @@ import com.aliyun.mns.model.Message;
 
 import cn.cerc.jdb.core.StubConfig;
 import cn.cerc.jdb.core.TDateTime;
-import cn.cerc.jdb.queue.QueueConnection;
-import cn.cerc.jdb.queue.QueueSession;
 
 public class QueueSessionTest {
+	private static final Logger log = Logger.getLogger(QueueSessionTest.class);
 
 	@Test
 	public void testQueue() {
@@ -26,7 +26,9 @@ public class QueueSessionTest {
 			Message msg = sess.receive(queue);
 			if (msg == null)
 				break;
-			System.out.println(msg.getMessageBody());
+			// 由于网络延迟或者不可达的原因,消息很可能出现重复消费,编码或设计时需要考虑
+			log.info("消息ID" + msg.getMessageId());
+			log.info("消息主体" + msg.getMessageBody());
 		}
 	}
 }
