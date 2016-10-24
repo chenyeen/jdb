@@ -13,7 +13,7 @@ public class StubConfig implements IConfig {
 	private static final Log log = LogFactory.getLog(StubConfig.class);
 
 	private static final String SETTINGS_FILE_NAME = System.getProperty("user.home")
-			+ System.getProperty("file.separator") + "mysql.properties";
+			+ System.getProperty("file.separator") + "jdb.properties";
 
 	private static Properties properties = new Properties();
 	static {
