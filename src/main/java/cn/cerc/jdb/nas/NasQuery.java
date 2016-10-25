@@ -8,9 +8,8 @@ import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
 
 import cn.cerc.jdb.core.DataQuery;
-import cn.cerc.jdb.core.IDataOperator;
 import cn.cerc.jdb.core.IHandle;
-import cn.cerc.jdb.core.Record;
+import cn.cerc.jdb.queue.QueueOperator;
 
 public class NasQuery extends DataQuery {
 	private static final long serialVersionUID = 1L;
@@ -18,12 +17,12 @@ public class NasQuery extends DataQuery {
 	private IHandle handle;
 	// 文件目录
 	private String filePath;
-	// 查询语句
-	private StringBuffer queryStr = new StringBuffer();
 	// 文件名称
 	private String fileName;
+	private QueueOperator operator;
 
 	public NasQuery(IHandle handle) {
+		super(handle);
 		this.handle = handle;
 	}
 
@@ -31,8 +30,10 @@ public class NasQuery extends DataQuery {
 	public DataQuery open() {
 		// 字符串截取获取collName和business_id的值
 		try {
-			this.fileName = queryStr.substring(queryStr.indexOf("select") + 6, queryStr.indexOf("from")).trim();
-			this.filePath = queryStr.substring(queryStr.indexOf("from") + 4).trim();
+			this.fileName = this.getCommandText()
+					.substring(this.getCommandText().indexOf("select") + 6, this.getCommandText().indexOf("from"))
+					.trim();
+			this.filePath = getOperator().findTableName(this.getCommandText());
 		} catch (Exception e) {
 			throw new RuntimeException("语法为: select fileName from filePath");
 		}
@@ -97,52 +98,10 @@ public class NasQuery extends DataQuery {
 	}
 
 	@Override
-	public IDataOperator getOperator() {
-		return (new IDataOperator() {
-			@Override
-			public boolean insert(Record record) {
-				throw new RuntimeException("本方法不提供服务,禁止调用");
-			}
-
-			@Override
-			public boolean update(Record record) {
-				throw new RuntimeException("本方法不提供服务,禁止调用");
-			}
-
-			@Override
-			public boolean delete(Record record) {
-				throw new RuntimeException("本方法不提供服务,禁止调用");
-			}
-		});
-	}
-
-	/**
-	 * 拼接查询语句
-	 * 
-	 * @Description
-	 * @author rick_zhou
-	 * @param queryString
-	 * @return
-	 */
-	public NasQuery add(String queryString) {
-		if (queryStr.length() == 0)
-			queryStr.append(queryString);
-		else
-			queryStr.append(" ").append(queryString);
-		return this;
-	}
-
-	/**
-	 * 替换拼接查询语句
-	 * 
-	 * @Description
-	 * @author rick_zhou
-	 * @param format
-	 * @param args
-	 * @return
-	 */
-	public NasQuery add(String format, Object... args) {
-		return this.add(String.format(format, args));
+	public QueueOperator getOperator() {
+		if (operator == null)
+			operator = new QueueOperator();
+		return operator;
 	}
 
 }
