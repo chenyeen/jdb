@@ -1,25 +1,33 @@
 package cn.cerc.jdb.core;
 
+import cn.cerc.jdb.mongo.MongoConnection;
+import cn.cerc.jdb.mongo.MongoSession;
 import cn.cerc.jdb.mysql.SqlConnection;
 import cn.cerc.jdb.mysql.SqlSession;
 import cn.cerc.jdb.queue.QueueConnection;
 import cn.cerc.jdb.queue.QueueSession;
 
-public class StubHandle implements IHandle, AutoCloseable {
-	private SqlSession sqlSession;
+public class StubHandle implements IHandle {
+	private SqlSession mysqlSession;
+	private MongoSession mgSession;
 	private QueueSession queueSession;
 
 	public StubHandle() {
 		super();
 		IConfig config = new StubConfig();
+		// mysql
+		SqlConnection conn = new SqlConnection();
+		conn.setConfig(config);
+		mysqlSession = conn.getSession();
+		// mongodb
+		MongoConnection mgconn = new MongoConnection();
+		mgconn.setConfig(config);
+		mgSession = mgconn.getSession();
+		// aliyun mq
+		QueueConnection queconn = new QueueConnection();
+		queconn.setConfig(config);
+		queueSession = queconn.getSession();
 
-		SqlConnection conn1 = new SqlConnection();
-		conn1.setConfig(config);
-		sqlSession = conn1.getSession();
-
-		QueueConnection conn2 = new QueueConnection();
-		conn2.setConfig(config);
-		queueSession = conn2.getSession();
 	}
 
 	@Override
@@ -35,7 +43,9 @@ public class StubHandle implements IHandle, AutoCloseable {
 	@Override
 	public Object getProperty(String key) {
 		if (SqlSession.sessionId.equals(key))
-			return sqlSession;
+			return mysqlSession;
+		if (MongoSession.sessionId.equals(key))
+			return mgSession;
 		if (QueueSession.sessionId.equals(key))
 			return queueSession;
 		return null;
@@ -43,11 +53,11 @@ public class StubHandle implements IHandle, AutoCloseable {
 
 	// 关闭资源
 	public void closeConnections() {
-		sqlSession.closeSession();
+		mysqlSession.closeSession();
 		queueSession.closeSession();
+		mgSession.closeSession();
 	}
 
-	@Override
 	public void close() {
 		closeConnections();
 	}

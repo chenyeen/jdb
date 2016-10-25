@@ -1,10 +1,12 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mongo;
 
 import com.mongodb.client.MongoDatabase;
 
+import cn.cerc.jdb.core.ISession;
+
 public class MongoSession implements ISession {
 	// private static final Logger log = Logger.getLogger(MongoSession.class);
-	public static final String sessionId = "mongoSession";
+	public static String sessionId = "mongoSession";
 	private MongoDatabase database;
 
 	public MongoSession() {
