@@ -8,9 +8,9 @@ import cn.cerc.jdb.queue.QueueConnection;
 import cn.cerc.jdb.queue.QueueSession;
 
 public class StubHandle implements IHandle {
-	private SqlSession sess;
-	private MongoSession mgsession;
-	private QueueSession queuesession;
+	private SqlSession mysqlSession;
+	private MongoSession mgSession;
+	private QueueSession queueSession;
 
 	public StubHandle() {
 		super();
@@ -18,15 +18,15 @@ public class StubHandle implements IHandle {
 		// mysql
 		SqlConnection conn = new SqlConnection();
 		conn.setConfig(config);
-		sess = conn.getSession();
+		mysqlSession = conn.getSession();
 		// mongodb
 		MongoConnection mgconn = new MongoConnection();
 		mgconn.setConfig(config);
-		mgsession = mgconn.getSession();
+		mgSession = mgconn.getSession();
 		// aliyun mq
 		QueueConnection queconn = new QueueConnection();
 		queconn.setConfig(config);
-		queuesession = queconn.getSession();
+		queueSession = queconn.getSession();
 
 	}
 
@@ -43,16 +43,22 @@ public class StubHandle implements IHandle {
 	@Override
 	public Object getProperty(String key) {
 		if (SqlSession.sessionId.equals(key))
-			return sess;
+			return mysqlSession;
 		if (MongoSession.sessionId.equals(key))
-			return mgsession;
+			return mgSession;
 		if (QueueSession.sessionId.equals(key))
-			return queuesession;
+			return queueSession;
 		return null;
 	}
 
 	// 关闭资源
 	public void closeConnections() {
-		sess.closeSession();
+		mysqlSession.closeSession();
+		queueSession.closeSession();
+		mgSession.closeSession();
+	}
+
+	public void close() {
+		closeConnections();
 	}
 }

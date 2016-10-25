@@ -43,7 +43,7 @@ public class MongoQuery extends DataQuery {
 	private boolean isUpdate = false;
 
 	public MongoQuery(IHandle handle) {
-		super();
+		super(handle);
 		this.handle = handle; // 暂时无用
 		session = (MongoSession) this.handle.getProperty(MongoSession.sessionId);
 	}
