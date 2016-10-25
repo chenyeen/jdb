@@ -28,9 +28,8 @@ public class SmsQuery extends DataQuery {
 	}
 
 	public SmsQuery add(String format, String phoneNumber) {
-		if (!format.equals("select * from %s")) {
+		if (!format.equals("select * from %s"))
 			throw new RuntimeException("format必须固定为select * from %s");
-		}
 		this.phoneNumber = phoneNumber;
 		return this;
 	}

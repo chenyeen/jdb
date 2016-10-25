@@ -35,9 +35,8 @@ public class SmsYunpianConnection implements IConnection, SmsConnection {
 			url = config.getProperty(SMS_YUNPIAN_URL, "").trim();
 			key = config.getProperty(SMS_YUNPIAN_KEY, "").trim();
 		}
-		if (url == null || key == null || url.equals("") || key.equals("")) {
+		if (url == null || key == null || url.equals("") || key.equals(""))
 			throw new RuntimeException("无法连接yuanpian发送短信！请在properties文件配置" + SMS_YUNPIAN_URL + "和" + SMS_YUNPIAN_KEY);
-		}
 		return smsSession;
 	}
 
@@ -49,14 +48,12 @@ public class SmsYunpianConnection implements IConnection, SmsConnection {
 		paramMap.put("mobile", phoneNumber);
 		paramMap.put("text", content);
 		String str = HttpClientUtil.post("https://sms.yunpian.com/v1/sms/send.json", paramMap, "UTF-8");
-		if (str == null) {
+		if (str == null)
 			throw new RuntimeException("网络错误，连接不上短信服务商");
-		}
 		JSONObject obj = JSON.parseObject(str);
 		result = obj.getIntValue("code");
-		if (result != 0) {
+		if (result != 0)
 			throw new RuntimeException("发送错误，sms.yunpian.com服务商返回不成功,code=" + result);
-		}
 	}
 
 	@Override
