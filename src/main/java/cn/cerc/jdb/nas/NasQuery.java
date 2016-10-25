@@ -28,7 +28,6 @@ public class NasQuery extends DataQuery {
 
 	@Override
 	public DataQuery open() {
-		// 字符串截取获取collName和business_id的值
 		try {
 			this.fileName = this.getCommandText()
 					.substring(this.getCommandText().indexOf("select") + 6, this.getCommandText().indexOf("from"))
