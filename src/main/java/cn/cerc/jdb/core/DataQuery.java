@@ -6,7 +6,7 @@ public abstract class DataQuery extends DataSet {
 	private boolean batchSave = false;
 	private String commandText;
 	protected boolean active = false;
-	private IHandle handle;
+	protected IHandle handle;
 
 	public DataQuery(IHandle handle) {
 		this.handle = handle;
@@ -48,14 +48,6 @@ public abstract class DataQuery extends DataSet {
 
 	public String getCommandText() {
 		return this.commandText;
-	}
-
-	public IHandle getHandle() {
-		return handle;
-	}
-
-	public void setHandle(IHandle handle) {
-		this.handle = handle;
 	}
 
 	public boolean getActive() {
