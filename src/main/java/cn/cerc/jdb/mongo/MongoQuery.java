@@ -109,15 +109,30 @@ public class MongoQuery extends DataQuery {
 		res.remove("_id");
 		// mongodb document to data set
 		// this.setJSON(res.toJson());
-		this.setBusJson(res.toJson());
+		if ("reduce".equals(res.getString("MongoSaveModel"))) {// 压缩还原
+			this.setJSON(res.toJson());
+		} else if ("keyValue".equals(res.getString("MongoSaveModel"))) {// keyvalue还原
+			this.setBusJson(res.toJson());
+		}
 		log.info("数据为:" + res.toJson());
 		return this;
 	}
 
-	@Override
-	public void save() {
-		// 将 this.head.record 和 this.recores.items 转换为json
-		Document doc = Document.parse(this.getBusJson());
+	public void save(MongoSaveModel model) {
+		if (model == MongoSaveModel.reduce) {// 压缩保存
+			// 将 this.head.record 以及 this.recores.items 转换为json
+			Document doc = Document.parse(super.getJSON());
+			doc.put("MongoSaveModel", "reduce");
+			saveJson(doc);
+		} else if (model == MongoSaveModel.keyValue) {// kevy-value形式保存
+			// 将 this.head.record 和 this.recores.items 转换为json
+			Document doc = Document.parse(this.getBusJson());
+			doc.put("MongoSaveModel", "keyValue");
+			saveJson(doc);
+		}
+	}
+
+	private void saveJson(Document doc) {
 		doc.append(businessId, businessIdValue);
 		// 执行流程为 open --> save/delete
 		if (StringUtils.isBlank(collName))
@@ -227,5 +242,12 @@ public class MongoQuery extends DataQuery {
 		}
 		// 将list<record> 装换为DataSet的records
 		this.getRecords().addAll(listRecord);
+		this.setRecNo(this.getRecords().size());// 修改当前records元素总数
+	}
+
+	@Deprecated
+	@Override
+	public void save() {
+		throw new RuntimeException("本方法不提供服务,请使用save(MongoSaveModel model)");
 	}
 }

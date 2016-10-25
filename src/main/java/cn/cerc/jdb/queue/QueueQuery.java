@@ -51,6 +51,8 @@ public class QueueQuery extends DataQuery {
 		if (StringUtils.isEmpty(this.topicName))
 			throw new RuntimeException("请输入队列名称");
 		this.queque = this.session.openQueue(this.topicName);
+		// 拉取一条消息
+		this.getMsg();
 		return this;
 	}
 
@@ -69,7 +71,7 @@ public class QueueQuery extends DataQuery {
 	 * @author rick_zhou
 	 * @return
 	 */
-	public void getMsg() {
+	private void getMsg() {
 		String json = this.session.receive(this.queque).getMessageBody();
 		this.setJSON(json);
 	}
