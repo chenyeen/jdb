@@ -13,11 +13,30 @@ public class MongoConnection implements IConnection {
 	private static final Logger log = Logger.getLogger(MongoConnection.class);
 	private static MongoClient pool;
 	private static String dbname;
+	private IConfig config;
 
 	@Override
 	public void setConfig(IConfig config) {
-		dbname = config.getProperty("mgdb.dbname", null);
+		this.config = config;
+	}
+
+	public IConfig getConfig() {
+		return config;
+	}
+
+	@Override
+	public MongoSession getSession() {
+		init();
+		MongoDatabase database = pool.getDatabase(dbname);
+		MongoSession sess = new MongoSession();
+		sess.setDatabase(database);
+		return sess;
+	}
+
+	@Override
+	public void init() {
 		if (MongoConnection.pool == null) {
+			dbname = config.getProperty("mgdb.dbname", null);
 			MongoClientURI connectionString = null;
 			StringBuffer sb = new StringBuffer();
 			sb.append("mongodb://");
@@ -49,13 +68,5 @@ public class MongoConnection implements IConnection {
 				pool = new MongoClient(connectionString);
 			}
 		}
-	}
-
-	@Override
-	public MongoSession getSession() {
-		MongoDatabase database = pool.getDatabase(dbname);
-		MongoSession sess = new MongoSession();
-		sess.setDatabase(database);
-		return sess;
 	}
 }

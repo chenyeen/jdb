@@ -18,6 +18,22 @@ public class CacheConnection implements IConnection {
 	@Override
 	public void setConfig(IConfig config) {
 		this.config = config;
+	}
+
+	@Override
+	public CacheSession getSession() {
+		init();
+		CacheSession sess = new CacheSession();
+		sess.setClient(new MemCachedClient());
+		return sess;
+	}
+
+	public IConfig getConfig() {
+		return config;
+	}
+
+	@Override
+	public void init() {
 		if (pool == null && config != null) {
 			site = config.getProperty("ocs.site", "127.0.0.1");
 			String port = config.getProperty("ocs.port", "11211");
@@ -36,16 +52,5 @@ public class CacheConnection implements IConnection {
 			pool.setAliveCheck(true);// 设置连接心跳监测开关。设为true则每次通信都要进行连接是否有效的监测，造成通信次数倍增，加大网络负载，因此该参数应该在对HA要求比较高的场合设为TRUE，默认状态是false
 			pool.initialize();// 设置完pool参数后最后调用该方法，启动pool。
 		}
-	}
-
-	@Override
-	public CacheSession getSession() {
-		CacheSession sess = new CacheSession();
-		sess.setClient(new MemCachedClient());
-		return sess;
-	}
-
-	public IConfig getConfig() {
-		return config;
 	}
 }

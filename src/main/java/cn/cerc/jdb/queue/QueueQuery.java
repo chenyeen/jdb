@@ -58,13 +58,7 @@ public class QueueQuery extends DataQuery {
 	public void save() {
 		// 将json作为消息内容进行发送
 		String msgBody = this.getJSON();
-		try {
-			this.session.append(this.queque, msgBody);
-		} catch (Exception e) {// 如果是第一次访问队列,则需要创建队列
-			this.session.createQueue(this.topicName);
-			log.info("创建队列:" + this.topicName);
-			this.session.append(this.queque, msgBody);
-		}
+		this.session.append(this.queque, msgBody);
 		log.info("消息发送成功,消息内容为:" + msgBody);
 	}
 

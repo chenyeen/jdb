@@ -1,11 +1,15 @@
 package cn.cerc.jdb.mongo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
@@ -104,15 +108,16 @@ public class MongoQuery extends DataQuery {
 		res.remove(businessId);
 		res.remove("_id");
 		// mongodb document to data set
-		this.setJSON(res.toJson());
-		log.info("数据为:" + this.getJSON());
+		// this.setJSON(res.toJson());
+		this.setBusJson(res.toJson());
+		log.info("数据为:" + res.toJson());
 		return this;
 	}
 
 	@Override
 	public void save() {
-		String json = this.getJSON();
-		Document doc = Document.parse(json);
+		// 将 this.head.record 和 this.recores.items 转换为json
+		Document doc = Document.parse(this.getBusJson());
 		doc.append(businessId, businessIdValue);
 		// 执行流程为 open --> save/delete
 		if (StringUtils.isBlank(collName))
@@ -187,4 +192,40 @@ public class MongoQuery extends DataQuery {
 		return this.add(String.format(format, args));
 	}
 
+	/**
+	 * 获取业json数据(不等于dataset结构)
+	 * 
+	 * @Description
+	 * @author rick_zhou
+	 * @return
+	 */
+	private String getBusJson() {
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		jsonMap.put("head", this.getHead().getItems());
+		List<Map<String, Object>> data = new ArrayList<>();
+		for (Record record : this.getRecords()) {
+			data.add(record.getItems());
+		}
+		jsonMap.put("data", data);
+		return new Gson().toJson(jsonMap);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private void setBusJson(String json) {
+		Gson gson = new Gson();
+		HashMap jsonMap = gson.fromJson(json, HashMap.class);
+		Map<String, Object> head = (Map<String, Object>) jsonMap.get("head");
+		// 将mongodb的head数据装换为dataset的head数据
+		this.getHead().getItems().putAll(head);
+		// 将mongodb查出的data数据装换为list<record>
+		List<Map<String, String>> data = (List<Map<String, String>>) jsonMap.get("data");
+		List<Record> listRecord = new ArrayList<>();
+		for (Map<String, String> map : data) {
+			Record rec = new Record();
+			rec.getItems().putAll(map);
+			listRecord.add(rec);
+		}
+		// 将list<record> 装换为DataSet的records
+		this.getRecords().addAll(listRecord);
+	}
 }
