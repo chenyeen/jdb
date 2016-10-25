@@ -46,13 +46,7 @@ public class OssQuery extends DataQuery {
 		return this;
 	}
 
-	/**
-	 * 查询文件
-	 * 
-	 * @Description
-	 * @author rick_zhou
-	 * @return
-	 */
+	// 查询文件
 	public String getFileContext() {
 		StringBuffer sb = new StringBuffer();
 		try {
@@ -73,13 +67,7 @@ public class OssQuery extends DataQuery {
 		return sb.toString();
 	}
 
-	/**
-	 * 保存或更新文件
-	 * 
-	 * @Description
-	 * @author rick_zhou
-	 * @param fileContext
-	 */
+	// 保存或更新文件
 	public void save(String fileContext) {
 		session.getOssClient().putObject(bucketName, objectId, new ByteArrayInputStream(fileContext.getBytes()));
 		log.info("对象:" + this.bucketName + "." + objectId + "保存成功");
@@ -87,8 +75,6 @@ public class OssQuery extends DataQuery {
 
 	/**
 	 * 删除文件或目录 Description
-	 * 
-	 * @see cn.cerc.jdb.core.CustomDataSet#delete()
 	 */
 	@Override
 	public void delete() {

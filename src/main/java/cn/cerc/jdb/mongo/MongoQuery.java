@@ -24,17 +24,13 @@ import cn.cerc.jdb.core.Record;
 /**
  * mongoDB 对象存储
  * 
- * @Description
  * @author rick_zhou
- * @date 2016年10月20日 下午1:31:10
  */
 public class MongoQuery extends DataQuery {
 	private static final long serialVersionUID = 1L;
 	// private static final Logger log = Logger.getLogger(MongoDataQuery.class);
 	private IHandle handle;
 	MongoSession session = null;
-	// 查询语句
-	private StringBuffer queryStr = new StringBuffer();
 
 	private String collName;
 	private String businessIdValue = null;
@@ -51,20 +47,19 @@ public class MongoQuery extends DataQuery {
 	/**
 	 * 此方法相当于通过连接进行查询 Description
 	 * 
-	 * @return
-	 * @see cn.cerc.jdb.dataquery.StoreQuery#open()
+	 * @return 返回数据集本身
 	 */
 	@Override
 	public DataQuery open() {
 		// get collName and business_id
-		String from = null;// from 关键字
 		String afterFromStr = null;// from之后的字符串
 		String[] arr = null;// arr[0] collName arr[1] business_id value
 		this.isUpdate = false;
 
 		// 字符串截取获取collName和business_id的值
 		try {
-			from = "from";
+			String from = "from";
+			String queryStr = this.getCommandText();
 			afterFromStr = queryStr.toString().substring(queryStr.indexOf(from) + from.length()).trim();
 			arr = afterFromStr.split("\\.");
 		} catch (Exception e) {
@@ -176,35 +171,6 @@ public class MongoQuery extends DataQuery {
 				throw new RuntimeException("本方法不提供服务,禁止调用");
 			}
 		});
-	}
-
-	/**
-	 * 拼接查询语句
-	 * 
-	 * @Description
-	 * @author rick_zhou
-	 * @param queryString
-	 * @return
-	 */
-	public MongoQuery add(String queryString) {
-		if (queryStr.length() == 0)
-			queryStr.append(queryString);
-		else
-			queryStr.append(" ").append(queryString);
-		return this;
-	}
-
-	/**
-	 * 替换拼接查询语句
-	 * 
-	 * @Description
-	 * @author rick_zhou
-	 * @param format
-	 * @param args
-	 * @return
-	 */
-	public MongoQuery add(String format, Object... args) {
-		return this.add(String.format(format, args));
 	}
 
 	/**

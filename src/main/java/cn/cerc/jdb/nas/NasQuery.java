@@ -42,13 +42,7 @@ public class NasQuery extends DataQuery {
 		return this;
 	}
 
-	/**
-	 * 查询文件
-	 * 
-	 * @Description
-	 * @author rick_zhou
-	 * @return
-	 */
+	// 查询文件
 	public String getFileContext() {
 		File file = FileUtils.getFile(this.filePath, this.fileName);
 		String fileContext = "";
@@ -60,13 +54,7 @@ public class NasQuery extends DataQuery {
 		return fileContext;
 	}
 
-	/**
-	 * 保存或更新文件
-	 * 
-	 * @Description
-	 * @author rick_zhou
-	 * @param fileContext
-	 */
+	// 保存或更新文件
 	public void save(String fileContext) {
 		File file = FileUtils.getFile(this.filePath, this.fileName);
 		try {
@@ -78,11 +66,7 @@ public class NasQuery extends DataQuery {
 		log.info("文件:" + file.getPath() + "保存成功");
 	}
 
-	/**
-	 * 删除文件或目录 Description
-	 * 
-	 * @see cn.cerc.jdb.core.CustomDataSet#delete()
-	 */
+	// 删除文件或目录
 	@Override
 	public void delete() {
 		File file = FileUtils.getFile(this.filePath, this.fileName);
