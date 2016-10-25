@@ -11,7 +11,7 @@ import org.dom4j.io.SAXReader;
 
 public class SmsTemplateUtil {
 
-	private static final String SMSFILE	= "app-sms.xml";
+	private static final String SMSFILE = "app-sms.xml";
 	private static Map<String, String> map = new HashMap<String, String>();
 
 	static {

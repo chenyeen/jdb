@@ -11,8 +11,8 @@ import cn.cerc.jdb.core.IConnection;
 
 public class SmsYunpianConnection implements IConnection, SmsConnection {
 
-	private static final String	SMS_YUNPIAN_URL	= "sms.yunpian.url";
-	private static final String	SMS_YUNPIAN_KEY	= "sms.yunpian.key";
+	private static final String	SMS_YUNPIAN_URL = "sms.yunpian.url";
+	private static final String	SMS_YUNPIAN_KEY = "sms.yunpian.key";
 
 	private IConfig config;
 
