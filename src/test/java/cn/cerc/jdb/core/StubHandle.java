@@ -2,16 +2,24 @@ package cn.cerc.jdb.core;
 
 import cn.cerc.jdb.mysql.SqlConnection;
 import cn.cerc.jdb.mysql.SqlSession;
+import cn.cerc.jdb.queue.QueueConnection;
+import cn.cerc.jdb.queue.QueueSession;
 
-public class StubHandle implements IHandle {
-	private SqlSession sess;
+public class StubHandle implements IHandle, AutoCloseable {
+	private SqlSession sqlSession;
+	private QueueSession queueSession;
 
 	public StubHandle() {
 		super();
 		IConfig config = new StubConfig();
-		SqlConnection conn = new SqlConnection();
-		conn.setConfig(config);
-		sess = conn.getSession();
+
+		SqlConnection conn1 = new SqlConnection();
+		conn1.setConfig(config);
+		sqlSession = conn1.getSession();
+
+		QueueConnection conn2 = new QueueConnection();
+		conn2.setConfig(config);
+		queueSession = conn2.getSession();
 	}
 
 	@Override
@@ -27,12 +35,20 @@ public class StubHandle implements IHandle {
 	@Override
 	public Object getProperty(String key) {
 		if (SqlSession.sessionId.equals(key))
-			return sess;
+			return sqlSession;
+		if (QueueSession.sessionId.equals(key))
+			return queueSession;
 		return null;
 	}
 
 	// 关闭资源
 	public void closeConnections() {
-		sess.closeSession();
+		sqlSession.closeSession();
+		queueSession.closeSession();
+	}
+
+	@Override
+	public void close() {
+		closeConnections();
 	}
 }
