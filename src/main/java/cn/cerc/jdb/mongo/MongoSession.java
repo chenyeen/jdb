@@ -6,7 +6,7 @@ import cn.cerc.jdb.core.ISession;
 
 public class MongoSession implements ISession {
 	// private static final Logger log = Logger.getLogger(MongoSession.class);
-	public static final String sessionId = "mongoSession";
+	public static String sessionId = "mongoSession";
 	private MongoDatabase database;
 
 	public MongoSession() {
