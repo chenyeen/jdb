@@ -57,6 +57,7 @@ public class QueueQuery extends DataQuery {
 		if (this.queueMode != QueueMode.append)
 			throw new RuntimeException("当前作业模式下，不允许保存");
 		sess.append(queue, getJSON());
+		log.info("消息保存成功");
 	}
 
 	/**
@@ -91,5 +92,9 @@ public class QueueQuery extends DataQuery {
 
 	public void setQueueMode(QueueMode queueMode) {
 		this.queueMode = queueMode;
+	}
+
+	public void sessionClose() {
+		this.sess.closeSession();
 	}
 }

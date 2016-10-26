@@ -92,4 +92,8 @@ public class OssQuery extends DataQuery {
 		return operator;
 	}
 
+	public void sessionClose() {
+		this.session.closeSession();
+	}
+
 }

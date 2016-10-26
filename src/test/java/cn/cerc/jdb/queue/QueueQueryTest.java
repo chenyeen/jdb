@@ -2,7 +2,8 @@ package cn.cerc.jdb.queue;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import cn.cerc.jdb.core.StubHandle;
@@ -11,13 +12,18 @@ import cn.cerc.jdb.mongo.MongoSession;
 public class QueueQueryTest {
 	private static final Logger log = Logger.getLogger(MongoSession.class);
 
-	private QueueQuery ds;
-	private StubHandle handle;
+	private static QueueQuery ds;
+	private static StubHandle handle;
 
-	@Before
-	public void setUp() {
+	@BeforeClass
+	public static void setUp() {
 		handle = new StubHandle();
 		ds = new QueueQuery(handle);
+	}
+
+	@AfterClass
+	public static void closeSession() {
+		ds.sessionClose();
 	}
 
 	/**
@@ -43,8 +49,8 @@ public class QueueQueryTest {
 		ds.setField("queueBodyData3", "queueBodyData3");
 		ds.setField("queueBodyData4", "queueBodyData4");
 		ds.setField("queueBodyData5", "queueBodyData5");
+		ds.setQueueMode(QueueMode.append);
 		ds.save();
-
 	}
 
 	/**
@@ -57,6 +63,7 @@ public class QueueQueryTest {
 	public void query() {
 		// ds.add("select * from %s", appdb.get(handle, appdb.MQ_TOPIC_NAME));
 		ds.add("select * from test");
+		ds.setQueueMode(QueueMode.recevie);
 		ds.open();// 获取消息
 
 		// 获取消息中DataSet的head内容

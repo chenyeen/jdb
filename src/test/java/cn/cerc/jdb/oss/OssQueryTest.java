@@ -1,6 +1,7 @@
 package cn.cerc.jdb.oss;
 
 import org.apache.log4j.Logger;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,6 +18,11 @@ public class OssQueryTest {
 	public void setUp() {
 		handle = new StubHandle();
 		ds = new OssQuery(handle);
+	}
+
+	@After
+	public void closeSession() {
+		ds.sessionClose();
 	}
 
 	/**
