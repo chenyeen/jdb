@@ -1,6 +1,5 @@
 package cn.cerc.jdb.oss;
 
-import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -8,8 +7,7 @@ import org.junit.Test;
 import cn.cerc.jdb.core.StubHandle;
 
 public class OssQueryTest {
-
-	private static final Logger log = Logger.getLogger(OssQueryTest.class);
+	// private static final Logger log = Logger.getLogger(OssQueryTest.class);
 	private OssQuery ds;
 	private StubHandle handle;
 
@@ -22,56 +20,30 @@ public class OssQueryTest {
 	/**
 	 * 保存文件/覆盖文件
 	 * 
-	 * @Description
-	 * @author rick_zhou
 	 */
 	@Test
 	@Ignore
 	public void saveFile() {
-		/*
-		 * ds.add("select id_00001 from %s",
-		 * appdb.get(handle,appdb.bucketName));
-		 */
-		ds.add("select id_00001 from %s", "zrk-oss-test");
+		ds.setOssMode(OssMode.create);
+		ds.add("select * from %s", "id_00001.txt");
 		ds.open();
-		String fileContext = "一大串字符串................................................";
-		ds.save(fileContext);
-	}
-
-	/**
-	 * 获取文件内容
-	 * 
-	 * @Description
-	 * @author rick_zhou
-	 */
-	@Test
-	@Ignore
-	public void findFile() {
-		/*
-		 * ds.add("select id_00001 from %s",
-		 * appdb.get(handle,appdb.bucketName));
-		 */
-		ds.add("select id_00001 from %s", "zrk-oss-test");
-		ds.open();
-		log.info("查询文件");
-		log.info("获取到的文件内容为:\n" + ds.getFileContext());
+		System.out.println(ds.getActive());
+		ds.append();
+		ds.setField("num", ds.getInt("num") + 1);
+		ds.save();
+		System.out.println(ds);
 	}
 
 	/**
 	 * 删除文件
 	 * 
-	 * @Description
-	 * @author rick_zhou
 	 */
 	@Test
+	@Ignore
 	public void deleteFile() {
-		/*
-		 * ds.add("select id_00001 from %s",
-		 * appdb.get(handle,appdb.bucketName));
-		 */
-		ds.add("select id_00001 from %s", "zrk-oss-test");
+		ds.add("select * from %s", "id_00001.txt");
 		ds.open();
-		ds.delete();
+		ds.remove();
 	}
 
 }

@@ -1,12 +1,17 @@
 package cn.cerc.jdb.oss;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.apache.log4j.Logger;
 
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.GetObjectRequest;
+import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.ObjectMetadata;
 
 import cn.cerc.jdb.core.ISession;
@@ -68,5 +73,27 @@ public class OssSession implements ISession {
 	// 删除文件
 	public void delete(String fileName) {
 		client.deleteObject(getBucket(), fileName);
+	}
+
+	public String getContent(String fileName) {
+		try {
+			StringBuffer sb = new StringBuffer();
+			// ObjectMetadata meta = client.getObjectMetadata(this.getBucket(),
+			// fileName);
+			// if (meta.getContentLength() == 0)
+			// return null;
+			OSSObject obj = client.getObject(getBucket(), fileName);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(obj.getObjectContent()));
+			while (true) {
+				String line;
+				line = reader.readLine();
+				if (line == null)
+					break;
+				sb.append(line);
+			}
+			return sb.toString();
+		} catch (OSSException | IOException e) {
+			return null;
+		}
 	}
 }
