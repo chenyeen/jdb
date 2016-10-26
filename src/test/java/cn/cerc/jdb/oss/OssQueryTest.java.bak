@@ -1,5 +1,10 @@
 package cn.cerc.jdb.oss;
 
+<<<<<<< HEAD
+import org.apache.log4j.Logger;
+import org.junit.After;
+=======
+>>>>>>> refs/remotes/origin/master
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

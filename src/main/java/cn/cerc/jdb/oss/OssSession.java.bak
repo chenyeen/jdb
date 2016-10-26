@@ -18,6 +18,10 @@ import cn.cerc.jdb.core.ISession;
 
 public class OssSession implements ISession {
 	private static final Logger log = Logger.getLogger(OssSession.class);
+<<<<<<< HEAD
+	public static final String sessionId = "ossSession";
+	private OSSClient ossClient;
+=======
 	// 设置连接地址
 	public static final String oss_endpoint = "oss.endpoint";
 	// 连接区域
@@ -32,6 +36,7 @@ public class OssSession implements ISession {
 	public static final String sessionId = "ossSession";
 	private OSSClient client;
 	private String bucket;
+>>>>>>> refs/remotes/origin/master
 
 	public OSSClient getClient() {
 		return client;
