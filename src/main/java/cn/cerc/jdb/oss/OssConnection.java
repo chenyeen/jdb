@@ -11,6 +11,7 @@ import cn.cerc.jdb.core.IConnection;
 public class OssConnection implements IConnection {
 	private static final Logger log = Logger.getLogger(OssConnection.class);
 	private static OSSClient ossClient;
+	private static String bucket;
 	private IConfig config;
 
 	@Override
@@ -27,6 +28,7 @@ public class OssConnection implements IConnection {
 		init();// 如果连接被意外断开了,那么重新建立连接
 		OssSession sess = new OssSession();
 		sess.setClient(ossClient);
+		sess.setBucket(bucket);
 		return sess;
 	}
 
@@ -36,6 +38,7 @@ public class OssConnection implements IConnection {
 			String endPoint = config.getProperty(OssSession.oss_endpoint, null);
 			String acId = config.getProperty(OssSession.oss_accessKeyId, null);
 			String secret = config.getProperty(OssSession.oss_accessKeySecret, null);
+			bucket = config.getProperty(OssSession.oss_bucket, null);
 			// 创建ClientConfiguration实例
 			ClientConfiguration conf = new ClientConfiguration();
 			// 设置OSSClient使用的最大连接数，默认1024
