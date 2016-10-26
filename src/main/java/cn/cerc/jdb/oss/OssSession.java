@@ -8,7 +8,7 @@ import cn.cerc.jdb.core.ISession;
 
 public class OssSession implements ISession {
 	private static final Logger log = Logger.getLogger(OssSession.class);
-	public static String sessionId = "ossSession";
+	public static final String sessionId = "ossSession";
 	private OSSClient ossClient;
 
 	public OSSClient getOssClient() {
