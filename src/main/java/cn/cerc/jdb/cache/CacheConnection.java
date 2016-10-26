@@ -35,8 +35,8 @@ public class CacheConnection implements IConnection {
 	@Override
 	public void init() {
 		if (pool == null && config != null) {
-			site = config.getProperty("ocs.site", "127.0.0.1");
-			String port = config.getProperty("ocs.port", "11211");
+			site = config.getProperty(CacheSession.ocs_site, "127.0.0.1");
+			String port = config.getProperty(CacheSession.ocs_port, "11211");
 			String[] servers = { site + ":" + port };
 			log.info("host: " + servers[0] + " init.");
 			// 建立MemcachedClient实例
