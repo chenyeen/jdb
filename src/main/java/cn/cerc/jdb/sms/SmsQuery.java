@@ -20,7 +20,7 @@ public class SmsQuery extends DataQuery {
 	private String phoneNumber = "";
 
 	public SmsQuery(IHandle handle) {
-		super();
+		super(handle);
 		Object object = handle.getProperty(SmsSession.sessionId);
 		if (object == null)
 			throw new RuntimeException("请先在application.xml配置" + SmsSession.sessionId);
