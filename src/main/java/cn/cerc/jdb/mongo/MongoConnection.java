@@ -1,10 +1,13 @@
-package cn.cerc.jdb.core;
+package cn.cerc.jdb.mongo;
 
 import org.apache.log4j.Logger;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
+
+import cn.cerc.jdb.core.IConfig;
+import cn.cerc.jdb.core.IConnection;
 
 public class MongoConnection implements IConnection {
 	private static final Logger log = Logger.getLogger(MongoConnection.class);

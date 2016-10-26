@@ -28,10 +28,7 @@ public class SqlQuery extends DataQuery {
 	private static final Logger log = Logger.getLogger(SqlQuery.class);
 
 	private static final long serialVersionUID = 7316772894058168187L;
-	private IHandle handle;
 	private SqlSession connection;
-	private String commandText;
-	private boolean active = false;
 	// private boolean closeMax = false;
 	private int offset = 0;
 	private int maximum = BigdataException.MAX_RECORDS;
@@ -50,8 +47,7 @@ public class SqlQuery extends DataQuery {
 	}
 
 	public SqlQuery(IHandle handle) {
-		super();
-		this.handle = handle;
+		super(handle);
 		this.connection = (SqlSession) handle.getProperty(SqlSession.sessionId);
 	}
 
@@ -166,6 +162,7 @@ public class SqlQuery extends DataQuery {
 		}
 	}
 
+	@Override
 	public SqlQuery setActive(boolean value) {
 		if (value) {
 			if (!this.active)
@@ -179,27 +176,6 @@ public class SqlQuery extends DataQuery {
 
 	public boolean getActive() {
 		return active;
-	}
-
-	public SqlQuery add(String sql) {
-		if (commandText == null)
-			commandText = sql;
-		else
-			commandText = commandText + " " + sql;
-		return this;
-	}
-
-	public SqlQuery add(String format, Object... args) {
-		return this.add(String.format(format, args));
-	}
-
-	public SqlQuery setCommandText(String sql) {
-		this.commandText = sql;
-		return this;
-	}
-
-	public String getCommandText() {
-		return this.commandText;
 	}
 
 	@Override
@@ -257,8 +233,8 @@ public class SqlQuery extends DataQuery {
 
 	protected IDataOperator getDefaultOperator() {
 		if (operator == null) {
-			SqlOperator def = new SqlOperator(handle);
-			String tableName = def.findTableName(this.commandText);
+			SqlOperator def = new SqlOperator(this.handle);
+			String tableName = def.findTableName(this.getCommandText());
 			def.setTableName(tableName);
 			operator = def;
 		}
@@ -335,7 +311,7 @@ public class SqlQuery extends DataQuery {
 
 	public void clear() {
 		close();
-		this.commandText = null;
+		this.setCommandText(null);
 	}
 
 	public boolean isStrict() {

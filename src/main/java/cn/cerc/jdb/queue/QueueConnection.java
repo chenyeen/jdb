@@ -9,6 +9,7 @@ import cn.cerc.jdb.core.IConnection;
 public class QueueConnection implements IConnection {
 	private static MNSClient client;
 	private static CloudAccount account;
+
 	private IConfig config;
 
 	@Override
