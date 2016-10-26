@@ -21,20 +21,12 @@ public class OssFolder {
 		this.disk = disk;
 	}
 
-	public OssDisk getDisk() {
-		return disk;
-	}
-
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public OSSClient getClient() {
-		return disk.getClient();
 	}
 
 	public List<String> getSubItems() {
@@ -54,7 +46,7 @@ public class OssFolder {
 		String marker = "";
 		while (true) {
 			// 构造ListObjectsRequest请求
-			ListObjectsRequest params = new ListObjectsRequest(disk.getBucketName());
+			ListObjectsRequest params = new ListObjectsRequest(disk.getSession().getBucket());
 
 			// 设置参数
 			params.setDelimiter("/");
