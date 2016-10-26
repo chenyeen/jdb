@@ -26,28 +26,27 @@ public class OssConnection implements IConnection {
 	public OssSession getSession() {
 		init();// 如果连接被意外断开了,那么重新建立连接
 		OssSession sess = new OssSession();
-		sess.setOssClient(ossClient);
+		sess.setClient(ossClient);
 		return sess;
 	}
 
 	@Override
 	public void init() {
 		if (null == ossClient) {
+			String endPoint = config.getProperty(OssSession.oss_endpoint, null);
+			String acId = config.getProperty(OssSession.oss_accessKeyId, null);
+			String secret = config.getProperty(OssSession.oss_accessKeySecret, null);
 			// 创建ClientConfiguration实例
 			ClientConfiguration conf = new ClientConfiguration();
 			// 设置OSSClient使用的最大连接数，默认1024
-			conf.setMaxConnections(Integer.parseInt(config.getProperty("oss.maxConnections", null)));
+			conf.setMaxConnections(1024);
 			// 设置请求超时时间，默认50秒
-			conf.setSocketTimeout(Integer.parseInt(config.getProperty("oss.SocketTimeout", null)));
+			conf.setSocketTimeout(50);
 			// 设置失败请求重试次数，默认3次
-			conf.setMaxErrorRetry(Integer.parseInt(config.getProperty("oss.maxErrorRetry", null)));
-
-			String endPoint = config.getProperty("oss.endpoint", null);
-			String acId = config.getProperty("oss.accessKeyId", null);
-			String secret = config.getProperty("oss.accessKeySecret", null);
+			conf.setMaxErrorRetry(3);
 			// 创建OSSClient实例
 			ossClient = new OSSClient(endPoint, acId, secret, conf);
-			log.info("建立oss连接......成功");
+			log.debug("建立oss连接成功");
 		}
 	}
 

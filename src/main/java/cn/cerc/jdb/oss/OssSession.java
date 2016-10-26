@@ -8,14 +8,21 @@ import cn.cerc.jdb.core.ISession;
 
 public class OssSession implements ISession {
 	private static final Logger log = Logger.getLogger(OssSession.class);
-	public static String sessionId = "ossSession";
+	// 设置连接地址
+	public static final String oss_endpoint = "oss.endpoint";
+	// 连接id
+	public static final String oss_accessKeyId = "oss.accessKeyId";
+	// 连接密码
+	public static final String oss_accessKeySecret = "oss.accessKeySecret";
+	// IHandle 标识
+	public static final String sessionId = "ossSession";
 	private OSSClient ossClient;
 
-	public OSSClient getOssClient() {
+	public OSSClient getClient() {
 		return ossClient;
 	}
 
-	public void setOssClient(OSSClient ossClient) {
+	public void setClient(OSSClient ossClient) {
 		this.ossClient = ossClient;
 	}
 
@@ -23,7 +30,7 @@ public class OssSession implements ISession {
 	public void closeSession() {
 		// 关闭OSSClient
 		ossClient.shutdown();
-		log.info("关闭ossSession......成功");
+		log.debug("关闭ossSession成功");
 	}
 
 }

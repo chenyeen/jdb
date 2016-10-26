@@ -47,7 +47,7 @@ public class OssQuery extends DataQuery {
 	public String getFileContext() {
 		StringBuffer sb = new StringBuffer();
 		try {
-			OSSObject ossObject = session.getOssClient().getObject(this.bucketName, this.objectId);
+			OSSObject ossObject = session.getClient().getObject(this.bucketName, this.objectId);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(ossObject.getObjectContent()));
 			while (true) {
 				String line;
@@ -66,7 +66,7 @@ public class OssQuery extends DataQuery {
 
 	// 保存或更新文件
 	public void save(String fileContext) {
-		session.getOssClient().putObject(bucketName, objectId, new ByteArrayInputStream(fileContext.getBytes()));
+		session.getClient().putObject(bucketName, objectId, new ByteArrayInputStream(fileContext.getBytes()));
 		log.info("对象:" + this.bucketName + "." + objectId + "保存成功");
 	}
 
@@ -75,7 +75,7 @@ public class OssQuery extends DataQuery {
 	 */
 	@Override
 	public void delete() {
-		session.getOssClient().deleteObject(this.bucketName, objectId);
+		session.getClient().deleteObject(this.bucketName, objectId);
 		log.info("对象:" + this.bucketName + "." + objectId + "删除成功");
 	}
 
