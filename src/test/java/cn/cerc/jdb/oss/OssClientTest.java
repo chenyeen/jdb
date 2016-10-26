@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.UUID;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import com.aliyun.oss.ClientConfiguration;
@@ -14,7 +13,7 @@ import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.OSSObject;
 
 public class OssClientTest {
-	private static final Logger log = Logger.getLogger(OssClientTest.class);
+	// private static final Logger log = Logger.getLogger(OssClientTest.class);
 
 	@Test
 	public void test() throws IOException {
@@ -45,7 +44,6 @@ public class OssClientTest {
 			String line = reader.readLine();
 			if (line == null)
 				break;
-			System.out.println(line);
 		}
 		// 关闭OSSClient
 		client.shutdown();
