@@ -46,8 +46,8 @@ public class OssConnection implements IConnection {
 			ClientConfiguration conf = new ClientConfiguration();
 			// 设置OSSClient使用的最大连接数，默认1024
 			conf.setMaxConnections(1024);
-			// 设置请求超时时间，默认50秒
-			conf.setSocketTimeout(50);
+			// 设置请求超时时间，默认3秒
+			conf.setSocketTimeout(3 * 1000);
 			// 设置失败请求重试次数，默认3次
 			conf.setMaxErrorRetry(3);
 			// 创建OSSClient实例

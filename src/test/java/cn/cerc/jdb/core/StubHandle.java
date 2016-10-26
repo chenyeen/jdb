@@ -18,23 +18,26 @@ public class StubHandle implements IHandle {
 	public StubHandle() {
 		super();
 		IConfig config = new StubConfig();
+
 		// mysql
 		SqlConnection conn = new SqlConnection();
 		conn.setConfig(config);
 		mysqlSession = conn.getSession();
+
 		// mongodb
 		MongoConnection mgconn = new MongoConnection();
 		mgconn.setConfig(config);
 		mgSession = mgconn.getSession();
+
 		// aliyun mq
 		QueueConnection queconn = new QueueConnection();
 		queconn.setConfig(config);
 		queueSession = queconn.getSession();
+
 		// oss
 		OssConnection ossConn = new OssConnection();
 		ossConn.setConfig(config);
 		ossSession = ossConn.getSession();
-
 	}
 
 	@Override

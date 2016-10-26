@@ -34,7 +34,7 @@ public class StubConfig implements IConfig {
 	public String getProperty(String key, String def) {
 		String result = properties.getProperty(key);
 		if (result == null)
-			throw new RuntimeException("请先准备好测试配置文件：" + SETTINGS_FILE_NAME);
+			throw new RuntimeException(String.format("请准备好配置文件 %s, 以及其中 %s 的设置", SETTINGS_FILE_NAME, key));
 		return result;
 	}
 }
