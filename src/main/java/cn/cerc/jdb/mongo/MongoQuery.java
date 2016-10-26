@@ -197,17 +197,18 @@ public class MongoQuery extends DataQuery {
 		HashMap jsonMap = gson.fromJson(json, HashMap.class);
 		Map<String, Object> head = (Map<String, Object>) jsonMap.get("head");
 		// 将mongodb的head数据装换为dataset的head数据
-		this.getHead().getItems().putAll(head);
+		for (String key : head.keySet()) {
+			this.getHead().setField(key, head.get(key));
+		}
 		// 将mongodb查出的data数据装换为list<record>
 		List<Map<String, String>> data = (List<Map<String, String>>) jsonMap.get("data");
-		List<Record> listRecord = new ArrayList<>();
 		for (Map<String, String> map : data) {
-			Record rec = new Record();
-			rec.getItems().putAll(map);
-			listRecord.add(rec);
+			this.append();
+			for (String key : map.keySet()) {
+				this.setField(key, map.get(key));
+			}
 		}
 		// 将list<record> 装换为DataSet的records
-		this.getRecords().addAll(listRecord);
 		this.setRecNo(this.getRecords().size());// 修改当前records元素总数
 	}
 
