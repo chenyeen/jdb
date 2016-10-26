@@ -15,8 +15,6 @@ import cn.cerc.jdb.queue.QueueOperator;
 public class OssQuery extends DataQuery {
 	private static final long serialVersionUID = 1L;
 	private OssSession session = null;
-	@SuppressWarnings("unused")
-	private IHandle handle;
 	// 文件目录
 	private String bucketName;
 	// 文件名称
@@ -26,7 +24,6 @@ public class OssQuery extends DataQuery {
 
 	public OssQuery(IHandle handle) {
 		super(handle);
-		this.handle = handle; // 暂时无用
 		session = (OssSession) this.handle.getProperty(OssSession.sessionId);
 	}
 
