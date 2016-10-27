@@ -163,18 +163,6 @@ public class MongoQuery extends DataQuery {
 		});
 	}
 
-	public MongoQuery add(String queryString) {
-		if (queryStr.length() == 0)
-			queryStr.append(queryString);
-		else
-			queryStr.append(" ").append(queryString);
-		return this;
-	}
-
-	public MongoQuery add(String format, Object... args) {
-		return this.add(String.format(format, args));
-	}
-
 	private String getBusJson() {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("head", this.getHead().getItems());
