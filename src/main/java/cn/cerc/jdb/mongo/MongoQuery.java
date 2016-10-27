@@ -21,13 +21,6 @@ import cn.cerc.jdb.core.IDataOperator;
 import cn.cerc.jdb.core.IHandle;
 import cn.cerc.jdb.core.Record;
 
-/**
- * mongoDB 对象存储
- * 
- * @Description
- * @author rick_zhou
- * @date 2016年10月20日 下午1:31:10
- */
 public class MongoQuery extends DataQuery {
 	private static final long serialVersionUID = 1L;
 	// private static final Logger log = Logger.getLogger(MongoDataQuery.class);
@@ -48,12 +41,6 @@ public class MongoQuery extends DataQuery {
 		session = (MongoSession) this.handle.getProperty(MongoSession.sessionId);
 	}
 
-	/**
-	 * 此方法相当于通过连接进行查询 Description
-	 * 
-	 * @return
-	 * @see cn.cerc.jdb.dataquery.StoreQuery#open()
-	 */
 	@Override
 	public DataQuery open() {
 		// get collName and business_id
@@ -178,14 +165,6 @@ public class MongoQuery extends DataQuery {
 		});
 	}
 
-	/**
-	 * 拼接查询语句
-	 * 
-	 * @Description
-	 * @author rick_zhou
-	 * @param queryString
-	 * @return
-	 */
 	public MongoQuery add(String queryString) {
 		if (queryStr.length() == 0)
 			queryStr.append(queryString);
@@ -194,26 +173,10 @@ public class MongoQuery extends DataQuery {
 		return this;
 	}
 
-	/**
-	 * 替换拼接查询语句
-	 * 
-	 * @Description
-	 * @author rick_zhou
-	 * @param format
-	 * @param args
-	 * @return
-	 */
 	public MongoQuery add(String format, Object... args) {
 		return this.add(String.format(format, args));
 	}
 
-	/**
-	 * 获取业json数据(不等于dataset结构)
-	 * 
-	 * @Description
-	 * @author rick_zhou
-	 * @return
-	 */
 	private String getBusJson() {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("head", this.getHead().getItems());
