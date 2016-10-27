@@ -26,8 +26,6 @@ public class MongoQuery extends DataQuery {
 	// private static final Logger log = Logger.getLogger(MongoDataQuery.class);
 	private IHandle handle;
 	MongoSession session = null;
-	// 查询语句
-	private StringBuffer queryStr = new StringBuffer();
 
 	private String collName;
 	private String businessIdValue = null;
@@ -44,14 +42,14 @@ public class MongoQuery extends DataQuery {
 	@Override
 	public DataQuery open() {
 		// get collName and business_id
-		String from = null;// from 关键字
 		String afterFromStr = null;// from之后的字符串
 		String[] arr = null;// arr[0] collName arr[1] business_id value
 		this.isUpdate = false;
 
 		// 字符串截取获取collName和business_id的值
 		try {
-			from = "from";
+			String from = "from";
+			String queryStr = this.getCommandText();
 			afterFromStr = queryStr.toString().substring(queryStr.indexOf(from) + from.length()).trim();
 			arr = afterFromStr.split("\\.");
 		} catch (Exception e) {

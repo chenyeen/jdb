@@ -28,7 +28,6 @@ public class NasQuery extends DataQuery {
 
 	@Override
 	public DataQuery open() {
-		// 字符串截取获取collName和business_id的值
 		try {
 			this.fileName = this.getCommandText()
 					.substring(this.getCommandText().indexOf("select") + 6, this.getCommandText().indexOf("from"))
@@ -43,6 +42,7 @@ public class NasQuery extends DataQuery {
 		return this;
 	}
 
+	// 查询文件
 	public String getFileContext() {
 		File file = FileUtils.getFile(this.filePath, this.fileName);
 		String fileContext = "";
@@ -54,6 +54,7 @@ public class NasQuery extends DataQuery {
 		return fileContext;
 	}
 
+	// 保存或更新文件
 	public void save(String fileContext) {
 		File file = FileUtils.getFile(this.filePath, this.fileName);
 		try {
@@ -65,6 +66,7 @@ public class NasQuery extends DataQuery {
 		log.info("文件:" + file.getPath() + "保存成功");
 	}
 
+	// 删除文件或目录
 	@Override
 	public void delete() {
 		File file = FileUtils.getFile(this.filePath, this.fileName);
