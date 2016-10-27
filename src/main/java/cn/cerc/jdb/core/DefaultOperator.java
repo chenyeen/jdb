@@ -226,9 +226,9 @@ public class DefaultOperator implements Operator {
 				if (CONST_UID.equalsIgnoreCase(pk)) {
 					if (!CONST_UID.equals(pk))
 						throw new RuntimeException(String.format("%s <> %s", CONST_UID, pk));
+					primaryKeys.add(pk);
 					break;
 				}
-				primaryKeys.add(pk);
 			}
 		}
 	}
