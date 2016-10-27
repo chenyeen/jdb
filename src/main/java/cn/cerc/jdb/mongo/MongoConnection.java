@@ -36,24 +36,24 @@ public class MongoConnection implements IConnection {
 	@Override
 	public void init() {
 		if (MongoConnection.pool == null) {
-			dbname = config.getProperty("mgdb.dbname", null);
+			dbname = config.getProperty(MongoSession.mgdb_dbname);
 			MongoClientURI connectionString = null;
 			StringBuffer sb = new StringBuffer();
 			sb.append("mongodb://");
 			// userName
-			sb.append(config.getProperty("mgdb.username", null));
+			sb.append(config.getProperty(MongoSession.mgdb_username));
 			// password
-			sb.append(":").append(config.getProperty("mgdb.password", null));
+			sb.append(":").append(config.getProperty(MongoSession.mgdb_password));
 			// ip
-			sb.append("@").append(config.getProperty("mgdb.ipandport", null));
+			sb.append("@").append(config.getProperty(MongoSession.mgdb_site));
 			// database
-			sb.append("/").append(config.getProperty("mgdb.dbname", null));
+			sb.append("/").append(config.getProperty(MongoSession.mgdb_dbname));
 
-			if ("true".equals(config.getProperty("mgdb.enablerep", null))) {
+			if ("true".equals(config.getProperty(MongoSession.mgdb_enablerep))) {
 				// replacaset
-				sb.append("?").append("replicaSet=").append(config.getProperty("mgdb.replicaset", null));
+				sb.append("?").append("replicaSet=").append(config.getProperty(MongoSession.mgdb_replicaset));
 				// poolsize
-				sb.append("&").append("maxPoolSize=").append(config.getProperty("mgdb.maxpoolsize", null));
+				sb.append("&").append("maxPoolSize=").append(config.getProperty(MongoSession.mgdb_maxpoolsize));
 
 				// MongoClientURI connectionString = new MongoClientURI(
 				// "mongodb://ehealth:123456@115.28.67.211:3717,115.28.67.211:13717/ehealth?replicaSet=mgset-2004675");

@@ -7,8 +7,10 @@ import com.danga.MemCached.MemCachedClient;
 import cn.cerc.jdb.core.ISession;
 
 public class CacheSession implements ISession, IMemcache {
-	private MemCachedClient client;
+	public static final String ocs_site = "ocs.site";
+	public static final String ocs_port = "ocs.port";
 	public static final String sessionId = "cacheSession";
+	private MemCachedClient client;
 
 	@Override
 	public void closeSession() {

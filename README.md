@@ -15,8 +15,5 @@
 * OssQuery：用于以类似mysql的操作方式，操作aliyun-oss数据，降低学习成本，以及由mysql迁移到aliyun-oss的成本。
 * CacheQuery：用于以类似mysql的操作方式，操作Memcached数据，降低学习成本，并方便与其它DataQuery结合。
 
-### 专用数据操作：
-* JsonQuery：用于以类似mysql的操作方式，操作json文件，适用于大量存档型数据处理，其实际存储将调用NasQuery或MongoQuery或RedisQuery。
-
 欢迎大家使用，同时反馈更多的建议与意见，也欢迎其它业内人士，对此项目进行协同改进！
 
