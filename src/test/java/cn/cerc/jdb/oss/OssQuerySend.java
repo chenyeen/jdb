@@ -3,7 +3,6 @@ package cn.cerc.jdb.oss;
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import cn.cerc.jdb.core.StubHandle;
@@ -29,10 +28,10 @@ public class OssQuerySend {
 	 * 
 	 */
 	@Test
-	@Ignore
 	public void saveFile() {
 		ds.setOssMode(OssMode.create);
 		ds.add("select * from %s", "id_00001.txt");
+		ds.setOssMode(OssMode.readWrite);
 		ds.open();
 		log.info(ds.getActive());
 		ds.append();
