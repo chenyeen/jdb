@@ -44,9 +44,9 @@ public class OssSession implements ISession {
 	@Override
 	public void closeSession() {
 		// 关闭OSSClient
-		// client.shutdown();
-		// client = null;
-		// log.debug("关闭ossSession成功");
+		client.shutdown();
+		client = null;
+		log.debug("关闭ossSession成功");
 
 	}
 
