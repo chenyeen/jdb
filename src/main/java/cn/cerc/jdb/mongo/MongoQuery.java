@@ -216,8 +216,4 @@ public class MongoQuery extends DataQuery {
 	public void save() {
 		throw new RuntimeException("本方法不提供服务,请使用save(MongoSaveModel model)");
 	}
-
-	public void sessionClose() {
-		this.session.closeSession();
-	}
 }
