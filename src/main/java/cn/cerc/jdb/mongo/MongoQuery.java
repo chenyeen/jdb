@@ -25,7 +25,7 @@ public class MongoQuery extends DataQuery {
 	private static final long serialVersionUID = 1L;
 	// private static final Logger log = Logger.getLogger(MongoDataQuery.class);
 	private IHandle handle;
-	MongoSession session = null;
+	private MongoSession session = null;
 
 	private String collName;
 	private String businessIdValue = null;
@@ -199,5 +199,9 @@ public class MongoQuery extends DataQuery {
 	@Override
 	public void save() {
 		throw new RuntimeException("本方法不提供服务,请使用save(MongoSaveModel model)");
+	}
+
+	public void sessionClose() {
+		this.session.closeSession();
 	}
 }

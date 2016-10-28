@@ -31,9 +31,17 @@ public class NasQueryTest {
 		 * appdb.get(handle,appdb.NAS_FOLDER));
 		 */
 		ds.add("select test.txt from %s", "D://testFolder1/testFolder2");
+		ds.setNasMode(NasModel.create);
 		ds.open();
-		String fileContext = "一大串字符串................................................";
-		ds.save(fileContext);
+		log.info(ds.getActive());
+		ds.append();
+		ds.setField("key", "一大串字符串................................................");
+		ds.save();
+		// update
+		ds.setField("key", "一大串字符串2................................................");
+		ds.save();
+		ds.setField("key2", "一大串字符串3................................................");
+		ds.save();
 	}
 
 	/**
@@ -49,9 +57,11 @@ public class NasQueryTest {
 		 * appdb.get(handle,appdb.NAS_FOLDER));
 		 */
 		ds.add("select test.txt from %s", "D://testFolder1/testFolder2");
+		ds.setNasMode(NasModel.readWrite);
 		ds.open();
-		log.info("查询文件");
-		log.info("获取到的文件内容为:\n" + ds.getFileContext());
+		log.info(ds.getActive());
+		log.info("获取到的文件内容为:\n" + ds.getField("key"));
+		log.info("获取到的文件内容为:\n" + ds.getField("key2"));
 	}
 
 	/**
@@ -68,6 +78,7 @@ public class NasQueryTest {
 		 */
 		ds.add("select test.txt from %s", "D://testFolder1/testFolder2");
 		ds.open();
+		log.info(ds.getActive());
 		ds.delete();
 	}
 
