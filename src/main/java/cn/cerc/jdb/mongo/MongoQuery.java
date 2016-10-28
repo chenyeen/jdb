@@ -94,23 +94,26 @@ public class MongoQuery extends DataQuery {
 		res.remove("_id");
 		// mongodb document to data set
 		// this.setJSON(res.toJson());
+		log.info("查询到的数据为:" + res.toJson());
 		if ("reduce".equals(res.getString("MongoSaveModel"))) {// 压缩还原
+			res.remove("MongoSaveModel");
 			this.setJSON(res.toJson());
+			log.info("压缩还原后的数据为:" + this.getJSON());
 		} else if ("keyValue".equals(res.getString("MongoSaveModel"))) {// keyvalue还原
+			res.remove("MongoSaveModel");
 			this.setBusJson(res.toJson());
+			log.info("keyVlaue还原后的数据为:" + this.getJSON());
 		}
-		log.info("数据为:" + res.toJson());
+
 		return this;
 	}
 
 	public void save(MongoSaveModel model) {
 		if (model == MongoSaveModel.reduce) {// 压缩保存
-			// 将 this.head.record 以及 this.recores.items 转换为json
 			Document doc = Document.parse(super.getJSON());
 			doc.put("MongoSaveModel", "reduce");
 			saveJson(doc);
 		} else if (model == MongoSaveModel.keyValue) {// kevy-value形式保存
-			// 将 this.head.record 和 this.recores.items 转换为json
 			Document doc = Document.parse(this.getBusJson());
 			doc.put("MongoSaveModel", "keyValue");
 			saveJson(doc);
@@ -199,5 +202,9 @@ public class MongoQuery extends DataQuery {
 	@Override
 	public void save() {
 		throw new RuntimeException("本方法不提供服务,请使用save(MongoSaveModel model)");
+	}
+
+	public void sessionClose() {
+		this.session.closeSession();
 	}
 }
