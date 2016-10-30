@@ -56,9 +56,6 @@ public class OssQuery extends DataQuery {
 		return operator;
 	}
 
-	public void sessionClose() {
-		this.session.closeSession();
-	}
 	public OssMode getOssMode() {
 		return ossMode;
 	}
