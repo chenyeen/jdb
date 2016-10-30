@@ -1,5 +1,6 @@
 package cn.cerc.jdb.queue;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,6 +15,11 @@ public class QueueQueryTest_append {
 	public void setUp() {
 		handle = new StubHandle();
 		ds = new QueueQuery(handle);
+	}
+
+	@After
+	public void closeSession() {
+		ds.sessionClose();
 	}
 
 	@Test

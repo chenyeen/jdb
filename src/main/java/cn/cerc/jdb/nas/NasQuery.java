@@ -20,6 +20,7 @@ public class NasQuery extends DataQuery {
 	// 文件名称
 	private String fileName;
 	private QueueOperator operator;
+	private NasModel nasMode = NasModel.create;
 
 	public NasQuery(IHandle handle) {
 		super(handle);
@@ -39,31 +40,16 @@ public class NasQuery extends DataQuery {
 		// 校验数据
 		if (StringUtils.isEmpty(this.filePath))
 			throw new RuntimeException("请输入文件路径");
+		if (nasMode == NasModel.readWrite) {
+			File file = FileUtils.getFile(this.filePath, this.fileName);
+			try {
+				this.setJSON(FileUtils.readFileToString(file, CharEncoding.UTF_8));
+				this.setActive(true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return this;
-	}
-
-	// 查询文件
-	public String getFileContext() {
-		File file = FileUtils.getFile(this.filePath, this.fileName);
-		String fileContext = "";
-		try {
-			fileContext = FileUtils.readFileToString(file, CharEncoding.UTF_8);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return fileContext;
-	}
-
-	// 保存或更新文件
-	public void save(String fileContext) {
-		File file = FileUtils.getFile(this.filePath, this.fileName);
-		try {
-			FileUtils.writeStringToFile(file, fileContext, CharEncoding.UTF_8, false);// 不存在则创建,存在则不追加到文件末尾
-		} catch (IOException e) {
-			log.info("文件:" + file.getPath() + "保存失败");
-			e.printStackTrace();
-		}
-		log.info("文件:" + file.getPath() + "保存成功");
 	}
 
 	// 删除文件或目录
@@ -74,10 +60,17 @@ public class NasQuery extends DataQuery {
 		log.info("文件:" + file.getPath() + "删除成功");
 	}
 
-	@Deprecated
 	@Override
 	public void save() {
-		throw new RuntimeException("本方法不提供服务,请使用save(String fileContext)");
+		File file = FileUtils.getFile(this.filePath, this.fileName);
+		try {
+			String content = this.getJSON();
+			FileUtils.writeStringToFile(file, content, CharEncoding.UTF_8, false);// 不存在则创建,存在则不追加到文件末尾
+		} catch (IOException e) {
+			log.info("文件:" + file.getPath() + "保存失败");
+			e.printStackTrace();
+		}
+		log.info("文件:" + file.getPath() + "保存成功");
 	}
 
 	@Override
@@ -85,6 +78,14 @@ public class NasQuery extends DataQuery {
 		if (operator == null)
 			operator = new QueueOperator();
 		return operator;
+	}
+
+	public NasModel getNasMode() {
+		return nasMode;
+	}
+
+	public void setNasMode(NasModel nasMode) {
+		this.nasMode = nasMode;
 	}
 
 }

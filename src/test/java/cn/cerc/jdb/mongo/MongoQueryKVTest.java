@@ -2,6 +2,7 @@ package cn.cerc.jdb.mongo;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -19,6 +20,11 @@ public class MongoQueryKVTest {
 	public void setUp() {
 		handle = new StubHandle();
 		ds = new MongoQuery(handle);
+	}
+
+	@After
+	public void closeSession() {
+		ds.sessionClose();
 	}
 
 	/**
