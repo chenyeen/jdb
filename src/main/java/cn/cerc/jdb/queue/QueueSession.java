@@ -20,6 +20,9 @@ public class QueueSession implements ISession {
 	public static String sessionId = "aliyunQueueSession";
 	// 默认不可见时间
 	private static int VisibilityTimeout = 50;
+	// 默认消息队列
+	public static final String defaultQueue = "summer";
+	//连接客户端
 	private MNSClient client;
 
 	public MNSClient getClient() {
