@@ -82,12 +82,13 @@
 	</build>
 	<properties>
 		<mysql-connector-java.version>5.1.38</mysql-connector-java.version>
+		<org.hibernate.version>4.3.5.Final</org.hibernate.version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.websocket</groupId>
@@ -173,6 +174,16 @@
 			<groupId>org.hibernate.javax.persistence</groupId>
 			<artifactId>hibernate-jpa-2.1-api</artifactId>
 			<version>1.0.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${org.hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-c3p0</artifactId>
+			<version>${org.hibernate.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>other</groupId>
