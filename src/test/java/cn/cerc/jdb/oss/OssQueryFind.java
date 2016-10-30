@@ -20,7 +20,7 @@ public class OssQueryFind {
 
 	@AfterClass
 	public static void closeSession() {
-		ds.sessionClose();
+		handle.closeConnections();
 	}
 
 	/**
