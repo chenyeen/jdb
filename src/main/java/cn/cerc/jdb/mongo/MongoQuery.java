@@ -21,11 +21,6 @@ import cn.cerc.jdb.core.IDataOperator;
 import cn.cerc.jdb.core.IHandle;
 import cn.cerc.jdb.core.Record;
 
-/**
- * mongoDB 对象存储
- * 
- * @author rick_zhou
- */
 public class MongoQuery extends DataQuery {
 	private static final long serialVersionUID = 1L;
 	// private static final Logger log = Logger.getLogger(MongoDataQuery.class);
@@ -44,11 +39,6 @@ public class MongoQuery extends DataQuery {
 		session = (MongoSession) this.handle.getProperty(MongoSession.sessionId);
 	}
 
-	/**
-	 * 此方法相当于通过连接进行查询 Description
-	 * 
-	 * @return 返回数据集本身
-	 */
 	@Override
 	public DataQuery open() {
 		// get collName and business_id
@@ -104,23 +94,26 @@ public class MongoQuery extends DataQuery {
 		res.remove("_id");
 		// mongodb document to data set
 		// this.setJSON(res.toJson());
+		log.info("查询到的数据为:" + res.toJson());
 		if ("reduce".equals(res.getString("MongoSaveModel"))) {// 压缩还原
+			res.remove("MongoSaveModel");
 			this.setJSON(res.toJson());
+			log.info("压缩还原后的数据为:" + this.getJSON());
 		} else if ("keyValue".equals(res.getString("MongoSaveModel"))) {// keyvalue还原
+			res.remove("MongoSaveModel");
 			this.setBusJson(res.toJson());
+			log.info("keyVlaue还原后的数据为:" + this.getJSON());
 		}
-		log.info("数据为:" + res.toJson());
+
 		return this;
 	}
 
 	public void save(MongoSaveModel model) {
 		if (model == MongoSaveModel.reduce) {// 压缩保存
-			// 将 this.head.record 以及 this.recores.items 转换为json
 			Document doc = Document.parse(super.getJSON());
 			doc.put("MongoSaveModel", "reduce");
 			saveJson(doc);
 		} else if (model == MongoSaveModel.keyValue) {// kevy-value形式保存
-			// 将 this.head.record 和 this.recores.items 转换为json
 			Document doc = Document.parse(this.getBusJson());
 			doc.put("MongoSaveModel", "keyValue");
 			saveJson(doc);
@@ -173,13 +166,6 @@ public class MongoQuery extends DataQuery {
 		});
 	}
 
-	/**
-	 * 获取业json数据(不等于dataset结构)
-	 * 
-	 * @Description
-	 * @author rick_zhou
-	 * @return
-	 */
 	private String getBusJson() {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("head", this.getHead().getItems());
@@ -197,17 +183,18 @@ public class MongoQuery extends DataQuery {
 		HashMap jsonMap = gson.fromJson(json, HashMap.class);
 		Map<String, Object> head = (Map<String, Object>) jsonMap.get("head");
 		// 将mongodb的head数据装换为dataset的head数据
-		this.getHead().getItems().putAll(head);
+		for (String key : head.keySet()) {
+			this.getHead().setField(key, head.get(key));
+		}
 		// 将mongodb查出的data数据装换为list<record>
 		List<Map<String, String>> data = (List<Map<String, String>>) jsonMap.get("data");
-		List<Record> listRecord = new ArrayList<>();
 		for (Map<String, String> map : data) {
-			Record rec = new Record();
-			rec.getItems().putAll(map);
-			listRecord.add(rec);
+			this.append();
+			for (String key : map.keySet()) {
+				this.setField(key, map.get(key));
+			}
 		}
 		// 将list<record> 装换为DataSet的records
-		this.getRecords().addAll(listRecord);
 		this.setRecNo(this.getRecords().size());// 修改当前records元素总数
 	}
 
@@ -215,5 +202,9 @@ public class MongoQuery extends DataQuery {
 	@Override
 	public void save() {
 		throw new RuntimeException("本方法不提供服务,请使用save(MongoSaveModel model)");
+	}
+
+	public void sessionClose() {
+		this.session.closeSession();
 	}
 }

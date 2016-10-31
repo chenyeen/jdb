@@ -34,6 +34,7 @@ public class MongoQueryKVTest {
 	 * @author rick_zhou
 	 */
 	@Test
+	@Ignore
 	public void keyValueAdd() {
 		ds.add("select * from mongoqueryColl.testkey001");
 		ds.open();
